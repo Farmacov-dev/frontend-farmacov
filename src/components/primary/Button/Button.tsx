@@ -4,12 +4,12 @@
 
 import styles from "./Button.module.css";
 
-//variantes del boton 
+//variantes
 type ButtonVariant = "primary" | "outline" | "ghost" | "sidebar";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
-  icon?: string;      // ruta al SVG: import salirSvg from "@/assets/icons/salir.svg"
+  icon?: string;      // ruta para los svg
   iconAlt?: string;
   children: React.ReactNode;
 }
