@@ -1,7 +1,10 @@
 // src/components/primary/Button/Button.tsx
+// angel
+
 
 import styles from "./Button.module.css";
 
+//variantes del boton 
 type ButtonVariant = "primary" | "outline" | "ghost" | "sidebar";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
