@@ -46,7 +46,7 @@ export default function Sidebar() {
             <a
               key={item.name}
               href={item.href}
-              className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-xs transition-all duration-200 ${
+              className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-xsx transition-all duration-200 ${
                 isActive
                   ? "text-black"
                   : "text-[#c7c9d1] hover:bg-[#8dadee] hover:text-white"
