@@ -1,35 +1,74 @@
-import { useState } from "react"
-import TextAreaField from "./components/primary/TextAreaField/TextAreaField"
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png'
+import './App.css'
+import Sidebar from './components/Sidebar/Sidebar'
+import ComparisonTable from "@/components/ComparisonTable/ComparisonTable";
+import LoadingState from './components/LoadingState/LoadingState'
+import type { ComparisonRowProps } from "@/components/ComparisonRow/ComparisonRow";
+import { Search } from 'lucide-react'
+import FormSectionTitle from './components/FormSectionTitle/FormSectionTitle'
+import ErrorBanner from './components/shared/ErrorBanner'
 
-export default function App() {
-  const [texto, setTexto] = useState("")  
+const comparisonRows: ComparisonRowProps[] = [
+  {
+    index: 1,
+    label: "Eficacia",
+    left: { value: "95%", status: "better" },
+    right: { value: "94%", status: "worse" },
+  },
+  {
+    index: 2,
+    label: "Costo Unitario",
+    left: { value: "$19.50 USD", status: "better" },
+    right: { value: "$25.00 USD", status: "worse" },
+  },
+  {
+    index: 3,
+    label: "Costo al Mayoreo",
+    left: { value: "$15.80 USD", status: "better" },
+    right: { value: "$20.50 USD", status: "worse" },
+  },
+  {
+    index: 4,
+    label: "Número de Dosis",
+    left: { value: "2 dosis", status: "neutral" },
+    right: { value: "2 dosis", status: "neutral" },
+  },
+  {
+    index: 5,
+    label: "Temperatura de Conservación",
+    left: { value: "-70°C", status: "neutral" },
+    right: { value: "-20°C", status: "neutral" },
+  },
+  {
+    index: 6,
+    label: "Tiempo de Preservación",
+    left: { value: "2 horas (ambiente)", status: "neutral" },
+    right: { value: "12 horas (ambiente)", status: "neutral" },
+  },
+  {
+    index: 7,
+    label: "Tipo de Vacuna",
+    left: { value: "ARNm", status: "neutral" },
+    right: { value: "ARNm", status: "neutral" },
+  },
+  {
+    index: 8,
+    label: "Farmacéutica",
+    left: { value: "Pfizer-BioNTech", status: "neutral" },
+    right: { value: "Moderna", status: "neutral" },
+  },
+];
+
+function App() {
+
   return (
-    <>
-    //sin limite
-      <TextAreaField
-  label="Observaciones y análisis"
-  placeholder="Describe tus hallazgos..."
-  value={texto}
-  onChange={(e) => setTexto(e.target.value)}
-/>
+    <div style={{ padding: "40px", background: "#eef1f6" }}>
+      <ErrorBanner message="Error al cargar los datos. Por favor, inténtalo de nuevo más tarde." />
+    </div>
 
-// limite de caracteres con contador
-<TextAreaField
-  label="Observaciones y análisis"
-  placeholder="Describe tus hallazgos..."
-  value={texto}
-  onChange={(e) => setTexto(e.target.value)}
-  maxLength={500}
-  showCount
-/>
-
-// Con error
-<TextAreaField
-  label="Observaciones y análisis"
-  error
-  value={texto}
-  onChange={(e) => setTexto(e.target.value)}
-/>
-    </>
-  )
+  );
 }
+
+export default App
