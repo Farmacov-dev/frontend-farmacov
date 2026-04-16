@@ -1,0 +1,73 @@
+/* src/components/primary/TextAreaField/TextAreaField.module.css */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+}
+
+/* label  */
+.label {
+  color: #111928;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.labelError {
+  color: #e10e0e;
+}
+
+/* textarea */
+.textarea {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+
+  border-radius: 6px;
+  border: 1px solid #000;
+  opacity: 0.5;
+  background: #ffffff;
+
+  color: #000000;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+
+  resize: vertical;
+  min-height: 120px;
+
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+.textarea:focus {
+  outline: none;
+  border-color: #527ff2;
+  opacity: 1;
+}
+.textarea::placeholder {
+  color: #000000;
+  opacity: 0.5;
+}
+.textareaError {
+  border-color: #f56060;
+  opacity: 1;
+}
+.textareaError:focus {
+  border-color: #e10e0e;
+}
+
+/* contador de caracteres */
+.counter {
+  align-self: flex-end;
+  color: #6b7280;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}

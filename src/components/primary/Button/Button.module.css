@@ -1,0 +1,105 @@
+/* src/components/primary/Button/Button.module.css */
+/* angel */
+
+.button {
+    /* base */
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+
+  /* fuentes */
+
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  white-space: nowrap;
+
+  transition: background-color 150ms ease,
+              opacity 150ms ease,
+              border-color 150ms ease;
+}
+
+/* boton primario */
+
+.primary {
+  background-color: #527ff2;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+.primary:hover:not(:disabled) {
+  background-color: #3d6adf;
+}
+.primary:active:not(:disabled) {
+  background-color: #3060d0;
+}
+
+/* boton outline */
+                            
+.outline {
+  background-color: #ffffff;
+  color: #527ff2;
+  border: 1px solid #527ff2;
+  padding: 13px 28px;
+  gap: 5px;
+}
+.outline:hover:not(:disabled) {
+  background-color: rgba(82, 127, 242, 0.06);
+}
+.outline:active:not(:disabled) {
+  background-color: rgba(82, 127, 242, 0.14);
+}
+
+/* boton ghost */
+                                    
+.ghost {
+  background-color: transparent;
+  color: #1a1a2e;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.ghost:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.ghost:active:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* botones para la navbar */
+
+.sidebar {
+  background-color: #f1f5f9;
+  color: #1a1a2e;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 12px 24px;
+  gap: 10px;
+  align-self: stretch;
+  width: 100%;
+  justify-content: flex-start;
+}
+.sidebar:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+.sidebar:active:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+/* boton desactivado */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* iconos svg */
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
