@@ -3,9 +3,9 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import Sidebar from './components/Sidebar/Sidebar'
-import ComparisonTable from "@/components/ComparisonTable/ComparisonTable";
+import ComparisonTable from "./components/ComparisonTable/ComparisonTable";
 import LoadingState from './components/LoadingState/LoadingState'
-import type { ComparisonRowProps } from "@/components/ComparisonRow/ComparisonRow";
+import type { ComparisonRowProps } from "./components/ComparisonRow/ComparisonRow";
 import { Search } from 'lucide-react'
 import FormSectionTitle from './components/FormSectionTitle/FormSectionTitle'
 import ErrorBanner from './components/shared/ErrorBanner'
