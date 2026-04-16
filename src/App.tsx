@@ -4,7 +4,11 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import Sidebar from './components/Sidebar/Sidebar'
 import ComparisonTable from "@/components/ComparisonTable/ComparisonTable";
+import LoadingState from './components/LoadingState/LoadingState'
 import type { ComparisonRowProps } from "@/components/ComparisonRow/ComparisonRow";
+import { Search } from 'lucide-react'
+import FormSectionTitle from './components/FormSectionTitle/FormSectionTitle'
+import ErrorBanner from './components/shared/ErrorBanner'
 
 const comparisonRows: ComparisonRowProps[] = [
   {
@@ -61,8 +65,9 @@ function App() {
 
   return (
     <div style={{ padding: "40px", background: "#eef1f6" }}>
-      <ComparisonTable rows={comparisonRows} />
+      <ErrorBanner message="Error al cargar los datos. Por favor, inténtalo de nuevo más tarde." />
     </div>
+
   );
 }
 
