@@ -2,7 +2,6 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
-import Sidebar from './components/Sidebar/Sidebar'
 import ComparisonTable from "./components/ComparisonTable/ComparisonTable";
 import LoadingState from './components/LoadingState/LoadingState'
 import type { ComparisonRowProps } from "./components/ComparisonRow/ComparisonRow";
