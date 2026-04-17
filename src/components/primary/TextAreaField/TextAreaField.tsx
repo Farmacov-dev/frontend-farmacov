@@ -1,13 +1,12 @@
 // src/components/primary/TextAreaField/TextAreaField.tsx
-
-import styles from "./TextAreaField.module.css";
+// angel
 
 interface TextAreaFieldProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: boolean;
-  maxLength?: number; // longitud maxima opcional 
-  showCount?: boolean; // muestra conador de caracteres si maxLength esta definido
+  maxLength?: number;
+  showCount?: boolean;
 }
 
 export default function TextAreaField({
@@ -22,12 +21,14 @@ export default function TextAreaField({
   const currentLength = String(value).length;
 
   return (
-    <div className={styles.wrapper}>
-      {/* label opcional — mismo estilo que InputField */}
+    <div className="flex flex-col items-start gap-[10px] self-stretch">
+
+      {/* label opcional */}
       {label && (
-        <span
-          className={[styles.label, error ? styles.labelError : ""].join(" ")}
-        >
+        <span className={`
+          font-inter text-[16px] font-medium leading-[24px]
+          ${error ? "text-red" : "text-dark"}
+        `}>
           {label}
         </span>
       )}
@@ -36,22 +37,34 @@ export default function TextAreaField({
       <textarea
         value={value}
         maxLength={maxLength}
-        className={[
-          styles.textarea,
-          error ? styles.textareaError : "",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={`
+          w-full self-stretch min-h-[120px]
+          p-[10px] gap-[10px]
+          rounded-card bg-white
+          border font-inter text-[16px] font-medium leading-[24px]
+          resize-y opacity-50
+          transition-[border-color,opacity] duration-150 ease-in-out
+          focus:outline-none focus:border-primary focus:opacity-100
+          placeholder:text-negro placeholder:opacity-50
+          ${error
+            ? "border-red-light opacity-100 focus:border-red"
+            : "border-negro"
+          }
+          ${className}
+        `}
         {...props}
       />
 
       {/* contador opcional */}
       {showCount && maxLength && (
-        <span className={styles.counter}>
+        <span className="
+          self-end font-inter text-[12px] font-normal
+          leading-[16px] text-muted
+        ">
           {currentLength} / {maxLength}
         </span>
       )}
+
     </div>
   );
 }
