@@ -1,5 +1,4 @@
-// src/components/modals/ModalContainer/ModalContainer.tsx
-
+// src/components/composed/ModalContainer/ModalContainer.tsx
 import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 
@@ -8,6 +7,7 @@ interface ModalContainerProps {
   onClose: () => void;
   children: React.ReactNode;
   showCloseButton?: boolean;
+  className?: string;
 }
 
 export default function ModalContainer({
@@ -15,8 +15,8 @@ export default function ModalContainer({
   onClose,
   children,
   showCloseButton = true,
+  className = "",
 }: ModalContainerProps) {
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -36,14 +36,15 @@ export default function ModalContainer({
       onClick={onClose}
     >
       <div
-        className="
-          relative flex flex-col items-start gap-[30px]
-          w-[466px] min-h-[288px]
-          px-[40px] pt-[40px] pb-[40px] pl-[30px]
+        className={`
+          relative flex flex-col items-start
+          w-fit min-w-[400px] max-w-[90vw]
+          px-[40px] pt-[40px] pb-[40px]
           bg-white rounded-card
           shadow-modal
           animate-fadeIn
-        "
+          ${className}
+        `}
         onClick={(e) => e.stopPropagation()}
       >
         {showCloseButton && (
@@ -60,7 +61,6 @@ export default function ModalContainer({
             <IoClose size={20} />
           </button>
         )}
-
         {children}
       </div>
     </div>
