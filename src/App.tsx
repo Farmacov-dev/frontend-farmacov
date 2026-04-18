@@ -1,25 +1,36 @@
-import LoginCard from "./components/composed/LoginCard/LoginCard";
+import { useState } from "react";
+import ExportCatalogModal from "./components/composed/ExportCatalogModal/ExportCatalogModal";
 
 export default function App() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [result, setResult] = useState<{
+    format: string;
+    orientation: string;
+    content: string[];
+  } | null>(null);
+
   return (
-    <div className="min-h-screen bg-blue-300 flex items-center justify-center">
-        <LoginCard
-      onLogin={async (email, password) => {
-        // simulación temporal — quitar cuando conectemos Firebase
-        await new Promise((resolve) => setTimeout(resolve, 800)); // simula delay de red
-        
-        // credenciales de prueba
-        if (email === "admin@farmacov.com" && password === "123456") {
-          console.log("Login exitoso");
-          // aquí irá navigate("/dashboard")
-        } else {
-          // simula error de credenciales incorrectas
-          const error: any = new Error("Credenciales incorrectas");
-          error.code = "auth/wrong-password";
-          throw error;
-        }
-      }}
-         />
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-6">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
+      >
+        Exportar Catálogo
+      </button>
+
+      {result && (
+        <div className="flex flex-col items-center gap-2 font-inter text-[14px] text-dark">
+          <p>Formato: <strong>{result.format}</strong></p>
+          <p>Orientación: <strong>{result.orientation}</strong></p>
+          <p>Contenido: <strong>{result.content.join(", ")}</strong></p>
+        </div>
+      )}
+
+      <ExportCatalogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onExport={(config) => setResult(config)}
+      />
     </div>
   );
 }
