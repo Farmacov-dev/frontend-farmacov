@@ -1,5 +1,4 @@
-import { styled } from '@mui/material/styles';
-  import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { Calendar } from 'lucide-react';
 
   interface PageHeaderProps {
     title: string;
@@ -7,49 +6,24 @@ import { styled } from '@mui/material/styles';
     lastUpdated?: string;
   }
 
-  const Wrapper = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  });
-
-  const Title = styled('h1')({
-    margin: 0,
-    fontSize: '24px',
-    fontWeight: 700,
-    fontFamily: 'Inter, sans-serif',
-    color: '#111827',
-  });
-
-  const Description = styled('p')({
-    margin: 0,
-    fontSize: '14px',
-    fontWeight: 400,
-    fontFamily: 'Inter, sans-serif',
-    color: '#6B7280',
-  });
-
-  const DateRow = styled('div')({
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '13px',
-    fontFamily: 'Inter, sans-serif',
-    color: '#6B7280',
-    marginTop: '4px',
-  });
-
   const PageHeader = ({ title, description, lastUpdated }: PageHeaderProps) => (
-    <Wrapper>
-      <Title>{title}</Title>
-      {description && <Description>{description}</Description>}
-      {lastUpdated && (
-        <DateRow>
-          <CalendarTodayIcon sx={{ fontSize: '14px' }} />
-          Última actualización: {lastUpdated}
-        </DateRow>
+    <div className="flex flex-col gap-1">
+      <h1 className="m-0 text-2xl font-bold font-['Inter',sans-serif] text-gray-900">
+        {title}
+      </h1>
+      {description && (
+        <p className="m-0 text-sm font-normal font-['Inter',sans-serif] text-gray-500">
+          {description}
+        </p>
       )}
-    </Wrapper>
+      {lastUpdated && (
+        <div className="flex items-center gap-1.5 text-[13px] font-['Inter',sans-serif]
+  text-gray-500 mt-1">
+          <Calendar size={14} />
+          Última actualización: {lastUpdated}
+        </div>
+      )}
+    </div>
   );
 
   export default PageHeader;
