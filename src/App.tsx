@@ -1,73 +1,36 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import ComparisonTable from "./components/ComparisonTable/ComparisonTable";
-import LoadingState from './components/LoadingState/LoadingState'
-import type { ComparisonRowProps } from "./components/ComparisonRow/ComparisonRow";
-import { Search } from 'lucide-react'
-import FormSectionTitle from './components/FormSectionTitle/FormSectionTitle'
-import ErrorBanner from './components/shared/ErrorBanner'
+import { useState } from "react";
+import ExportCatalogModal from "./components/composed/ExportCatalogModal/ExportCatalogModal";
 
-const comparisonRows: ComparisonRowProps[] = [
-  {
-    index: 1,
-    label: "Eficacia",
-    left: { value: "95%", status: "better" },
-    right: { value: "94%", status: "worse" },
-  },
-  {
-    index: 2,
-    label: "Costo Unitario",
-    left: { value: "$19.50 USD", status: "better" },
-    right: { value: "$25.00 USD", status: "worse" },
-  },
-  {
-    index: 3,
-    label: "Costo al Mayoreo",
-    left: { value: "$15.80 USD", status: "better" },
-    right: { value: "$20.50 USD", status: "worse" },
-  },
-  {
-    index: 4,
-    label: "Número de Dosis",
-    left: { value: "2 dosis", status: "neutral" },
-    right: { value: "2 dosis", status: "neutral" },
-  },
-  {
-    index: 5,
-    label: "Temperatura de Conservación",
-    left: { value: "-70°C", status: "neutral" },
-    right: { value: "-20°C", status: "neutral" },
-  },
-  {
-    index: 6,
-    label: "Tiempo de Preservación",
-    left: { value: "2 horas (ambiente)", status: "neutral" },
-    right: { value: "12 horas (ambiente)", status: "neutral" },
-  },
-  {
-    index: 7,
-    label: "Tipo de Vacuna",
-    left: { value: "ARNm", status: "neutral" },
-    right: { value: "ARNm", status: "neutral" },
-  },
-  {
-    index: 8,
-    label: "Farmacéutica",
-    left: { value: "Pfizer-BioNTech", status: "neutral" },
-    right: { value: "Moderna", status: "neutral" },
-  },
-];
-
-function App() {
+export default function App() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [result, setResult] = useState<{
+    format: string;
+    orientation: string;
+    content: string[];
+  } | null>(null);
 
   return (
-    <div style={{ padding: "40px", background: "#eef1f6" }}>
-      <ErrorBanner message="Error al cargar los datos. Por favor, inténtalo de nuevo más tarde." />
-    </div>
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-6">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
+      >
+        Exportar Catálogo
+      </button>
 
+      {result && (
+        <div className="flex flex-col items-center gap-2 font-inter text-[14px] text-dark">
+          <p>Formato: <strong>{result.format}</strong></p>
+          <p>Orientación: <strong>{result.orientation}</strong></p>
+          <p>Contenido: <strong>{result.content.join(", ")}</strong></p>
+        </div>
+      )}
+
+      <ExportCatalogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onExport={(config) => setResult(config)}
+      />
+    </div>
   );
 }
-
-export default App
