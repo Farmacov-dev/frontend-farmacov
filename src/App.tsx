@@ -2,12 +2,15 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
-import ComparisonTable from "./components/ComparisonTable/ComparisonTable";
-import LoadingState from './components/LoadingState/LoadingState'
 import type { ComparisonRowProps } from "./components/ComparisonRow/ComparisonRow";
-import { Search } from 'lucide-react'
-import FormSectionTitle from './components/FormSectionTitle/FormSectionTitle'
-import ErrorBanner from './components/shared/ErrorBanner'
+import { Search} from 'lucide-react'
+import Sidebar from "./components/Sidebar/Sidebar";
+import { useState } from 'react';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import KPICard from './components/KpiCard/KpiCard';
 
 const comparisonRows: ComparisonRowProps[] = [
   {
@@ -57,16 +60,54 @@ const comparisonRows: ComparisonRowProps[] = [
     label: "Farmacéutica",
     left: { value: "Pfizer-BioNTech", status: "neutral" },
     right: { value: "Moderna", status: "neutral" },
+
+
   },
 ];
 
+const userItems = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: DashboardOutlinedIcon,
+    onClick: () => console.log('Dashboard'),
+  },
+  {
+    key: 'analisis',
+    label: 'Análisis de síntomas',
+    icon: QueryStatsOutlinedIcon,
+    onClick: () => console.log('Análisis'),
+  },
+  {
+    key: 'catalogo',
+    label: 'Catálogo de vacunas',
+    icon: VaccinesOutlinedIcon,
+    onClick: () => console.log('Catálogo'),
+  },
+  {
+    key: 'anotaciones',
+    label: 'Anotaciones',
+    icon: AssignmentOutlinedIcon,
+    onClick: () => console.log('Anotaciones'),
+  },
+];
+
+
 function App() {
 
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <div style={{ padding: "40px", background: "#eef1f6" }}>
-      <ErrorBanner message="Error al cargar los datos. Por favor, inténtalo de nuevo más tarde." />
+    <div className="flex min-h-screen">
+      <Sidebar
+        items={userItems}
+        activeItem="dashboard"
+        collapsed={collapsed}
+        onLogoutClick={() => console.log('Cerrar sesión')}
+        onToggleCollapse={() => setCollapsed((prev) => !prev)}
+        userName="Caro Ramirez"
+        userRole="Director de finanzas"
+      />
     </div>
-
   );
 }
 
