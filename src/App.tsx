@@ -98,15 +98,6 @@ function App() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <div className="flex min-h-screen">
-      <Sidebar
-        items={userItems}
-        activeItem="dashboard"
-        collapsed={collapsed}
-        onLogoutClick={() => console.log('Cerrar sesión')}
-        onToggleCollapse={() => setCollapsed((prev) => !prev)}
-        userName="Caro Ramirez"
-        userRole="Director de finanzas"
-      />
     </div>
   );
 }

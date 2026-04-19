@@ -1,37 +1,39 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
-import VaccinesOutlinedIcon from "@mui/icons-material/VaccinesOutlined";
-import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import {
+  FaChartBar,
+  FaSyringe,
+  FaStickyNote,
+  FaHome,
+  FaUsers,
+  FaShieldAlt,
+} from "react-icons/fa";
+
 import Sidebar from "./Sidebar";
 
 const userItems = [
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: DashboardOutlinedIcon,
+    icon: FaChartBar,
     onClick: () => console.log("Dashboard"),
   },
   {
     key: "analisis",
     label: "Análisis de síntomas",
-    icon: QueryStatsOutlinedIcon,
+    icon: FaChartBar,
     onClick: () => console.log("Análisis"),
   },
   {
     key: "catalogo",
     label: "Catálogo de vacunas",
-    icon: VaccinesOutlinedIcon,
+    icon: FaSyringe,
     onClick: () => console.log("Catálogo"),
   },
   {
     key: "anotaciones",
     label: "Anotaciones",
-    icon: AssignmentOutlinedIcon,
+    icon: FaStickyNote,
     onClick: () => console.log("Anotaciones"),
   },
 ];
@@ -40,19 +42,19 @@ const adminItems = [
   {
     key: "inicio",
     label: "Inicio",
-    icon: HomeOutlinedIcon,
+    icon: FaHome,
     onClick: () => console.log("Inicio"),
   },
   {
     key: "usuarios",
     label: "Usuarios",
-    icon: GroupOutlinedIcon,
+    icon: FaUsers,
     onClick: () => console.log("Usuarios"),
   },
   {
     key: "roles",
     label: "Roles y Permisos",
-    icon: ShieldOutlinedIcon,
+    icon: FaShieldAlt,
     onClick: () => console.log("Roles y Permisos"),
   },
 ];
@@ -64,43 +66,6 @@ const meta = {
     layout: "fullscreen",
   },
   tags: ["autodocs"],
-  decorators: [
-    (Story) => (
-      <div
-        style={{
-          background: "#cfd4da",
-          minHeight: "100vh",
-          padding: "12px",
-          boxSizing: "border-box",
-        }}
-      >
-        <Story />
-      </div>
-    ),
-  ],
-  argTypes: {
-    items: {
-      control: false,
-    },
-    activeItem: {
-      control: { type: "text" },
-    },
-    collapsed: {
-      control: { type: "boolean" },
-    },
-    onLogoutClick: {
-      action: "logout-click",
-    },
-    onToggleCollapse: {
-      action: "toggle-collapse",
-    },
-    userName: {
-      control: { type: "text" },
-    },
-    userRole: {
-      control: { type: "text" },
-    },
-  },
 } satisfies Meta<typeof Sidebar>;
 
 export default meta;
@@ -114,21 +79,13 @@ const SidebarWithState = (args: React.ComponentProps<typeof Sidebar>) => {
       <Sidebar
         {...args}
         collapsed={collapsed}
-        onLogoutClick={() => {
-          console.log("Cerrar sesión");
-          args.onLogoutClick?.();
-        }}
-        onToggleCollapse={() => {
-          setCollapsed((prev) => !prev);
-          args.onToggleCollapse?.();
-        }}
+        onToggleCollapse={() => setCollapsed((prev) => !prev)}
       />
     </div>
   );
 };
 
 export const UserSidebar: Story = {
-  name: "Sidebar usuarios",
   render: (args) => <SidebarWithState {...args} />,
   args: {
     items: userItems,
@@ -140,7 +97,6 @@ export const UserSidebar: Story = {
 };
 
 export const AdminSidebar: Story = {
-  name: "Sidebar admin",
   render: (args) => <SidebarWithState {...args} />,
   args: {
     items: adminItems,

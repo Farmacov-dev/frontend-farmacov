@@ -1,29 +1,79 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';                                                                        
-  import DashboardIcon from '@mui/icons-material/Dashboard';
-  import BarChartIcon from '@mui/icons-material/BarChart';                                                                            
-  import NavItem from './NavItem';                                                                                                    
-   
-  const meta: Meta<typeof NavItem> = {                                                                                                
-    title: 'Components/NavItem',
-    component: NavItem,
-    tags: ['autodocs'],                                                                                                               
-  };
-                                                                                                                                      
-  export default meta;
-  type Story = StoryObj<typeof NavItem>;
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { FaChartBar, FaTachometerAlt } from "react-icons/fa";
+import NavItem from "./NavItem";
 
-  export const Default: Story = {
-    render: () => <NavItem label="Dashboard" icon={DashboardIcon} />,
-  };                                                                                                                                  
-   
-  export const Active: Story = {                                                                                                      
-    render: () => <NavItem label="Dashboard" icon={DashboardIcon} active />,
-  };
+const meta = {
+  title: "Components/NavItem",
+  component: NavItem,
+  tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <div
+        style={{
+          padding: "16px",
+          background: "#ECEFF3",
+          minHeight: "100vh",
+          boxSizing: "border-box",
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
+  argTypes: {
+    label: {
+      control: { type: "text" },
+    },
+    icon: {
+      control: false,
+    },
+    active: {
+      control: { type: "boolean" },
+    },
+    collapsed: {
+      control: { type: "boolean" },
+    },
+    onClick: {
+      action: "clicked",
+    },
+  },
+} satisfies Meta<typeof NavItem>;
 
-  export const Collapsed: Story = {
-    render: () => <NavItem label="Análisis de síntomas" icon={BarChartIcon} collapsed />,
-  };                                                                                                                                  
-   
-  export const CollapsedActive: Story = {                                                                                             
-    render: () => <NavItem label="Análisis de síntomas" icon={BarChartIcon} active collapsed />,
-  };    
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    label: "Dashboard",
+    icon: FaTachometerAlt,
+    active: false,
+    collapsed: false,
+  },
+};
+
+export const Active: Story = {
+  args: {
+    label: "Dashboard",
+    icon: FaTachometerAlt,
+    active: true,
+    collapsed: false,
+  },
+};
+
+export const Collapsed: Story = {
+  args: {
+    label: "Análisis de síntomas",
+    icon: FaChartBar,
+    active: false,
+    collapsed: true,
+  },
+};
+
+export const CollapsedActive: Story = {
+  args: {
+    label: "Análisis de síntomas",
+    icon: FaChartBar,
+    active: true,
+    collapsed: true,
+  },
+};

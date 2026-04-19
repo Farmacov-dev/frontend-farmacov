@@ -1,21 +1,26 @@
-import React from "react";
+import UserAvatar from "./UserAvatar";
 
-type UserProfileProps = {
-  name: string;
-  role: string;
-};
+interface UserProfileProps {
+  userName?: string;
+  userRole?: string;
+  collapsed?: boolean;
+}
 
-const UserProfile = ({ name, role }: UserProfileProps) => {
+const UserProfile = ({
+  userName = "Caro Ramirez",
+  userRole = "Director de finanzas",
+  collapsed = false,
+}: UserProfileProps) => {
   return (
-    <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
-        CR
-      </div>
+    <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3 px-1"}`}>
+      <UserAvatar userName={userName} />
 
-      <div>
-        <p className="text-sm font-semibold text-slate-800">{name}</p>
-        <p className="text-xs text-slate-500">{role}</p>
-      </div>
+      {!collapsed && (
+        <div className="leading-tight">
+          <p className="text-sm font-semibold text-[#111827]">{userName}</p>
+          <p className="mt-1 text-[11px] text-[#7B7B7B]">{userRole}</p>
+        </div>
+      )}
     </div>
   );
 };
