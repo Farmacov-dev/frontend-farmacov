@@ -11,6 +11,7 @@ import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import KPICard from './components/KpiCard/KpiCard';
+import ExportCatalogModal from './components/composed/ExportCatalogModal/ExportCatalogModal';
 
 const comparisonRows: ComparisonRowProps[] = [
   {
@@ -94,14 +95,15 @@ const userItems = [
 
 
 function App() {
+  const [isOpen, setIsOpen] = useState(true);
+  const [result, setResult] = useState<{
+    format: "A4" | "Letter";
+    orientation: "Vertical" | "Horizontal";
+    content: string[];
+  } | null>(null);
 
-  const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="flex min-h-screen">
-    </div>
-  );
-}
-
+    <div>
       <ExportCatalogModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

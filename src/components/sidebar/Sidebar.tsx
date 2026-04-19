@@ -20,7 +20,7 @@ interface SidebarProps {
   userName?: string;
   userRole?: string;
 }
- // Bug en atributo llamado icon en la Sidebar
+
 const Sidebar = ({
   items,
   activeItem = "",
