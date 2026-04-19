@@ -1,30 +1,106 @@
-import { useState } from "react";
-import ExportCatalogModal from "./components/composed/ExportCatalogModal/ExportCatalogModal";
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png'
+import './App.css'
+import type { ComparisonRowProps } from "./components/ComparisonRow/ComparisonRow";
+import { Search} from 'lucide-react'
+import Sidebar from "./components/Sidebar/Sidebar";
+import { useState } from 'react';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+import VaccinesOutlinedIcon from '@mui/icons-material/VaccinesOutlined';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import KPICard from './components/KpiCard/KpiCard';
 
-export default function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [result, setResult] = useState<{
-    format: string;
-    orientation: string;
-    content: string[];
-  } | null>(null);
+const comparisonRows: ComparisonRowProps[] = [
+  {
+    index: 1,
+    label: "Eficacia",
+    left: { value: "95%", status: "better" },
+    right: { value: "94%", status: "worse" },
+  },
+  {
+    index: 2,
+    label: "Costo Unitario",
+    left: { value: "$19.50 USD", status: "better" },
+    right: { value: "$25.00 USD", status: "worse" },
+  },
+  {
+    index: 3,
+    label: "Costo al Mayoreo",
+    left: { value: "$15.80 USD", status: "better" },
+    right: { value: "$20.50 USD", status: "worse" },
+  },
+  {
+    index: 4,
+    label: "Número de Dosis",
+    left: { value: "2 dosis", status: "neutral" },
+    right: { value: "2 dosis", status: "neutral" },
+  },
+  {
+    index: 5,
+    label: "Temperatura de Conservación",
+    left: { value: "-70°C", status: "neutral" },
+    right: { value: "-20°C", status: "neutral" },
+  },
+  {
+    index: 6,
+    label: "Tiempo de Preservación",
+    left: { value: "2 horas (ambiente)", status: "neutral" },
+    right: { value: "12 horas (ambiente)", status: "neutral" },
+  },
+  {
+    index: 7,
+    label: "Tipo de Vacuna",
+    left: { value: "ARNm", status: "neutral" },
+    right: { value: "ARNm", status: "neutral" },
+  },
+  {
+    index: 8,
+    label: "Farmacéutica",
+    left: { value: "Pfizer-BioNTech", status: "neutral" },
+    right: { value: "Moderna", status: "neutral" },
 
+
+  },
+];
+
+const userItems = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: DashboardOutlinedIcon,
+    onClick: () => console.log('Dashboard'),
+  },
+  {
+    key: 'analisis',
+    label: 'Análisis de síntomas',
+    icon: QueryStatsOutlinedIcon,
+    onClick: () => console.log('Análisis'),
+  },
+  {
+    key: 'catalogo',
+    label: 'Catálogo de vacunas',
+    icon: VaccinesOutlinedIcon,
+    onClick: () => console.log('Catálogo'),
+  },
+  {
+    key: 'anotaciones',
+    label: 'Anotaciones',
+    icon: AssignmentOutlinedIcon,
+    onClick: () => console.log('Anotaciones'),
+  },
+];
+
+
+function App() {
+
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-center gap-6">
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
-      >
-        Exportar Catálogo
-      </button>
-
-      {result && (
-        <div className="flex flex-col items-center gap-2 font-inter text-[14px] text-dark">
-          <p>Formato: <strong>{result.format}</strong></p>
-          <p>Orientación: <strong>{result.orientation}</strong></p>
-          <p>Contenido: <strong>{result.content.join(", ")}</strong></p>
-        </div>
-      )}
+    <div className="flex min-h-screen">
+    </div>
+  );
+}
 
       <ExportCatalogModal
         isOpen={isOpen}
