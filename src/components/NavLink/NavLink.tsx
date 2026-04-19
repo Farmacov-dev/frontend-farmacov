@@ -1,27 +1,20 @@
-import { styled } from '@mui/material/styles';                                                                                      
-                                                                                                                                      
-  interface NavLinkProps {                                                                                                            
-    label: string;                                                                                                                    
+interface NavLinkProps {
+    label: string;
     active?: boolean;
     onClick?: () => void;
   }
 
-  const Link = styled('span')<{ active: boolean }>(({ active }) => ({                                                                 
-    fontFamily: 'Inter, sans-serif',
-    fontSize: '14px',                                                                                                                 
-    fontWeight: active ? 600 : 400,
-    color: active ? '#6366F1' : '#374151',
-    cursor: 'pointer',                                                                                                                
-    textDecoration: 'none',
-    '&:hover': {                                                                                                                      
-      color: '#6366F1',
-    },
-  }));
-
-  const NavLink = ({ label, active = false, onClick }: NavLinkProps) => (                                                             
-    <Link active={active} onClick={onClick}>
-      {label}                                                                                                                         
-    </Link>       
+  const NavLink = ({ label, active = false, onClick }: NavLinkProps) => (
+    <span
+      onClick={onClick}
+      className={`font-[Inter,sans-serif] text-sm cursor-pointer no-underline transition-colors ${
+        active
+          ? 'font-semibold text-indigo-500'
+          : 'font-normal text-gray-700 hover:text-indigo-500'
+      }`}
+    >
+      {label}
+    </span>
   );
 
   export default NavLink;

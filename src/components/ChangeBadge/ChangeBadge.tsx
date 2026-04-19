@@ -1,29 +1,21 @@
-import { styled } from '@mui/material/styles';                                                            
-   
-  interface ChangeBadgeProps {                                                                              
+interface ChangeBadgeProps {
     value: number;
-    showArrow?: boolean;                                                                                    
+    showArrow?: boolean;
   }
-                                                                                                            
-  const Badge = styled('span')<{ positive: boolean }>(({ positive }) => ({                                  
-    display: 'inline-flex',
-    alignItems: 'center',                                                                                   
-    gap: '2px',   
-    fontSize: '12px',
-    fontWeight: 500,                                                                                        
-    fontFamily: 'Inter, sans-serif',
-    color: positive ? '#16A34A' : '#DC2626',                                                                
-  }));            
 
-  const ChangeBadge = ({ value, showArrow = true }: ChangeBadgeProps) => {                                  
+  const ChangeBadge = ({ value, showArrow = true }: ChangeBadgeProps) => {
     const positive = value >= 0;
-    const arrow = positive ? '↑' : '↓';                                                                     
-                                                                                                            
+    const arrow = positive ? '↑' : '↓';
+
     return (
-      <Badge positive={positive}>                                                                           
+      <span
+        className={`inline-flex items-center gap-0.5 text-xs font-medium font-[Inter,sans-serif] ${
+          positive ? 'text-green-600' : 'text-red-600'
+        }`}
+      >
         {positive ? '+' : ''}{value}%{showArrow && ` ${arrow}`}
-      </Badge>                                                                                              
+      </span>
     );
-  };                                                                                                        
-                  
+  };
+
   export default ChangeBadge;

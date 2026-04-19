@@ -1,61 +1,25 @@
-import { styled } from '@mui/material/styles';                                           
-  import SecurityIcon from '@mui/icons-material/Security';                                 
-                                                                                           
+import { MdSecurity } from 'react-icons/md';                                                                                           
+                                                                                                                                           
   interface LogoMarkProps {
-    variant?: 'full' | 'icon';
-  }                                                                                        
-  
-  const Wrapper = styled('div')({                                                          
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '10px',
-  });                                                                                      
-  
-  const IconWrapper = styled('div')({                                                      
-    width: '40px',
-    height: '40px',
-    borderRadius: '8px',
-    backgroundColor: '#6366F1',
-    display: 'flex',                                                                       
-    alignItems: 'center',
-    justifyContent: 'center',                                                              
-    color: '#fff',
-    flexShrink: 0,
-  });
+    variant?: 'full' | 'icon';                                                                                                             
+  }                                                                                                                                      
 
-  const TextWrapper = styled('div')({                                                      
-    display: 'flex',
-    flexDirection: 'column',                                                               
-  });             
-
-  const Name = styled('span')({
-    fontSize: '16px',
-    fontWeight: 700,                                                                       
-    fontFamily: 'Inter, sans-serif',
-    color: '#111827',                                                                      
-    lineHeight: 1.2,
-  });
-
-  const Subtitle = styled('span')({                                                        
-    fontSize: '11px',
-    fontWeight: 400,                                                                       
-    fontFamily: 'Inter, sans-serif',
-    color: '#6B7280',
-    lineHeight: 1.2,
-  });                                                                                      
-  
-  const LogoMark = ({ variant = 'full' }: LogoMarkProps) => (                              
-    <Wrapper>     
-      <IconWrapper>
-        <SecurityIcon fontSize="small" />
-      </IconWrapper>                                                                       
-      {variant === 'full' && (
-        <TextWrapper>                                                                      
-          <Name>Farmacov</Name>
-          <Subtitle>Portal Ejecutivo</Subtitle>
-        </TextWrapper>                                                                     
-      )}
-    </Wrapper>                                                                             
-  );              
-
-  export default LogoMark;
+  const LogoMark = ({ variant = 'full' }: LogoMarkProps) => (                                                                              
+    <div className="inline-flex items-center gap-2.5">
+      <div className="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white shrink-0">                            
+        <MdSecurity size={20} />                                                                                                         
+      </div>                                                                                                                               
+      {variant === 'full' && (                                                                                                           
+        <div className="flex flex-col">                                                                                                    
+          <span className="text-base font-bold font-[Inter,sans-serif] text-gray-900 leading-tight">                                     
+            Farmacov                                                                                                                       
+          </span>
+          <span className="text-[11px] font-normal font-[Inter,sans-serif] text-gray-500 leading-tight">                                   
+            Portal Ejecutivo                                                                                                               
+          </span>
+        </div>                                                                                                                             
+      )}                                                                                                                                 
+    </div>
+  );                                                                                                                                       
+   
+  export default LogoMark;        
