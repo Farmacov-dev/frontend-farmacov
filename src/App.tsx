@@ -102,4 +102,11 @@ function App() {
   );
 }
 
-export default App
+      <ExportCatalogModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onExport={(config) => setResult(config)}
+      />
+    </div>
+  );
+}

@@ -1,35 +1,22 @@
-import type { IconType } from "react-icons";
+import type { LucideIcon } from 'lucide-react';
 
-interface NavItemProps {
-  label: string;
-  icon?: IconType;
-  active?: boolean;
-  collapsed?: boolean;
-  onClick?: () => void;
-}
+  interface NavItemProps {
+    label: string;
+    icon?: LucideIcon;
+    active?: boolean;
+    collapsed?: boolean;
+    onClick?: () => void;
+  }
 
-const NavItem = ({
-  label,
-  icon: Icon,
-  active = false,
-  collapsed = false,
-  onClick,
-}: NavItemProps) => {
-  return (
+  const NavItem = ({ label, icon: Icon, active = false, collapsed = false, onClick }:
+  NavItemProps) => (
     <div
       onClick={onClick}
-      className={`flex cursor-pointer items-center rounded-lg px-3 py-2 font-inter text-sm transition-colors duration-150 ${
-        collapsed ? "justify-center" : "gap-[10px]"
-      } ${
-        active
-          ? "bg-[#6366F1] font-semibold text-white"
-          : "bg-transparent font-normal text-[#374151] hover:bg-[#F3F4F6]"
-      }`}
+      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer text-sm font-['Inter',sans-serif] transition-colors duration-150 ${active ? 'bg-indigo-500 text-white font-semibold' : 'bg-transparent text-gray-700 font-normal hover:bg-gray-100'}`}
     >
       {Icon && <Icon size={16} />}
-      {!collapsed && <span>{label}</span>}
+      {!collapsed && label}
     </div>
   );
-};
 
-export default NavItem;
+  export default NavItem;
