@@ -9,27 +9,13 @@ const meta: Meta<typeof FilterBar> = {
 export default meta;
 type Story = StoryObj<typeof FilterBar>;
 
-export const Default: Story = {
-  args: {
-    filters: [
-      {
-        key: "vacuna",
-        label: "Vacuna",
-        value: "pfizer",
-        options: [
-          { label: "Pfizer", value: "pfizer" },
-          { label: "Moderna", value: "moderna" },
-        ],
-      },
-      {
-        key: "edad",
-        label: "Edad",
-        value: "all",
-        options: [
-          { label: "Todas", value: "all" },
-          { label: "18-40", value: "18-40" },
-        ],
-      },
-    ],
-  },
+export const Default: Story = {};
+
+export const CompactView: Story = {
+  name: "Vista compacta",
+  render: () => (
+    <div style={{ maxWidth: "400px" }}>
+      <FilterBar />
+    </div>
+  ),
 };
