@@ -15,3 +15,13 @@ export const Default: Story = {
     color: "#22c55e",
   },
 };
+
+export const CircleSmall: Story = {
+  name: "Círculo pequeño",
+  args: {
+    label: "Baja",
+    color: "#ef4444",
+    shape: "circle",
+    size: "sm",
+  },
+};
