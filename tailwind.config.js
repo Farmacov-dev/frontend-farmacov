@@ -70,6 +70,10 @@ export default {
           dark:  "#E5E7EB",     // bg-hover-dark  — ghost button active
         },
 
+        login: {
+          bg: "#6B97EE",  // bg-login-background — fondo general login
+        },
+
       },
 
       fontFamily: {
