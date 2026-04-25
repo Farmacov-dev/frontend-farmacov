@@ -6,35 +6,35 @@ type ChartItem = {
 };
 
 type ChartCardProps = {
+  title?: string;
+  subtitle?: string;
   data?: ChartItem[];
 };
 
 const defaultData: ChartItem[] = [
   { label: "Dolor", value: 80 },
   { label: "Fiebre", value: 55 },
-  { label: "Náusea", value: 40 },
+  { label: "N\u00e1usea", value: 40 },
   { label: "Fatiga", value: 65 },
   { label: "Mareo", value: 30 },
 ];
 
-const ChartCard = ({ data }: ChartCardProps) => {
+const ChartCard = ({
+  title = "Frecuencia de s\u00edntomas",
+  subtitle = "Distribuci\u00f3n estimada por s\u00edntoma seleccionado",
+  data,
+}: ChartCardProps) => {
   const chartData = data && data.length > 0 ? data : defaultData;
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-slate-800">
-            Frecuencia de síntomas
-          </h3>
-          <p className="text-sm text-slate-500">
-            Distribución estimada por síntoma seleccionado
-          </p>
+          <h3 className="text-lg font-semibold text-slate-800">{title}</h3>
+          <p className="text-sm text-slate-500">{subtitle}</p>
         </div>
 
-        <button className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-          Exportar
-        </button>
+
       </div>
 
       <div className="rounded-xl bg-slate-50 p-5">

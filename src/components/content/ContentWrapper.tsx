@@ -6,7 +6,7 @@ type ContentWrapperProps = {
 
 const ContentWrapper = ({ children }: ContentWrapperProps) => {
   return (
-    <div className="w-full max-w-[1200px]">
+    <div className="w-full px-6 py-6">
       {children}
     </div>
   );
