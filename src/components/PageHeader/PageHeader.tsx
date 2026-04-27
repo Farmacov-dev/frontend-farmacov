@@ -1,29 +1,41 @@
-import { Calendar } from 'lucide-react';
+import { Calendar } from "lucide-react";
 
-  interface PageHeaderProps {
-    title: string;
-    description?: string;
-    lastUpdated?: string;
-  }
+interface PageHeaderProps {
+  title: string;
+  description?: string;
+  subtitle?: string;
+  lastUpdated?: string;
+  date?: string;
+}
 
-  const PageHeader = ({ title, description, lastUpdated }: PageHeaderProps) => (
+const PageHeader = ({
+  title,
+  description,
+  subtitle,
+  lastUpdated,
+  date,
+}: PageHeaderProps) => {
+  const resolvedDescription = description ?? subtitle;
+  const resolvedLastUpdated = lastUpdated ?? date;
+
+  return (
     <div className="flex flex-col gap-1">
       <h1 className="m-0 text-2xl font-bold font-['Inter',sans-serif] text-gray-900">
         {title}
       </h1>
-      {description && (
+      {resolvedDescription && (
         <p className="m-0 text-sm font-normal font-['Inter',sans-serif] text-gray-500">
-          {description}
+          {resolvedDescription}
         </p>
       )}
-      {lastUpdated && (
-        <div className="flex items-center gap-1.5 text-[13px] font-['Inter',sans-serif]
-  text-gray-500 mt-1">
+      {resolvedLastUpdated && (
+        <div className="mt-1 flex items-center gap-1.5 text-[13px] font-['Inter',sans-serif] text-gray-500">
           <Calendar size={14} />
-          Última actualización: {lastUpdated}
+          {"\u00daltima actualizaci\u00f3n"}: {resolvedLastUpdated}
         </div>
       )}
     </div>
   );
+};
 
-  export default PageHeader;
+export default PageHeader;
