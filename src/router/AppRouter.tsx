@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Login, Catalog} from '../pages';
+  import {Login, Catalog, Dashboard} from '../pages';
 
 
 export default function AppRouter(){
@@ -8,6 +8,7 @@ export default function AppRouter(){
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/catalog" element={<Catalog />} />
+                <Route path="/dashboard" element={<Dashboard />} />  
             </Routes>
         </BrowserRouter>
     );
