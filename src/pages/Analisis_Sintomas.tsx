@@ -3,6 +3,7 @@ import { FaSyringe, FaClipboardList } from "react-icons/fa";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ContentWrapper from "../components/content/ContentWrapper";
 import FilterBar from "../components/filters/FilterBar";
+import { useSidebar } from "../context/SidebarContext";
 import ChartCard from "../components/charts/ChartCard";
 import { useNavigate } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
@@ -16,14 +17,15 @@ type ChartDataItem = {
 const Analisis_Sintomas = () => {
   const [activeItem, setActiveItem] = useState("analisis_sintomas");
   const [data, setData] = useState<ChartDataItem[]>([]);
+  const {collapsed, setCollapsed} = useSidebar();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     vacuna: "Vacuna",
     sexo: "Sexo",
     edad: "Edad",
     sintoma: "S\u00edntoma",
   });
-  const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetch("http://localhost:5173/nombre_mysq")
@@ -132,7 +134,7 @@ const Analisis_Sintomas = () => {
       items={userItems}
       activeItem={activeItem}
       collapsed={collapsed}
-      onToggleCollapse={() => setCollapsed(!collapsed)}
+      onToggleCollapse={() => setCollapsed((prev) => !prev)}
       userName="Caro Ramirez"
       userRole="Director de finanzas"
     >

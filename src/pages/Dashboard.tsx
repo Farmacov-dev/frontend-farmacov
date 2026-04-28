@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { useSidebar } from "../context/SidebarContext";
 import PageHeader from "../components/PageHeader/PageHeader";
 import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
@@ -28,7 +29,7 @@ const vaccineList = ["Pfizer", "Moderna", "AstraZeneca", "Johnson & Johnson", "S
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState("dashboard");
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, setCollapsed } = useSidebar();
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaSyringe, FaClipboardList } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { useSidebar } from "../context/SidebarContext";
 import VaccineCatalogTable from "../components/VaccineCatalogTable/VaccineCatalogTable";
 import PageHeader from "../components/PageHeader/PageHeader";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 
 const Catalog = () => {
   const [activeItem, setActiveItem] = useState("catalog");
-  const [collapsed, setCollapsed] = useState(false);
+  const {collapsed, setCollapsed} = useSidebar();
   const navigate = useNavigate();
 
   const userItems = [
@@ -55,7 +56,7 @@ const Catalog = () => {
       items={userItems}
       activeItem={activeItem}
       collapsed={collapsed}
-      onToggleCollapse={() => setCollapsed(!collapsed)}
+      onToggleCollapse={() => setCollapsed((prev) => !prev)}
       userName="Caro Ramirez"
       userRole="Director de finanzas"
     >
