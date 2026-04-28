@@ -1,28 +1,34 @@
 import { useState } from "react";
-import { FaChartBar, FaSyringe } from "react-icons/fa";
-
+import { FaSyringe, FaClipboardList } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import VaccineCatalogTable from "../components/VaccineCatalogTable/VaccineCatalogTable";
 import Sidebar from "../components/Sidebar/Sidebar";
 import PageHeader from "../components/PageHeader/PageHeader";
+import { useNavigate } from "react-router-dom";
+
+const Catalog = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  
+  const navigate = useNavigate();
 
 const userItems = [
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: FaChartBar,
-    onClick: () => console.log("Dashboard"),
+    icon: MdDashboard,
+    onClick: () => navigate("/dashboard"),
   },
   {
     key: "analisis",
     label: "Análisis de síntomas",
-    icon: FaChartBar,
-    onClick: () => console.log("Análisis"),
+    icon: FaClipboardList,
+    onClick: () => navigate("/analisis_sintomas"),
   },
   {
     key: "catalogo",
     label: "Catálogo de vacunas",
     icon: FaSyringe,
-    onClick: () => console.log("Catálogo"),
+    onClick: () => navigate("/catalog"),
   },
 ];
 
@@ -35,8 +41,8 @@ const mockVaccines = [
   { id: '6', name: 'Sinopharm', farmaceutica: 'Sinopharm', costo: 36.00, costoMayoreo: 28.00, temperatura: '2-8°C', efectividad: 79, longevidad: '24 meses (refrigerado)' },
 ];
 
-const Catalog = () => {
-  const [collapsed, setCollapsed] = useState(false);
+
+
 
   return (
     <div className="flex h-screen bg-[#F5F7FA]">
@@ -45,6 +51,7 @@ const Catalog = () => {
         activeItem="catalogo"
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(!collapsed)}
+        onLogoutClick={() => navigate("/")}
         userName="Caro Ramirez"
         userRole="Director de finanzas"
       />
