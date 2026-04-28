@@ -7,13 +7,9 @@ import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
 import DashboardLayout from "../components/layout/DashboardLayout";
+import { useNavigate } from "react-router-dom";
 
-const sidebarItems = [
-  { key: "dashboard", label: "Dashboard", icon: MdDashboard },
-  { key: "catalogo", label: "Catálogo", icon: FaSyringe },
-  { key: "reportes", label: "Reportes", icon: FaClipboardList },
-  { key: "alertas", label: "Alertas", icon: FaExclamationTriangle },
-];
+
 
 const symptomsData = [
   { label: "Miocarditis", value: 65 },
@@ -37,6 +33,15 @@ export default function Dashboard() {
   const [activeItem, setActiveItem] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const sidebarItems = [
+  { key: "dashboard", label: "Dashboard", icon: MdDashboard, onClick: () => {setActiveItem("dashboard"), navigate("/dashboard")} },
+  { key: "analisis_sintomas", label: "Analisis de sintomas", icon: FaClipboardList, onClick: () => { setActiveItem("dashboard"), navigate("/analisis_sintomas")}},
+  { key: "catalog", label: "Catalogo de vacunas", icon: FaSyringe, onClick: () => { setActiveItem("catalog"), navigate("/catalog") }},
+  
+  
+  ];
 
   function handleCompare(vaccineA: string, vaccineB: string) {
     console.log("Comparando:", vaccineA, vaccineB);
@@ -46,13 +51,11 @@ export default function Dashboard() {
   return (
     <DashboardLayout>
       <Sidebar
-        items={sidebarItems.map((item) => ({
-          ...item,
-          onClick: () => setActiveItem(item.key),
-        }))}
+        items={sidebarItems}
         activeItem={activeItem}
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((prev) => !prev)}
+        onLogoutClick={() => navigate("/")}
         userName="Caro Ramírez"
         userRole="Director de finanzas"
       />

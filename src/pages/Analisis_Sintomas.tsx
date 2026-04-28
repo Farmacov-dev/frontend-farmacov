@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FaChartBar, FaSyringe } from "react-icons/fa";
+import { FaSyringe, FaClipboardList } from "react-icons/fa";
 import PageHeader from "../components/PageHeader/PageHeader";
 import Sidebar from "../components/Sidebar/Sidebar";
 import ContentWrapper from "../components/content/ContentWrapper";
 import FilterBar from "../components/filters/FilterBar";
 import ChartCard from "../components/charts/ChartCard";
+import { useNavigate } from "react-router-dom";
+import { MdDashboard } from "react-icons/md";
 
 type ChartDataItem = {
   label: string;
@@ -12,6 +14,7 @@ type ChartDataItem = {
 };
 
 const Analisis_Sintomas = () => {
+  const [activeItem, setActiveItem] = useState("analisis_sintomas");
   const [data, setData] = useState<ChartDataItem[]>([]);
   const [filters, setFilters] = useState({
     vacuna: "Vacuna",
@@ -20,6 +23,8 @@ const Analisis_Sintomas = () => {
     sintoma: "S\u00edntoma",
   });
   const [collapsed, setCollapsed] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:5173/nombre_mysq")
@@ -90,20 +95,20 @@ const Analisis_Sintomas = () => {
     {
       key: "dashboard",
       label: "Dashboard",
-      icon: FaChartBar,
-      onClick: () => console.log("Dashboard"),
+      icon: MdDashboard,
+      onClick: () => {setActiveItem("dashboard"), navigate("/dashboard")} 
     },
     {
-      key: "analisis",
-      label: "An\u00e1lisis de s\u00edntomas",
-      icon: FaChartBar,
-      onClick: () => console.log("An\u00e1lisis"),
+      key: "analisis_sintomas",
+      label: "Analisis de sintomas",
+      icon: FaClipboardList,
+      onClick: () => {setActiveItem("analisis_sintomas"),navigate("/analisis_sintomas")} 
     },
     {
       key: "catalogo",
-      label: "Cat\u00e1logo de vacunas",
+      label: "Catalogo de vacunas",
       icon: FaSyringe,
-      onClick: () => console.log("Cat\u00e1logo"),
+      onClick: () => {setActiveItem("analisis_sintomas"), navigate("/catalog")}
     },
   ];
 
@@ -118,9 +123,10 @@ const Analisis_Sintomas = () => {
     <div className="flex h-screen bg-[#F5F7FA]">
       <Sidebar
         items={userItems}
-        activeItem="catalogo"
+        activeItem={activeItem}
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(!collapsed)}
+        onLogoutClick={() => navigate("/")}
         userName="Caro Ramirez"
         userRole="Director de finanzas"
       />
