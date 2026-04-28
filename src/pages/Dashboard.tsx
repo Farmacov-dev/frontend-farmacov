@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
-import Sidebar from "../components/Sidebar/Sidebar";
 import PageHeader from "../components/PageHeader/PageHeader";
 import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
@@ -9,13 +8,11 @@ import ComparisonModal from "../components/composed/ComparisonModal/ComparisonMo
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useNavigate } from "react-router-dom";
 
-
-
 const symptomsData = [
   { label: "Miocarditis", value: 65 },
   { label: "Anafilaxia", value: 64 },
   { label: "Trombosis", value: 57 },
-  { label: "Parálisis", value: 50 },
+  { label: "ParÃ¡lisis", value: 50 },
   { label: "Gastritis", value: 21 },
 ];
 
@@ -36,11 +33,33 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const sidebarItems = [
-  { key: "dashboard", label: "Dashboard", icon: MdDashboard, onClick: () => {setActiveItem("dashboard"), navigate("/dashboard")} },
-  { key: "analisis_sintomas", label: "Analisis de sintomas", icon: FaClipboardList, onClick: () => { setActiveItem("dashboard"), navigate("/analisis_sintomas")}},
-  { key: "catalog", label: "Catalogo de vacunas", icon: FaSyringe, onClick: () => { setActiveItem("catalog"), navigate("/catalog") }},
-  
-  
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: MdDashboard,
+      onClick: () => {
+        setActiveItem("dashboard");
+        navigate("/dashboard");
+      },
+    },
+    {
+      key: "analisis_sintomas",
+      label: "Analisis de sintomas",
+      icon: FaClipboardList,
+      onClick: () => {
+        setActiveItem("analisis_sintomas");
+        navigate("/analisis_sintomas");
+      },
+    },
+    {
+      key: "catalog",
+      label: "Catalogo de vacunas",
+      icon: FaSyringe,
+      onClick: () => {
+        setActiveItem("catalog");
+        navigate("/catalog");
+      },
+    },
   ];
 
   function handleCompare(vaccineA: string, vaccineB: string) {
@@ -49,19 +68,15 @@ export default function Dashboard() {
   }
 
   return (
-    <DashboardLayout>
-      <Sidebar
-        items={sidebarItems}
-        activeItem={activeItem}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed((prev) => !prev)}
-        onLogoutClick={() => navigate("/")}
-        userName="Caro Ramírez"
-        userRole="Director de finanzas"
-      />
-
+    <DashboardLayout
+      items={sidebarItems}
+      activeItem={activeItem}
+      collapsed={collapsed}
+      onToggleCollapse={() => setCollapsed((prev) => !prev)}
+      userName="Caro RamÃ­rez"
+      userRole="Director de finanzas"
+    >
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8 min-h-0">
-
         <PageHeader
           title="Dashboard Ejecutivo"
           description="Resumen general de vacunas y eventos adversos"
@@ -102,7 +117,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 overflow-hidden">
           <ChartCard
             title="Frecuencia de Síntomas Adversos"
-            subtitle="Distribución estimada por síntoma reportado"
+            subtitle="Distribución estimada por sí­ntoma reportado"
             data={symptomsData}
           />
           <ChartCard
@@ -120,7 +135,6 @@ export default function Dashboard() {
             Comparar Vacunas
           </button>
         </div>
-
       </main>
 
       <ComparisonModal

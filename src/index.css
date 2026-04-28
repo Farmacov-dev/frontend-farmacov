@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
 #root {
-  min-height: 100svh;
+  width: 100%;
+  min-height: 100%;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -29,13 +37,7 @@
 }
 
 #root {
-  max-width: 100%;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
 }
 
 body {
