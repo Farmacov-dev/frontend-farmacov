@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSyringe, FaClipboardList } from "react-icons/fa";
 import PageHeader from "../components/PageHeader/PageHeader";
-import Sidebar from "../components/Sidebar/Sidebar";
 import ContentWrapper from "../components/content/ContentWrapper";
 import FilterBar from "../components/filters/FilterBar";
 import ChartCard from "../components/charts/ChartCard";
 import { useNavigate } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
+import DashboardLayout from "../components/layout/DashboardLayout";
 
 type ChartDataItem = {
   label: string;
@@ -23,7 +23,6 @@ const Analisis_Sintomas = () => {
     sintoma: "S\u00edntoma",
   });
   const [collapsed, setCollapsed] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,19 +95,28 @@ const Analisis_Sintomas = () => {
       key: "dashboard",
       label: "Dashboard",
       icon: MdDashboard,
-      onClick: () => {setActiveItem("dashboard"), navigate("/dashboard")} 
+      onClick: () => {
+        setActiveItem("dashboard");
+        navigate("/dashboard");
+      },
     },
     {
       key: "analisis_sintomas",
       label: "Analisis de sintomas",
       icon: FaClipboardList,
-      onClick: () => {setActiveItem("analisis_sintomas"),navigate("/analisis_sintomas")} 
+      onClick: () => {
+        setActiveItem("analisis_sintomas");
+        navigate("/analisis_sintomas");
+      },
     },
     {
-      key: "catalogo",
+      key: "catalog",
       label: "Catalogo de vacunas",
       icon: FaSyringe,
-      onClick: () => {setActiveItem("analisis_sintomas"), navigate("/catalog")}
+      onClick: () => {
+        setActiveItem("catalog");
+        navigate("/catalog");
+      },
     },
   ];
 
@@ -120,18 +128,15 @@ const Analisis_Sintomas = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#F5F7FA]">
-      <Sidebar
-        items={userItems}
-        activeItem={activeItem}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
-        onLogoutClick={() => navigate("/")}
-        userName="Caro Ramirez"
-        userRole="Director de finanzas"
-      />
-
-      <main className="flex-1 overflow-y-auto">
+    <DashboardLayout
+      items={userItems}
+      activeItem={activeItem}
+      collapsed={collapsed}
+      onToggleCollapse={() => setCollapsed(!collapsed)}
+      userName="Caro Ramirez"
+      userRole="Director de finanzas"
+    >
+      <main className="flex-1 min-w-0 overflow-y-auto">
         <ContentWrapper>
           <PageHeader
             title="Analisis de Sintomas"
@@ -145,11 +150,10 @@ const Analisis_Sintomas = () => {
               filters={filterOptions}
               onFilterChange={handleFilterChange}
             />
-
           </div>
 
           <div className="w-full">
-            <ChartCard 
+            <ChartCard
               title="Distribución de Analisis"
               subtitle="Comparativa de efectos secundarios reportados"
               data={data}
@@ -157,7 +161,7 @@ const Analisis_Sintomas = () => {
           </div>
         </ContentWrapper>
       </main>
-    </div>
+    </DashboardLayout>
   );
 };
 
