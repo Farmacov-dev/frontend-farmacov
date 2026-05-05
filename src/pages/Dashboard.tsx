@@ -1,3 +1,4 @@
+// src/pages/Dashboard.tsx
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -8,22 +9,7 @@ import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useNavigate } from "react-router-dom";
-
-const symptomsData = [
-  { label: "Miocarditis", value: 65 },
-  { label: "Anafilaxia", value: 64 },
-  { label: "Trombosis", value: 57 },
-  { label: "ParÃ¡lisis", value: 50 },
-  { label: "Gastritis", value: 21 },
-];
-
-const effectivenessData = [
-  { label: "Pfizer", value: 90 },
-  { label: "Moderna", value: 85 },
-  { label: "AZ", value: 70 },
-  { label: "J&J", value: 66 },
-  { label: "Sinovac", value: 55 },
-];
+import { useKpis, useTopSintomas, useEfectividad } from "../hooks/useDashboard";
 
 const vaccineList = ["Pfizer", "Moderna", "AstraZeneca", "Johnson & Johnson", "Sinovac"];
 
@@ -33,33 +19,29 @@ export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  // hooks de datos
+  const { data: kpis, isPending: kpisPending } = useKpis()
+  const { data: sintomas, isPending: sintomasPending } = useTopSintomas()
+  const { data: efectividad, isPending: efectividadPending } = useEfectividad()
+
   const sidebarItems = [
     {
       key: "dashboard",
       label: "Dashboard",
       icon: MdDashboard,
-      onClick: () => {
-        setActiveItem("dashboard");
-        navigate("/dashboard");
-      },
+      onClick: () => { setActiveItem("dashboard"); navigate("/dashboard"); },
     },
     {
       key: "analisis_sintomas",
       label: "Analisis de sintomas",
       icon: FaClipboardList,
-      onClick: () => {
-        setActiveItem("analisis_sintomas");
-        navigate("/analisis_sintomas");
-      },
+      onClick: () => { setActiveItem("analisis_sintomas"); navigate("/analisis_sintomas"); },
     },
     {
       key: "catalog",
       label: "Catalogo de vacunas",
       icon: FaSyringe,
-      onClick: () => {
-        setActiveItem("catalog");
-        navigate("/catalog");
-      },
+      onClick: () => { setActiveItem("catalog"); navigate("/catalog"); },
     },
   ];
 
@@ -74,7 +56,7 @@ export default function Dashboard() {
       activeItem={activeItem}
       collapsed={collapsed}
       onToggleCollapse={() => setCollapsed((prev) => !prev)}
-      userName="Caro RamÃ­rez"
+      userName="Caro Ramírez"
       userRole="Director de finanzas"
     >
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8 min-h-0">
@@ -84,47 +66,55 @@ export default function Dashboard() {
           date="27 Abril 2026"
         />
 
+        {/* KPIs */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <KpiCard
-            title="Total Vacunas Registradas"
-            value="1,284"
-            change={12}
-            color="#6366F1"
-            icon={<FaSyringe size={24} />}
-          />
-          <KpiCard
-            title="Eventos Adversos Reportados"
-            value="342"
-            change={-5}
-            color="#EF4444"
-            icon={<FaExclamationTriangle size={24} />}
-          />
-          <KpiCard
-            title="Reportes del Mes"
-            value="87"
-            change={8}
-            color="#10B981"
-            icon={<FaClipboardList size={24} />}
-          />
-          <KpiCard
-            title="Tasa de Efectividad Promedio"
-            value="73%"
-            change={3}
-            color="#F59E0B"
-            icon={<FaChartBar size={24} />}
-          />
+          {kpisPending ? (
+            <p className="text-gray-400 col-span-4">Cargando KPIs...</p>
+          ) : (
+            <>
+              <KpiCard
+                title="Total Vacunas Registradas"
+                value={kpis?.totalVacunasRegistradas ?? '-'}
+                change={kpis?.changeVacunas ?? 0}
+                color="#6366F1"
+                icon={<FaSyringe size={24} />}
+              />
+              <KpiCard
+                title="Eventos Adversos Reportados"
+                value={kpis?.eventosAdversosReportados ?? '-'}
+                change={kpis?.changeEventos ?? 0}
+                color="#EF4444"
+                icon={<FaExclamationTriangle size={24} />}
+              />
+              <KpiCard
+                title="Reportes del Mes"
+                value={kpis?.reportesDelMes ?? '-'}
+                change={kpis?.changeReportes ?? 0}
+                color="#10B981"
+                icon={<FaClipboardList size={24} />}
+              />
+              <KpiCard
+                title="Tasa de Efectividad Promedio"
+                value={kpis?.tasaEfectividadPromedio ?? '-'}
+                change={kpis?.changeEfectividad ?? 0}
+                color="#F59E0B"
+                icon={<FaChartBar size={24} />}
+              />
+            </>
+          )}
         </div>
 
+        {/* Gráficas */}
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 overflow-hidden">
           <ChartCard
             title="Frecuencia de Síntomas Adversos"
-            subtitle="Distribución estimada por sí­ntoma reportado"
-            data={symptomsData}
+            subtitle="Distribución estimada por síntoma reportado"
+            data={sintomasPending ? [] : sintomas}
           />
           <ChartCard
             title="Efectividad por Vacuna"
             subtitle="Porcentaje de efectividad estimada"
-            data={effectivenessData}
+            data={efectividadPending ? [] : efectividad}
           />
         </div>
 

@@ -1,55 +1,36 @@
-import { useEffect, useState } from "react";
+// src/pages/Analisis_Sintomas.tsx
+import { useState } from "react";
 import { FaSyringe, FaClipboardList } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useSidebar } from "../context/SidebarContext";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ContentWrapper from "../components/content/ContentWrapper";
 import FilterBar from "../components/filters/FilterBar";
-import { useSidebar } from "../context/SidebarContext";
 import ChartCard from "../components/charts/ChartCard";
-import { useNavigate } from "react-router-dom";
-import { MdDashboard } from "react-icons/md";
 import DashboardLayout from "../components/layout/DashboardLayout";
-
-type ChartDataItem = {
-  label: string;
-  value: number;
-};
+import { useSintomas } from "../hooks/useAnalisis";
+import type { SintomaFiltros } from "../services/analisis/getSintomas";
 
 const Analisis_Sintomas = () => {
   const [activeItem, setActiveItem] = useState("analisis_sintomas");
-  const [data, setData] = useState<ChartDataItem[]>([]);
-  const {collapsed, setCollapsed} = useSidebar();
+  const { collapsed, setCollapsed } = useSidebar();
   const navigate = useNavigate();
-  const [filters, setFilters] = useState({
-    vacuna: "Vacuna",
-    sexo: "Sexo",
-    edad: "Edad",
-    sintoma: "S\u00edntoma",
-  });
 
+  const [filtros, setFiltros] = useState<SintomaFiltros>({
+    vacuna: undefined,
+    sexo: undefined,
+    edad: undefined,
+    sintoma: undefined,
+  })
 
-  useEffect(() => {
-    fetch("http://localhost:5173/nombre_mysq")
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Datos recibidos:", result);
-
-        const formattedData: ChartDataItem[] = Array.isArray(result)
-          ? result.map((item: any) => ({
-              label: item.label ?? item.nombre ?? "Sin nombre",
-              value: Number(item.value ?? item.cantidad ?? 0),
-            }))
-          : [];
-
-        setData(formattedData);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  const { data: sintomas, isPending, isError } = useSintomas(filtros)
 
   const filterOptions = [
     {
       key: "vacuna",
       label: "Vacuna",
-      value: filters.vacuna,
+      value: filtros.vacuna ?? "all",
       options: [
         { label: "Vacuna", value: "all" },
         { label: "Pfizer", value: "pfizer" },
@@ -60,74 +41,68 @@ const Analisis_Sintomas = () => {
     {
       key: "sexo",
       label: "Sexo",
-      value: filters.sexo,
+      value: filtros.sexo ?? "all",
       options: [
         { label: "Sexo", value: "all" },
-        { label: "Masculino", value: "male" },
-        { label: "Femenino", value: "female" },
+        { label: "Masculino", value: "M" },
+        { label: "Femenino", value: "F" },
       ],
     },
     {
       key: "edad",
       label: "Edad",
-      value: filters.edad,
+      value: filtros.edad ?? "all",
       options: [
         { label: "Edad", value: "all" },
-        { label: "0 - 18", value: "0-18" },
-        { label: "19 - 40", value: "19-40" },
-        { label: "41 - 65", value: "41-65" },
-        { label: "66+", value: "66+" },
+        { label: "0-17", value: "0-17" },
+        { label: "18-29", value: "18-29" },
+        { label: "30-49", value: "30-49" },
+        { label: "50-64", value: "50-64" },
+        { label: "65+", value: "65+" },
       ],
     },
     {
       key: "sintoma",
-      label: "S\u00edntoma",
-      value: filters.sintoma,
+      label: "Síntoma",
+      value: filtros.sintoma ?? "all",
       options: [
-        { label: "S\u00edntoma", value: "all" },
-        { label: "Fiebre", value: "fever" },
-        { label: "Fatiga", value: "fatigue" },
-        { label: "Dolor muscular", value: "pain" },
+        { label: "Síntoma", value: "all" },
+        { label: "Miocarditis", value: "miocarditis" },
+        { label: "Anafilaxia", value: "anafilaxia" },
+        { label: "Trombosis", value: "trombosis" },
+        { label: "Parálisis", value: "paralisis" },
+        { label: "Gastritis", value: "gastritis" },
       ],
     },
-  ];
+  ]
 
   const userItems = [
     {
       key: "dashboard",
       label: "Dashboard",
       icon: MdDashboard,
-      onClick: () => {
-        setActiveItem("dashboard");
-        navigate("/dashboard");
-      },
+      onClick: () => { setActiveItem("dashboard"); navigate("/dashboard"); },
     },
     {
       key: "analisis_sintomas",
       label: "Analisis de sintomas",
       icon: FaClipboardList,
-      onClick: () => {
-        setActiveItem("analisis_sintomas");
-        navigate("/analisis_sintomas");
-      },
+      onClick: () => { setActiveItem("analisis_sintomas"); navigate("/analisis_sintomas"); },
     },
     {
       key: "catalog",
       label: "Catalogo de vacunas",
       icon: FaSyringe,
-      onClick: () => {
-        setActiveItem("catalog");
-        navigate("/catalog");
-      },
+      onClick: () => { setActiveItem("catalog"); navigate("/catalog"); },
     },
-  ];
+  ]
 
   const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({
+    setFiltros((prev) => ({
       ...prev,
-      [key]: value,
-    }));
-  };
+      [key]: value === "all" ? undefined : value,
+    }))
+  }
 
   return (
     <DashboardLayout
@@ -155,16 +130,24 @@ const Analisis_Sintomas = () => {
           </div>
 
           <div className="w-full">
-            <ChartCard
-              title="Distribución de Analisis"
-              subtitle="Comparativa de efectos secundarios reportados"
-              data={data}
-            />
+            {isPending && (
+              <p className="text-gray-400 text-sm">Cargando datos...</p>
+            )}
+            {isError && (
+              <p className="text-red-400 text-sm">Error cargando análisis.</p>
+            )}
+            {!isPending && !isError && (
+              <ChartCard
+                title="Distribución de Análisis"
+                subtitle="Comparativa de efectos secundarios reportados"
+                data={sintomas}
+              />
+            )}
           </div>
         </ContentWrapper>
       </main>
     </DashboardLayout>
-  );
-};
+  )
+}
 
-export default Analisis_Sintomas;
+export default Analisis_Sintomas
