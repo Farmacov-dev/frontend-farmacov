@@ -2,8 +2,13 @@
 import { create } from 'zustand'
 import { login as loginService, logout as logoutService } from '../services/auth/authService'
 
-interface User {
+export interface User {
   email: string
+  nombre: string
+  apellidoPaterno: string
+  apellidoMaterno?: string
+  departamento?: string
+  rol: string
 }
 
 interface AuthStore {
@@ -14,27 +19,18 @@ interface AuthStore {
   logout: () => Promise<void>
 }
 
-// forma correcta para TypeScript según documentación oficial
 export const useAuthStore = create<AuthStore>()((set) => ({
   token: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),
   user: null,
 
   login: async (email, password) => {
-    const token = await loginService(email, password)
-    set({
-      token,
-      isAuthenticated: true,
-      user: { email },
-    })
+    const { token, user } = await loginService(email, password)
+    set({ token, isAuthenticated: true, user })
   },
 
   logout: async () => {
     await logoutService()
-    set({
-      token: null,
-      isAuthenticated: false,
-      user: null,
-    })
+    set({ token: null, isAuthenticated: false, user: null })
   },
 }))

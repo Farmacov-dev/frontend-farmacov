@@ -1,8 +1,9 @@
+// src/components/layout/DashboardLayout.tsx
 import React from "react";
 import type { IconType } from "react-icons";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
-import { logoutUser } from "../../services/auth";
+import { useAuth } from "../../hooks/useAuth";
 
 type SidebarItem = {
   key: string;
@@ -17,8 +18,6 @@ type DashboardLayoutProps = {
   activeItem: string;
   collapsed: boolean;
   onToggleCollapse: () => void;
-  userName?: string;
-  userRole?: string;
 };
 
 const DashboardLayout = ({
@@ -27,13 +26,12 @@ const DashboardLayout = ({
   activeItem,
   collapsed,
   onToggleCollapse,
-  userName = "Caro Ramirez",
-  userRole = "Director de finanzas",
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
+  const { userName, userRole, logout } = useAuth();
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logout()
     navigate("/");
   };
 

@@ -1,40 +1,25 @@
 // LoginPage.tsx
 // angel
-
 import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/composed/LoginCard/LoginCard";
 import Button from "../components/primary/Button/Button";
 import salirSvg from "../assets/icons/salir.svg";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   async function handleLogin(email: string, password: string) {
-    // cambiar esto con firebase
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    if (email === "admin@farmacov.com" && password === "123456") {
-      navigate("/dashboard");
-    } else {
-      const error: any = new Error("Credenciales incorrectas");
-      error.code = "auth/wrong-password";
-      throw error;
-    }
+    await login(email, password)
+    navigate("/dashboard");
   }
 
-  // parte de estilos
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-login-bg">
-
-      {/* ccard y botones*/}
       <div className="flex flex-col items-center gap-[16px]">
-
-        {/* login card */}
         <LoginCard onLogin={handleLogin} />
-
-        {/* botones alineados con el ancho de la card */}
         <div className="flex justify-between w-[520px]">
-
-          {/* salir */}
           <Button
             variant="floating"
             icon={salirSvg}
@@ -44,8 +29,6 @@ export default function LoginPage() {
           >
             Salir
           </Button>
-
-          {/* olvidaste la contrasena */}
           <Button
             variant="floating"
             className="h-[43px]"
@@ -53,7 +36,6 @@ export default function LoginPage() {
           >
             Olvidaste tu contraseña?
           </Button>
-
         </div>
       </div>
     </div>

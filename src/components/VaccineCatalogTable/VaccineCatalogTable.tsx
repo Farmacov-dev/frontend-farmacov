@@ -9,6 +9,7 @@ type SortDir = 'asc' | 'desc';
 interface VaccineCatalogTableProps {
   vaccines: Vaccine[];
   onVaccineClick?: (vaccine: Vaccine) => void;
+  onInfoClick?: (vaccine: Vaccine) => void;
 }
 
 const columns: { key: SortKey; label: string }[] = [
@@ -21,7 +22,7 @@ const columns: { key: SortKey; label: string }[] = [
   { key: 'longevidad', label: 'Longevidad' },
 ];
 
-const VaccineCatalogTable = ({ vaccines, onVaccineClick }: VaccineCatalogTableProps) => {
+const VaccineCatalogTable = ({ vaccines, onVaccineClick, onInfoClick }: VaccineCatalogTableProps) => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
 
@@ -67,6 +68,7 @@ const VaccineCatalogTable = ({ vaccines, onVaccineClick }: VaccineCatalogTablePr
               key={vaccine.id}
               vaccine={vaccine}
               onClick={() => onVaccineClick?.(vaccine)}
+              onInfoClick={onInfoClick}
             />
           ))}
         </tbody>
