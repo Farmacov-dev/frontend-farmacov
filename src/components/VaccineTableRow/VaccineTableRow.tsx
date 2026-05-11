@@ -1,8 +1,9 @@
+// src/components/VaccineTableRow/VaccineTableRow.tsx
 import { Info } from 'lucide-react';
 import EffectivenessBadge from '../EffectivenessBadge/EffectivenessBadge';
 
 export interface Vaccine {
-  id: string;
+  id: number;
   name: string;
   farmaceutica: string;
   costo: number;
@@ -15,14 +16,22 @@ export interface Vaccine {
 interface VaccineTableRowProps {
   vaccine: Vaccine;
   onClick?: () => void;
+  onInfoClick?: (vaccine: Vaccine) => void;
 }
 
-const VaccineTableRow = ({ vaccine, onClick }: VaccineTableRowProps) => (
+const VaccineTableRow = ({ vaccine, onClick, onInfoClick }: VaccineTableRowProps) => (
   <tr onClick={onClick} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-100">
     <td className="px-4 py-3">
       <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-900">
         {vaccine.name}
-        <Info size={14} className="text-gray-400 flex-shrink-0" />
+        <Info
+          size={14}
+          className="text-gray-400 flex-shrink-0 cursor-pointer hover:text-blue-600"
+          onClick={(e) => {
+            e.stopPropagation()
+            onInfoClick?.(vaccine)
+          }}
+        />
       </span>
     </td>
     <td className="px-4 py-3 text-sm text-gray-600">{vaccine.farmaceutica}</td>

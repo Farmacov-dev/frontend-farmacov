@@ -11,11 +11,14 @@ import ChartCard from "../components/charts/ChartCard";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useSintomas } from "../hooks/useAnalisis";
 import type { SintomaFiltros } from "../services/analisis/getSintomas";
+import RadarPerfilRiesgo from "../components/charts/RadarPerfilRiesgo";
+import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 
 const Analisis_Sintomas = () => {
   const [activeItem, setActiveItem] = useState("analisis_sintomas");
   const { collapsed, setCollapsed } = useSidebar();
   const navigate = useNavigate();
+  const ultimaActualizacion = useUltimaActualizacion()
 
   const [filtros, setFiltros] = useState<SintomaFiltros>({
     vacuna: undefined,
@@ -110,15 +113,13 @@ const Analisis_Sintomas = () => {
       activeItem={activeItem}
       collapsed={collapsed}
       onToggleCollapse={() => setCollapsed((prev) => !prev)}
-      userName="Caro Ramirez"
-      userRole="Director de finanzas"
     >
       <main className="flex-1 min-w-0 overflow-y-auto">
         <ContentWrapper>
           <PageHeader
             title="Analisis de Sintomas"
             subtitle="Analisis detallado de efectos secundarios graves por vacuna"
-            date="05 de marzo 2026"
+            date={ultimaActualizacion}
           />
 
           <div className="mb-8 flex justify-center">
@@ -129,7 +130,8 @@ const Analisis_Sintomas = () => {
             />
           </div>
 
-          <div className="w-full">
+          {/* grafica de sintomas con filtros */}
+          <div className="w-full mb-8">
             {isPending && (
               <p className="text-gray-400 text-sm">Cargando datos...</p>
             )}
@@ -144,6 +146,12 @@ const Analisis_Sintomas = () => {
               />
             )}
           </div>
+
+          {/* perfil de riesgo-valor */}
+          <div className="w-full">
+            <RadarPerfilRiesgo />
+          </div>
+
         </ContentWrapper>
       </main>
     </DashboardLayout>

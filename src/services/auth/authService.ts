@@ -1,25 +1,30 @@
 // src/services/auth/authService.ts
 
-// TODO: reemplazar con Firebase real antes de producción
-const MOCK_CREDENTIALS = {
-  email: "admin@farmacov.com",
-  password: "1234",
+import type { User } from '@/store/authStore'
+
+const MOCK_USER: User = {
+  email: 'admin@farmacov.com',
+  nombre: 'Angel',
+  apellidoPaterno: 'Ramírez',
+  apellidoMaterno: '',
+  departamento: 'Dirección',
+  rol: 'Director de finanzas',
 }
 
-export const login = async (email: string, password: string): Promise<string> => {
-  // simula delay de red
+export const login = async (email: string, password: string): Promise<{ token: string, user: User }> => {
   await new Promise((resolve) => setTimeout(resolve, 800))
 
-  if (email === MOCK_CREDENTIALS.email && password === MOCK_CREDENTIALS.password) {
-    const mockToken = "mock-token-farmacov"
-    localStorage.setItem("token", mockToken)
-    return mockToken
+  if (email === 'admin@farmacov.com' && password === '1234') {
+    const mockToken = 'mock-token-farmacov'
+    localStorage.setItem('token', mockToken)
+    localStorage.setItem('user', JSON.stringify(MOCK_USER))
+    return { token: mockToken, user: MOCK_USER }
   }
 
-  throw new Error("Credenciales incorrectas")
+  throw new Error('Credenciales incorrectas')
 }
 
 export const logout = async (): Promise<void> => {
-  localStorage.removeItem("token")
-  // TODO: agregar Firebase signOut antes de producción
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
 }
