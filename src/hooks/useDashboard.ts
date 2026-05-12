@@ -6,6 +6,7 @@ import { getEfectividad } from '../services/dashboard/getEfectividad'
 import { getCostosVacuna } from '../services/dashboard/getCostosVacuna'
 import { CACHE_24H, CACHE_15MIN } from '../config/queryClient'
 
+
 export const useKpis = () => {
   return useQuery({
     queryKey: ['kpis'],
@@ -41,3 +42,4 @@ export const useCostosVacuna = () => {
     gcTime: CACHE_15MIN,
   })
 }
+

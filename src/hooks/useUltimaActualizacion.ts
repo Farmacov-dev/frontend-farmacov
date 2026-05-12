@@ -1,15 +1,5 @@
 // src/hooks/useUltimaActualizacion.ts
-import { useQuery } from '@tanstack/react-query'
-import { getKpis } from '../services/dashboard/getKpis'
-import { CACHE_24H } from '../config/queryClient'
-
-// reutiliza getKpis porque ultimaActualizacion podria venir desde el mismo endpoint
+// TODO: conectar a GET /dashboard/ultima-actualizacion cuando esté listo
 export const useUltimaActualizacion = () => {
-  const { data } = useQuery({
-    queryKey: ['kpis'],
-    queryFn: getKpis,
-    staleTime: CACHE_24H,
-    gcTime: CACHE_24H,
-  })
-  return data?.ultimaActualizacion ?? 'Cargando...'
+  return '12 Mayo 2026' // temporal hasta que el endpoint esté listo
 }

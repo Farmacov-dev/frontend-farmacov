@@ -1,19 +1,30 @@
-import { getVacunas } from '../vacunas/getVacunas'
+// src/services/dashboard/getCostosVacuna.ts
+import api from '../api'
+
+interface CostosPorVacunaBackend {
+  nombreVacuna: string
+  costoUnitario: number
+}
 
 export interface CostoVacunaItem {
   label: string
   value: number
 }
 
-export const getCostosVacuna = async (): Promise<CostoVacunaItem[]> => {
-  const vacunas = await getVacunas()
+const MOCK_COSTOS: CostoVacunaItem[] = [
+  { label: 'Comirnaty', value: 19.50 },
+  { label: 'Spikevax', value: 25.00 },
+  { label: 'Vaxzevria', value: 4.00 },
+  { label: 'Janssen', value: 10.00 },
+  { label: 'CoronaVac', value: 13.60 },
+  { label: 'Sinopharm', value: 36.00 },
+]
 
-  return vacunas.slice(0, 5).map((vacuna) => ({
-    label: vacuna.farmaceutica === 'AstraZeneca'
-      ? 'AZ'
-      : vacuna.farmaceutica === 'Johnson & Johnson'
-        ? 'J&J'
-        : vacuna.farmaceutica,
-    value: vacuna.costo,
+export const getCostosVacuna = async (): Promise<CostoVacunaItem[]> => {
+  const data: CostosPorVacunaBackend[] = await (await api.get('/dashboard/costos')).data
+  return data.map((item) => ({
+    label: item.nombreVacuna,
+    value: Number(item.costoUnitario),
   }))
+  // return MOCK_COSTOS
 }
