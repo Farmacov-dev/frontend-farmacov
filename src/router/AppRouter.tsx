@@ -3,6 +3,7 @@ import { Analisis_Sintomas } from '../pages';
 import Login from '../pages/Login';
 import Catalog from '../pages/Catalog';
 import Dashboard from '../pages/Dashboard';
+import Comparison from '../pages/Comparison';
 
 export default function AppRouter() {
   return (
@@ -11,6 +12,7 @@ export default function AppRouter() {
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/analisis_sintomas" element={<Analisis_Sintomas />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/comparacion" element={<Comparison />} />
     </Routes>
   );
 }

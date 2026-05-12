@@ -3,9 +3,10 @@ import ComparisonRow, { type ComparisonRowProps } from "../ComparisonRow/Compari
 export interface ComparisonTableProps {
   rows: ComparisonRowProps[];
   className?: string;
+  onVolver?: () => void;
 }
 
-const ComparisonTable = ({ rows, className = "" }: ComparisonTableProps) => {
+const ComparisonTable = ({ rows, className = "", onVolver }: ComparisonTableProps) => {
   return (
     <section
       className={`w-full rounded-xl border border-[#d7deea] bg-[#eef1f6] px-6 pt-7 pb-5 box-border ${className}`.trim()}
@@ -36,6 +37,7 @@ const ComparisonTable = ({ rows, className = "" }: ComparisonTableProps) => {
         <button
           type="button"
           className="min-w-[168px] h-[54px] cursor-pointer rounded-[10px] border-none bg-[#6c92ea] text-base font-semibold text-white"
+          onClick={onVolver}
         >
           Volver
         </button>

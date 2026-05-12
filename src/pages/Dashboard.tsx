@@ -48,6 +48,7 @@ export default function Dashboard() {
   function handleCompare(vaccineA: string, vaccineB: string) {
     console.log("Comparando:", vaccineA, vaccineB);
     setModalOpen(false);
+    navigate(`/comparacion?a=${vaccineA}&b=${vaccineB}`)
   }
 
   return (
@@ -56,14 +57,12 @@ export default function Dashboard() {
       activeItem={activeItem}
       collapsed={collapsed}
       onToggleCollapse={() => setCollapsed((prev) => !prev)}
-      userName="Caro Ramírez"
-      userRole="Director de finanzas"
     >
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8 min-h-0">
         <PageHeader
           title="Dashboard Ejecutivo"
           description="Resumen general de vacunas y eventos adversos"
-          date="27 Abril 2026"
+          date={kpis?.ultimaActualizacion ?? 'Cargando fecha...'}
         />
 
         {/* KPIs */}
@@ -74,29 +73,33 @@ export default function Dashboard() {
             <>
               <KpiCard
                 title="Total Vacunas Registradas"
-                value={kpis?.totalVacunasRegistradas ?? '-'}
-                change={kpis?.changeVacunas ?? 0}
+                value={kpis?.totalVacunasRegistradas.toLocaleString('es-MX') ?? '-'}
+                change={kpis?.changeVacunas ?? null}
+                positiveDirection="up"
                 color="#6366F1"
                 icon={<FaSyringe size={24} />}
               />
               <KpiCard
                 title="Eventos Adversos Reportados"
-                value={kpis?.eventosAdversosReportados ?? '-'}
-                change={kpis?.changeEventos ?? 0}
+                value={kpis?.eventosAdversosReportados.toLocaleString('es-MX') ?? '-'}
+                change={kpis?.changeEventos ?? null}
+                positiveDirection="down"
                 color="#EF4444"
                 icon={<FaExclamationTriangle size={24} />}
               />
               <KpiCard
                 title="Reportes del Mes"
-                value={kpis?.reportesDelMes ?? '-'}
-                change={kpis?.changeReportes ?? 0}
+                value={kpis?.reportesDelMes.toLocaleString('es-MX') ?? '-'}
+                change={kpis?.changeReportes ?? null}
+                positiveDirection="neutral"
                 color="#10B981"
                 icon={<FaClipboardList size={24} />}
               />
               <KpiCard
                 title="Tasa de Efectividad Promedio"
-                value={kpis?.tasaEfectividadPromedio ?? '-'}
-                change={kpis?.changeEfectividad ?? 0}
+                value={kpis ? `${kpis.tasaEfectividadPromedio}%` : '-'}
+                change={kpis?.changeEfectividad ?? null}
+                positiveDirection="up"
                 color="#F59E0B"
                 icon={<FaChartBar size={24} />}
               />

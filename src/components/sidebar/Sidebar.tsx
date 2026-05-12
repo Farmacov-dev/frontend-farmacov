@@ -27,8 +27,8 @@ const Sidebar = ({
   collapsed = false,
   onLogoutClick,
   onToggleCollapse,
-  userName = "Caro Ramirez",
-  userRole = "Director de finanzas",
+  userName = "",
+  userRole = "",
 }: SidebarProps) => {
   const renderNavItem = ({ key, label, icon: Icon, onClick }: SidebarItem) => (
     <NavItem
