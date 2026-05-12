@@ -2,14 +2,14 @@
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
-import { useSidebar } from "../context/SidebarContext";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader/PageHeader";
 import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
 import DashboardLayout from "../components/layout/DashboardLayout";
-import { useNavigate } from "react-router-dom";
-import { useKpis, useTopSintomas, useEfectividad } from "../hooks/useDashboard";
+import { useSidebar } from "../context/SidebarContext";
+import { useKpis, useTopSintomas, useEfectividad, useCostosVacuna } from "../hooks/useDashboard";
 
 const vaccineList = ["Pfizer", "Moderna", "AstraZeneca", "Johnson & Johnson", "Sinovac"];
 
@@ -19,10 +19,10 @@ export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  // hooks de datos
-  const { data: kpis, isPending: kpisPending } = useKpis()
-  const { data: sintomas, isPending: sintomasPending } = useTopSintomas()
-  const { data: efectividad, isPending: efectividadPending } = useEfectividad()
+  const { data: kpis, isPending: kpisPending } = useKpis();
+  const { data: sintomas, isPending: sintomasPending } = useTopSintomas();
+  const { data: costosVacuna, isPending: costosVacunaPending } = useCostosVacuna();
+  const { data: efectividad, isPending: efectividadPending } = useEfectividad();
 
   const sidebarItems = [
     {
@@ -48,7 +48,7 @@ export default function Dashboard() {
   function handleCompare(vaccineA: string, vaccineB: string) {
     console.log("Comparando:", vaccineA, vaccineB);
     setModalOpen(false);
-    navigate(`/comparacion?a=${vaccineA}&b=${vaccineB}`)
+    navigate(`/comparacion?a=${vaccineA}&b=${vaccineB}`);
   }
 
   return (
@@ -58,22 +58,21 @@ export default function Dashboard() {
       collapsed={collapsed}
       onToggleCollapse={() => setCollapsed((prev) => !prev)}
     >
-      <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8 min-h-0">
+      <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
         <PageHeader
           title="Dashboard Ejecutivo"
           description="Resumen general de vacunas y eventos adversos"
-          date={kpis?.ultimaActualizacion ?? 'Cargando fecha...'}
+          date={kpis?.ultimaActualizacion ?? "Cargando fecha..."}
         />
 
-        {/* KPIs */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {kpisPending ? (
-            <p className="text-gray-400 col-span-4">Cargando KPIs...</p>
+            <p className="col-span-4 text-gray-400">Cargando KPIs...</p>
           ) : (
             <>
               <KpiCard
                 title="Total Vacunas Registradas"
-                value={kpis?.totalVacunasRegistradas.toLocaleString('es-MX') ?? '-'}
+                value={kpis?.totalVacunasRegistradas.toLocaleString("es-MX") ?? "-"}
                 change={kpis?.changeVacunas ?? null}
                 positiveDirection="up"
                 color="#6366F1"
@@ -81,7 +80,7 @@ export default function Dashboard() {
               />
               <KpiCard
                 title="Eventos Adversos Reportados"
-                value={kpis?.eventosAdversosReportados.toLocaleString('es-MX') ?? '-'}
+                value={kpis?.eventosAdversosReportados.toLocaleString("es-MX") ?? "-"}
                 change={kpis?.changeEventos ?? null}
                 positiveDirection="down"
                 color="#EF4444"
@@ -89,7 +88,7 @@ export default function Dashboard() {
               />
               <KpiCard
                 title="Reportes del Mes"
-                value={kpis?.reportesDelMes.toLocaleString('es-MX') ?? '-'}
+                value={kpis?.reportesDelMes.toLocaleString("es-MX") ?? "-"}
                 change={kpis?.changeReportes ?? null}
                 positiveDirection="neutral"
                 color="#10B981"
@@ -97,7 +96,7 @@ export default function Dashboard() {
               />
               <KpiCard
                 title="Tasa de Efectividad Promedio"
-                value={kpis ? `${kpis.tasaEfectividadPromedio}%` : '-'}
+                value={kpis ? `${kpis.tasaEfectividadPromedio}%` : "-"}
                 change={kpis?.changeEfectividad ?? null}
                 positiveDirection="up"
                 color="#F59E0B"
@@ -107,11 +106,10 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Gráficas */}
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 overflow-hidden">
+        <div className="grid grid-cols-1 gap-6 overflow-hidden xl:grid-cols-2">
           <ChartCard
-            title="Frecuencia de Síntomas Adversos"
-            subtitle="Distribución estimada por síntoma reportado"
+            title="Frecuencia de Sintomas Adversos"
+            subtitle="Distribucion estimada por sintoma reportado"
             data={sintomasPending ? [] : sintomas}
           />
           <ChartCard
@@ -120,11 +118,20 @@ export default function Dashboard() {
             data={efectividadPending ? [] : efectividad}
           />
         </div>
+        <div className="flex justify-center">
+          <div className="w-full xl:w-[calc(50%-0.75rem)]">
+            <ChartCard
+              title="Costos por Vacuna"
+              subtitle="Costo unitario estimado por farmaceutica"
+              data={costosVacunaPending ? [] : costosVacuna}
+            />
+          </div>
+        </div>
 
         <div className="flex justify-end">
           <button
             onClick={() => setModalOpen(true)}
-            className="rounded-xl bg-[#5B84E9] px-6 py-3 text-sm font-semibold text-white shadow hover:bg-[#4a73d8] transition-colors"
+            className="rounded-xl bg-[#5B84E9] px-6 py-3 text-sm font-semibold text-white shadow transition-colors hover:bg-[#4a73d8]"
           >
             Comparar Vacunas
           </button>
