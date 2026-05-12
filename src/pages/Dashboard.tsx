@@ -10,6 +10,7 @@ import ComparisonModal from "../components/composed/ComparisonModal/ComparisonMo
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useSidebar } from "../context/SidebarContext";
 import { useKpis, useTopSintomas, useEfectividad, useCostosVacuna } from "../hooks/useDashboard";
+import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 
 const vaccineList = ["Pfizer", "Moderna", "AstraZeneca", "Johnson & Johnson", "Sinovac"];
 
@@ -23,6 +24,8 @@ export default function Dashboard() {
   const { data: sintomas, isPending: sintomasPending } = useTopSintomas();
   const { data: costosVacuna, isPending: costosVacunaPending } = useCostosVacuna();
   const { data: efectividad, isPending: efectividadPending } = useEfectividad();
+
+  const ultimaActualizacion = useUltimaActualizacion();
 
   const sidebarItems = [
     {
@@ -62,7 +65,7 @@ export default function Dashboard() {
         <PageHeader
           title="Dashboard Ejecutivo"
           description="Resumen general de vacunas y eventos adversos"
-          date={kpis?.ultimaActualizacion ?? "Cargando fecha..."}
+          date={ultimaActualizacion}
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -72,32 +75,32 @@ export default function Dashboard() {
             <>
               <KpiCard
                 title="Total Vacunas Registradas"
-                value={kpis?.totalVacunasRegistradas.toLocaleString("es-MX") ?? "-"}
-                change={kpis?.changeVacunas ?? null}
+                value={kpis?.totalVacunas.toLocaleString("es-MX") ?? "-"}
+                change={null}
                 positiveDirection="up"
                 color="#6366F1"
                 icon={<FaSyringe size={24} />}
               />
               <KpiCard
                 title="Eventos Adversos Reportados"
-                value={kpis?.eventosAdversosReportados.toLocaleString("es-MX") ?? "-"}
-                change={kpis?.changeEventos ?? null}
+                value={kpis?.totalReportes.toLocaleString("es-MX") ?? "-"}
+                change={null}
                 positiveDirection="down"
                 color="#EF4444"
                 icon={<FaExclamationTriangle size={24} />}
               />
               <KpiCard
                 title="Reportes del Mes"
-                value={kpis?.reportesDelMes.toLocaleString("es-MX") ?? "-"}
-                change={kpis?.changeReportes ?? null}
+                value={kpis?.reportesEsteMes.toLocaleString("es-MX") ?? "-"}
+                change={null}
                 positiveDirection="neutral"
                 color="#10B981"
                 icon={<FaClipboardList size={24} />}
               />
               <KpiCard
-                title="Tasa de Efectividad Promedio"
-                value={kpis ? `${kpis.tasaEfectividadPromedio}%` : "-"}
-                change={kpis?.changeEfectividad ?? null}
+                title="Porcentaje de Reportes Graves"
+                value={kpis ? `${kpis.porcentajeReportesGraves.toFixed(1)}%` : "-"}
+                change={null}
                 positiveDirection="up"
                 color="#F59E0B"
                 icon={<FaChartBar size={24} />}
