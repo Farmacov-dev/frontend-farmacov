@@ -10,7 +10,7 @@ COPY . .
 ARG VITE_API_URL=https://backend-farmacov-88437624090.us-central1.run.app
 ENV VITE_API_URL=$VITE_API_URL
 
-RUN yarn build
+RUN npx vite build
 
 FROM nginx:alpine
 

@@ -2,7 +2,7 @@
 import React from "react";
 import type { IconType } from "react-icons";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../Sidebar/Sidebar";
+import Sidebar from "../sidebar/Sidebar";
 import { useAuth } from "../../hooks/useAuth";
 
 type SidebarItem = {
