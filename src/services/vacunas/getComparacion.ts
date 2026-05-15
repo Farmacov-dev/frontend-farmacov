@@ -9,54 +9,83 @@ export interface ComparacionData {
 }
 
 interface VacunaData {
-  efectividad: number
+  seguridad: number
   costo: number
-  costoMayoreo: number
   temperatura: number
-  longevidad: string
-  tipo: string
+  tiempoAmbiente: string
+  
 }
 
 const DATOS_VACUNAS: Record<string, VacunaData> = {
-  Pfizer: {
-    efectividad: 95,
+  Comirnaty: {
+    seguridad: 91.2,
     costo: 19.50,
-    costoMayoreo: 15.80,
     temperatura: -70,
-    longevidad: '2 horas (ambiente)',
-    tipo: 'ARNm',
+    tiempoAmbiente: '2 horas',
+    
   },
-  Moderna: {
-    efectividad: 94,
+  Spikevax: {
+    seguridad: 88.7,
     costo: 25.00,
-    costoMayoreo: 20.50,
     temperatura: -20,
-    longevidad: '12 horas (ambiente)',
-    tipo: 'ARNm',
+    tiempoAmbiente: '12 horas',
+    
   },
-  AstraZeneca: {
-    efectividad: 74,
+  Vaxzevria: {
+    seguridad: 76.4,
     costo: 4.00,
-    costoMayoreo: 2.80,
-    temperatura: 2,
-    longevidad: '6 meses (refrigerado)',
-    tipo: 'Vector viral',
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
   },
-  'Johnson & Johnson': {
-    efectividad: 66,
+  Janssen: {
+    seguridad: 72.1,
     costo: 10.00,
-    costoMayoreo: 8.50,
-    temperatura: 2,
-    longevidad: '3 meses (refrigerado)',
-    tipo: 'Vector viral',
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
   },
-  Sinovac: {
-    efectividad: 51,
+  CoronaVac: {
+    seguridad: 68.9,
     costo: 13.60,
-    costoMayoreo: 10.20,
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
+  },
+  'Sinopharm BBIBP': {
+    seguridad: 71.3,
+    costo: 14.50,
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+   
+  },
+  Covaxin: {
+    seguridad: 70.5,
+    costo: 15.00,
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
+  },
+  Nuvaxovid: {
+    seguridad: 74.2,
+    costo: 16.00,
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
+  },
+  'Sputnik V': {
+    seguridad: 73.8,
+    costo: 9.95,
     temperatura: -18,
-    longevidad: '12 meses (refrigerado)',
-    tipo: 'Virus inactivado',
+    tiempoAmbiente: 'Refrigerado',
+    
+  },
+  Convidecia: {
+    seguridad: 69.4,
+    costo: 10.50,
+    temperatura: 4,
+    tiempoAmbiente: 'Refrigerado',
+    
   },
 }
 
@@ -71,19 +100,18 @@ const compararNumeros = (
 }
 
 const generarComparacion = (vaccineA: string, vaccineB: string): ComparacionData => {
-  const a = DATOS_VACUNAS[vaccineA] ?? DATOS_VACUNAS['Pfizer']
-  const b = DATOS_VACUNAS[vaccineB] ?? DATOS_VACUNAS['Moderna']
+  const a = DATOS_VACUNAS[vaccineA] ?? DATOS_VACUNAS['Comirnaty']
+  const b = DATOS_VACUNAS[vaccineB] ?? DATOS_VACUNAS['Spikevax']
 
-  const [leftEfect, rightEfect] = compararNumeros(a.efectividad, b.efectividad, true)
+  const [leftSeg, rightSeg] = compararNumeros(a.seguridad, b.seguridad, true)
   const [leftCosto, rightCosto] = compararNumeros(a.costo, b.costo, false)
-  const [leftMayoreo, rightMayoreo] = compararNumeros(a.costoMayoreo, b.costoMayoreo, false)
 
   const rows: ComparisonRowProps[] = [
     {
       index: 1,
-      label: 'Efectividad',
-      left:  { value: `${a.efectividad}%`, status: leftEfect },
-      right: { value: `${b.efectividad}%`, status: rightEfect },
+      label: 'Índice de Seguridad',
+      left:  { value: `${a.seguridad}%`, status: leftSeg },
+      right: { value: `${b.seguridad}%`, status: rightSeg },
     },
     {
       index: 2,
@@ -93,28 +121,17 @@ const generarComparacion = (vaccineA: string, vaccineB: string): ComparacionData
     },
     {
       index: 3,
-      label: 'Costo mayoreo',
-      left:  { value: `$${a.costoMayoreo.toFixed(2)}`, status: leftMayoreo },
-      right: { value: `$${b.costoMayoreo.toFixed(2)}`, status: rightMayoreo },
-    },
-    {
-      index: 4,
       label: 'Temperatura',
       left:  { value: `${a.temperatura}°C`, status: 'neutral' },
       right: { value: `${b.temperatura}°C`, status: 'neutral' },
     },
     {
-      index: 5,
-      label: 'Longevidad',
-      left:  { value: a.longevidad, status: 'neutral' },
-      right: { value: b.longevidad, status: 'neutral' },
+      index: 4,
+      label: 'Tiempo ambiente',
+      left:  { value: a.tiempoAmbiente, status: 'neutral' },
+      right: { value: b.tiempoAmbiente, status: 'neutral' },
     },
-    {
-      index: 6,
-      label: 'Tipo',
-      left:  { value: a.tipo, status: 'neutral' },
-      right: { value: b.tipo, status: 'neutral' },
-    },
+ 
   ]
 
   return { vaccineA, vaccineB, rows }

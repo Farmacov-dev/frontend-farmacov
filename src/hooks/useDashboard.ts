@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getKpis } from '../services/dashboard/getKpis'
 import { getTopSintomas } from '../services/dashboard/getTopSintomas'
-import { getEfectividad } from '../services/dashboard/getEfectividad'
+import { getSeguridadVacuna } from '../services/dashboard/getSeguridadVacuna'
 import { getCostosVacuna } from '../services/dashboard/getCostosVacuna'
 import { CACHE_24H, CACHE_15MIN } from '../config/queryClient'
 
@@ -25,10 +25,10 @@ export const useTopSintomas = () => {
   })
 }
 
-export const useEfectividad = () => {
+export const useSeguridadVacuna = () => {
   return useQuery({
-    queryKey: ['efectividad'],
-    queryFn: getEfectividad,
+    queryKey: ['seguridad-vacuna'],
+    queryFn: getSeguridadVacuna,
     staleTime: CACHE_15MIN,
     gcTime: CACHE_15MIN,
   })

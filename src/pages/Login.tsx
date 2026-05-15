@@ -11,8 +11,20 @@ export default function LoginPage() {
   const { login } = useAuth();
 
   async function handleLogin(email: string, password: string) {
-    await login(email, password)
-    navigate("/dashboard");
+    try {
+      await login(email, password)
+      navigate("/dashboard")
+    } catch (error: any) {
+      if (error.code === 'auth/user-disabled') {
+        navigate('/error', {
+          state: {
+            mensaje: 'Error: usuario no activo, contacte a su administrador'
+          }
+        })
+      } else {
+        throw error
+      }
+    }
   }
 
   return (
