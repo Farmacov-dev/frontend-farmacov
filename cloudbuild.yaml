@@ -37,3 +37,6 @@ steps:
 images:
   - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
   - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
