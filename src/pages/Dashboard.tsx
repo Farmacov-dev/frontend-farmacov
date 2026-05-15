@@ -9,10 +9,19 @@ import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useSidebar } from "../context/SidebarContext";
-import { useKpis, useTopSintomas, useEfectividad, useCostosVacuna } from "../hooks/useDashboard";
+import { useKpis, useTopSintomas, useSeguridadVacuna, useCostosVacuna } from "../hooks/useDashboard";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 
-const vaccineList = ["Pfizer", "Moderna", "AstraZeneca", "Johnson & Johnson", "Sinovac"];
+const vaccineList = ["Comirnaty",
+  "Spikevax",
+  "Vaxzevria",
+  "Janssen",
+  "CoronaVac",
+  "Sinopharm BBIBP",
+  "Covaxin",
+  "Nuvaxovid",
+  "Sputnik V",
+  "Convidecia"];
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState("dashboard");
@@ -23,7 +32,7 @@ export default function Dashboard() {
   const { data: kpis, isPending: kpisPending } = useKpis();
   const { data: sintomas, isPending: sintomasPending } = useTopSintomas();
   const { data: costosVacuna, isPending: costosVacunaPending } = useCostosVacuna();
-  const { data: efectividad, isPending: efectividadPending } = useEfectividad();
+  const { data: seguridad, isPending: seguridadPending } = useSeguridadVacuna();
 
   const ultimaActualizacion = useUltimaActualizacion();
 
@@ -116,9 +125,9 @@ export default function Dashboard() {
             data={sintomasPending ? [] : sintomas}
           />
           <ChartCard
-            title="Efectividad por Vacuna"
-            subtitle="Porcentaje de efectividad estimada"
-            data={efectividadPending ? [] : efectividad}
+            title="Seguridad por Vacuna"
+            subtitle="Indice de seguridad compuesto"
+            data={seguridadPending ? [] : seguridad}
           />
         </div>
         <div className="flex justify-center">

@@ -33,7 +33,7 @@ const ChartCard = ({
   subtitle = 'Distribución estimada por síntoma seleccionado',
   data,
 }: ChartCardProps) => {
-  const chartData = data && data.length > 0 ? data : defaultData
+  const chartData = (data && data.length > 0 ? data : defaultData).slice(0, 5)
 
   // Recharts necesita la key como 'name' para el eje X
   const formattedData = chartData.map((item) => ({

@@ -1,7 +1,7 @@
 // src/components/primary/Button/Button.tsx
 // angel
 
-type ButtonVariant = "primary" | "outline" | "ghost" | "sidebar" | "floating";
+type ButtonVariant = "primary" | "outline" | "ghost" | "sidebar" | "floating" | "inverse";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -35,7 +35,10 @@ const variantClasses: Record<ButtonVariant, string> = {
     shadow-[0_1px_55px_-11px_rgba(0,0,0,0.01)]
     hover:bg-surface active:bg-surface-dark
   `,
-  
+  inverse: `
+    bg-transparent text-white border border-white
+    hover:bg-white/10 active:bg-white/20
+  `
 };
 
 export default function Button({

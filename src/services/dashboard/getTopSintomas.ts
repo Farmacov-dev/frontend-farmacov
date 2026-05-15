@@ -7,11 +7,11 @@ export interface SintomaItem {
 }
 
 const MOCK_SINTOMAS: SintomaItem[] = [
-  { label: 'Miocarditis', value: 65 },
-  { label: 'Anafilaxia', value: 64 },
-  { label: 'Trombosis', value: 57 },
-  { label: 'Parálisis', value: 50 },
-  { label: 'Gastritis', value: 21 },
+  { label: 'Miocarditis', value: 4 },
+  { label: 'Anafilaxia', value: 3 },
+  { label: 'Trombosis', value: 3 },
+  { label: 'Parálisis', value: 2 },
+  { label: 'Alergia', value: 2 },
 ]
 
 export const getTopSintomas = async (): Promise<SintomaItem[]> => {
