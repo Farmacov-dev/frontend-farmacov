@@ -4,21 +4,41 @@ import { FaShieldAlt } from "react-icons/fa"
 interface VaccineDetailHeaderProps {
   nombre: string
   farmaceutica: string
+  compact?: boolean
+  effectiveness?: number
 }
 
-export default function VaccineDetailHeader({ nombre, farmaceutica }: VaccineDetailHeaderProps) {
+export default function VaccineDetailHeader({
+  nombre,
+  farmaceutica,
+  compact = false,
+  effectiveness
+}: VaccineDetailHeaderProps) {
   return (
-    <div className="flex items-start gap-4 sm:gap-5 lg:gap-6">
-      <div className="flex h-[64px] w-[64px] items-center justify-center rounded-[10px] bg-[#4F7EF7] text-white sm:h-[76px] sm:w-[76px] lg:h-[90px] lg:w-[90px]">
-        <FaShieldAlt className="h-8 w-8 sm:h-10 sm:w-10 lg:h-[46px] lg:w-[46px]" />
+    <div className="space-y-2">
+      <div className="flex justify-between gap-3">
+        {/* Contenedor icono + textos */}
+        <div className="flex gap-3 align-center">
+          {/* Icono contenedor - 42px x 42px */}
+          <div className="flex items-center justify-center h-[42px] w-[42px] rounded-[8px] bg-[#4F7EF7] text-white flex-shrink-0">
+            <FaShieldAlt className="h-[24px] w-[24px]" />
+          </div>
+
+          {/* Textos alineados verticalmente */}
+          <div className="flex flex-col gap-[7px]">
+            {/* Nombre de la vacuna - 24px, Roboto, weight 400 */}
+            <h2 className="text-black text-[32px] font-normal leading-tight font-sans">
+              {nombre}
+            </h2>
+          </div>
+        </div>
+        
       </div>
-      <div className="pt-1">
-        <h1 className="text-[36px] font-normal leading-none text-black sm:text-[48px] lg:text-[64px]">
-          {nombre}
-        </h1>
-        <p className="mt-3 text-[18px] font-normal text-black sm:text-[20px] lg:mt-4 lg:text-[24px]">
-          Diseñada por: {farmaceutica}
-        </p>
+
+      <div>
+          <p className="text-black text-[13px] font-normal font-sans">
+              Diseñada por: {farmaceutica}
+          </p>
       </div>
     </div>
   )

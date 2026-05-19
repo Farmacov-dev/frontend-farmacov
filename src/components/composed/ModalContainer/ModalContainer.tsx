@@ -40,7 +40,7 @@ export default function ModalContainer({
       <div
         className={`
           relative flex flex-col items-start
-          w-fit min-w-[400px] max-w-[90vw]
+          w-fit min-w-[400px] max-w-[60vw]
           px-[40px] pt-[40px] pb-[40px]
           bg-white rounded-card
           shadow-modal

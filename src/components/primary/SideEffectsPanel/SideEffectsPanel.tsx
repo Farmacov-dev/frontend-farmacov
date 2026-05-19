@@ -19,21 +19,24 @@ const severidadColor: Record<string, string> = {
 
 export default function SideEffectsPanel({ efectos }: SideEffectsPanelProps) {
   return (
-    <div className="w-full rounded-[18px] bg-[#D3D3D3] px-5 py-5 lg:w-[432px] lg:px-[32px] lg:py-[28px]">
-      <h2 className="text-[26px] font-bold text-[#172033] lg:text-[40px]">
+    <div className="w-full rounded-[12px] bg-[#D3D3D3] px-3 py-3">
+      {/* Título - Body Large/SemiBold */}
+      <h2 className="text-[16px] font-semibold text-black leading-[24px]">
         Efectos secundarios
       </h2>
-      <div className="mt-5 rounded-[20px] bg-[#F7F2F4] px-5 py-5 lg:px-[30px] lg:py-[28px]">
+
+      {/* Contenido efectos */}
+      <div className="mt-2 rounded-[10px] bg-[#F7F2F4] px-3 py-3">
         {efectos.length === 0 ? (
-          <EmptyState title="No hay efectos secundarios registrados" />
+          <EmptyState title="No hay efectos secundarios" />
         ) : (
-          <div className="flex flex-col gap-5 lg:gap-[34px]">
+          <div className="flex flex-col gap-2">
             {efectos.map((efecto) => (
-              <div key={efecto.descripcion} className="flex items-center gap-3">
+              <div key={efecto.descripcion} className="flex items-start gap-2">
                 <HiOutlineBars3BottomLeft
-                  className={`h-5 w-5 lg:h-[26px] lg:w-[26px] ${severidadColor[efecto.severidad]}`}
+                  className={`h-4 w-4 flex-shrink-0 mt-0.5 ${severidadColor[efecto.severidad]}`}
                 />
-                <span className={`text-[18px] font-normal lg:text-[24px] ${severidadColor[efecto.severidad]}`}>
+                <span className={`text-[12px] font-normal leading-[18px] ${severidadColor[efecto.severidad]}`}>
                   {efecto.descripcion}
                 </span>
               </div>
