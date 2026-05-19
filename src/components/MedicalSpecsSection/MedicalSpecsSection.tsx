@@ -11,9 +11,9 @@ interface MedicalSpecsSectionProps {
 
 const MedicalSpecsSection = ({ specs }: MedicalSpecsSectionProps) => (
   <div className="flex flex-col gap-3">
-    <h3 className="text-base font-bold font-['Inter',sans-serif] text-gray-900">
+    <h2 className="text-[18px] weight-[600]">
       Especificaciones medicas
-    </h3>
+    </h2>
     <div className="flex flex-col gap-2">
       {specs.map((spec, i) => (
         <div key={i} className="flex items-center justify-between">

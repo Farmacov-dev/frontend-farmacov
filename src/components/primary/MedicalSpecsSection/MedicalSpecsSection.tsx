@@ -15,36 +15,39 @@ export default function MedicalSpecsSection({
   costoUnitario,
 }: MedicalSpecsSectionProps) {
   return (
-    <section className="mt-10 lg:mt-[80px]">
-      <h2 className="text-[24px] font-bold text-[#172033] lg:text-[39px]">
+    <section className="mt-4">
+      {/* Título - Body Large/SemiBold - Inter, 18px, weight 600 */}
+      <h2 className="text-[18px] font-semibold text-black leading-[26px] font-sans">
         Especificaciones médicas
       </h2>
-      <div className="mt-6 flex flex-col gap-6 lg:mt-[58px] lg:gap-[46px]">
 
-        <div className="grid grid-cols-[32px_1fr_auto] items-center gap-2 lg:grid-cols-[54px_1fr_auto]">
-          <HiOutlineBars3BottomLeft className="h-6 w-6 text-[#172033] lg:h-[40px] lg:w-[40px]" />
-          <span className="text-[18px] text-black lg:text-[32px]">Tipo:</span>
-          <span className="text-[18px] text-black lg:text-[32px]">{tipo}</span>
+      {/* Items de especificaciones - Body Small/Regular - Inter, 14px, weight 400 */}
+      <div className="mt-3 flex flex-col gap-3">
+
+        <div className="flex items-center gap-2">
+          <HiOutlineBars3BottomLeft className="h-4 w-4 text-black flex-shrink-0" />
+          <span className="text-[14px] text-black leading-[22px] font-sans">Tipo:</span>
+          <span className="text-[14px] text-black leading-[22px] font-sans font-semibold">{tipo}</span>
         </div>
 
-        <div className="grid grid-cols-[32px_1fr_auto] items-center gap-2 lg:grid-cols-[54px_1fr_auto]">
-          <HiOutlineBars3BottomLeft className="h-6 w-6 text-[#172033] lg:h-[40px] lg:w-[40px]" />
-          <span className="text-[18px] text-black lg:text-[32px]">Temperatura:</span>
-          <span className="text-[18px] text-black lg:text-[32px]">{temperatura}°C</span>
+        <div className="flex items-center gap-2">
+          <HiOutlineBars3BottomLeft className="h-4 w-4 text-black flex-shrink-0" />
+          <span className="text-[14px] text-black leading-[22px] font-sans">Temperatura:</span>
+          <span className="text-[14px] text-black leading-[22px] font-sans font-semibold">{temperatura}°C</span>
         </div>
 
         {tiempoAmbiente && (
-          <div className="grid grid-cols-[32px_1fr_auto] items-center gap-2 lg:grid-cols-[54px_1fr_auto]">
-            <HiOutlineBars3BottomLeft className="h-6 w-6 text-[#172033] lg:h-[40px] lg:w-[40px]" />
-            <span className="text-[18px] text-black lg:text-[32px]">Tiempo ambiente:</span>
-            <span className="text-[18px] text-black lg:text-[32px]">{tiempoAmbiente} hrs</span>
+          <div className="flex items-center gap-2">
+            <HiOutlineBars3BottomLeft className="h-4 w-4 text-black flex-shrink-0" />
+            <span className="text-[14px] text-black leading-[22px] font-sans">Preservación:</span>
+            <span className="text-[14px] text-black leading-[22px] font-sans font-semibold">{tiempoAmbiente} hrs (amb)</span>
           </div>
         )}
 
-        <div className="grid grid-cols-[32px_1fr_auto] items-center gap-2 lg:grid-cols-[54px_1fr_auto]">
-          <HiOutlineBars3BottomLeft className="h-6 w-6 text-[#172033] lg:h-[40px] lg:w-[40px]" />
-          <span className="text-[18px] text-black lg:text-[32px]">Costo unitario:</span>
-          <span className="text-[18px] text-black lg:text-[32px]">${costoUnitario.toFixed(2)}</span>
+        <div className="flex items-center gap-2">
+          <HiOutlineBars3BottomLeft className="h-4 w-4 text-black flex-shrink-0" />
+          <span className="text-[14px] text-black leading-[22px] font-sans">Dosis requerida:</span>
+          <span className="text-[14px] text-black leading-[22px] font-sans font-semibold">2</span>
         </div>
 
       </div>
