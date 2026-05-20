@@ -9,6 +9,12 @@ export interface User {
   apellidoMaterno?: string
   departamento?: string
   rol: string
+  esAdmin: boolean
+  permisos: {
+    dashboard: boolean
+    catalogo: boolean
+    analisis: boolean
+  }
 }
 
 interface AuthStore {

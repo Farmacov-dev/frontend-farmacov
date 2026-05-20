@@ -1,13 +1,8 @@
 // src/pages/Analisis_Sintomas.tsx
 import { useState } from "react";
-import { FaSyringe, FaClipboardList } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import { useSidebar } from "../context/SidebarContext";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ContentWrapper from "../components/content/ContentWrapper";
 import FilterBar from "../components/filters/FilterBar";
-import DashboardLayout from "../components/layout/DashboardLayout";
 import { useSintomas } from "../hooks/useAnalisis";
 import type { SintomaFiltros } from "../services/analisis/getSintomas";
 import { extraerVacunas, agruparPorSintoma } from "../services/analisis/getSintomas";
@@ -17,9 +12,6 @@ import VaccineCheckboxSelector from "../components/primary/VaccineCheckboxSelect
 import GroupedBarChart from "../components/charts/GroupedBarChart";
 
 const Analisis_Sintomas = () => {
-  const [activeItem, setActiveItem] = useState("analisis_sintomas");
-  const { collapsed, setCollapsed } = useSidebar();
-  const navigate = useNavigate();
   const ultimaActualizacion = useUltimaActualizacion()
 
   const [filtros, setFiltros] = useState<SintomaFiltros>({
@@ -86,27 +78,6 @@ const Analisis_Sintomas = () => {
     },
   ]
 
-  const userItems = [
-    {
-      key: "dashboard",
-      label: "Dashboard",
-      icon: MdDashboard,
-      onClick: () => { setActiveItem("dashboard"); navigate("/dashboard"); },
-    },
-    {
-      key: "analisis_sintomas",
-      label: "Analisis de sintomas",
-      icon: FaClipboardList,
-      onClick: () => { setActiveItem("analisis_sintomas"); navigate("/analisis_sintomas"); },
-    },
-    {
-      key: "catalog",
-      label: "Catalogo de vacunas",
-      icon: FaSyringe,
-      onClick: () => { setActiveItem("catalog"); navigate("/catalog"); },
-    },
-  ]
-
   const handleFilterChange = (key: string, value: string) => {
     setFiltros((prev) => ({
       ...prev,
@@ -119,68 +90,61 @@ const Analisis_Sintomas = () => {
   }
 
   return (
-    <DashboardLayout
-      items={userItems}
-      activeItem={activeItem}
-      collapsed={collapsed}
-      onToggleCollapse={() => setCollapsed((prev) => !prev)}
-    >
-      <main className="flex-1 min-w-0 overflow-y-auto">
-        <ContentWrapper>
-          <PageHeader
-            title="Analisis de Sintomas"
-            subtitle="Analisis detallado de efectos secundarios graves por vacuna"
-            date={ultimaActualizacion}
+    <main className="flex-1 min-w-0 overflow-y-auto">
+      <ContentWrapper>
+        <PageHeader
+          title="Analisis de Sintomas"
+          subtitle="Analisis detallado de efectos secundarios graves por vacuna"
+          date={ultimaActualizacion}
+        />
+
+        {/* filtros de contexto */}
+        <div className="mb-6 flex justify-center">
+          <FilterBar
+            title="Filtros de Analisis"
+            filters={filterOptions}
+            onFilterChange={handleFilterChange}
           />
+        </div>
 
-          {/* filtros de contexto */}
-          <div className="mb-6 flex justify-center">
-            <FilterBar
-              title="Filtros de Analisis"
-              filters={filterOptions}
-              onFilterChange={handleFilterChange}
+        {/* selector de vacunas */}
+        <div className="mb-6">
+          {isPending ? (
+            <p className="font-inter text-[13px] text-muted">
+              Cargando vacunas...
+            </p>
+          ) : (
+            <VaccineCheckboxSelector
+              vacunas={vacunasDisponibles}
+              seleccionadas={vacunasSeleccionadas}
+              onChange={setVacunasSeleccionadas}
             />
-          </div>
+          )}
+        </div>
 
-          {/* selector de vacunas */}
-          <div className="mb-6">
-            {isPending ? (
-              <p className="font-inter text-[13px] text-muted">
-                Cargando vacunas...
-              </p>
-            ) : (
-              <VaccineCheckboxSelector
-                vacunas={vacunasDisponibles}
-                seleccionadas={vacunasSeleccionadas}
-                onChange={setVacunasSeleccionadas}
-              />
-            )}
-          </div>
+        {/* grafica grouped */}
+        <div className="w-full mb-8">
+          {isError ? (
+            <p className="font-inter text-[13px] text-red">
+              Error cargando análisis.
+            </p>
+          ) : (
+            <GroupedBarChart
+              title="Distribución de síntomas"
+              subtitle="Comparativa de reportes por vacuna seleccionada"
+              data={datosAgrupados}
+              vacunasSeleccionadas={vacunasSeleccionadasConNombre}
+            />
+          )}
+        </div>
 
-          {/* grafica grouped */}
-          <div className="w-full mb-8">
-            {isError ? (
-              <p className="font-inter text-[13px] text-red">
-                Error cargando análisis.
-              </p>
-            ) : (
-              <GroupedBarChart
-                title="Distribución de síntomas"
-                subtitle="Comparativa de reportes por vacuna seleccionada"
-                data={datosAgrupados}
-                vacunasSeleccionadas={vacunasSeleccionadasConNombre}
-              />
-            )}
-          </div>
+        {/* perfil de riesgo-valor */}
+        <div className="w-full">
+          <RadarPerfilRiesgo />
+        </div>
 
-          {/* perfil de riesgo-valor */}
-          <div className="w-full">
-            <RadarPerfilRiesgo />
-          </div>
-
-        </ContentWrapper>
-      </main>
-    </DashboardLayout>
+      </ContentWrapper>
+    </main>
   )
 }
 

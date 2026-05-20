@@ -1,53 +1,78 @@
 // src/components/layout/DashboardLayout.tsx
-import React from "react";
-import type { IconType } from "react-icons";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "../sidebar/Sidebar";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { MdDashboard } from "react-icons/md";
+import { FaSyringe, FaClipboardList, FaUserShield } from "react-icons/fa";
+import Sidebar from "../Sidebar/Sidebar";
 import { useAuth } from "../../hooks/useAuth";
+import { useSidebar } from "../../context/SidebarContext";
 
-type SidebarItem = {
-  key: string;
-  label: string;
-  icon: IconType;
-  onClick?: () => void;
-};
-
-type DashboardLayoutProps = {
-  children: React.ReactNode;
-  items: SidebarItem[];
-  activeItem: string;
-  collapsed: boolean;
-  onToggleCollapse: () => void;
-};
-
-const DashboardLayout = ({
-  children,
-  items,
-  activeItem,
-  collapsed,
-  onToggleCollapse,
-}: DashboardLayoutProps) => {
+const DashboardLayout = () => {
   const navigate = useNavigate();
-  const { userName, userRole, logout } = useAuth();
+  const location = useLocation();
+  
+  // Consumimos los contextos directamente aquí
+  const { collapsed, setCollapsed } = useSidebar();
+  const { userName, userRole, logout, canView, isAdmin } = useAuth();
 
   const handleLogout = async () => {
-    await logout()
+    await logout();
     navigate("/");
   };
+
+  // 1. Centralizamos todos los items posibles de la aplicación
+  const sidebarItems = [
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: MdDashboard,
+      onClick: () => navigate("/dashboard"),
+    },
+    {
+      key: "analisis_sintomas",
+      label: "Analisis de sintomas",
+      icon: FaClipboardList,
+      onClick: () => navigate("/analisis_sintomas"),
+    },
+    {
+      key: "catalog",
+      label: "Catalogo de vacunas",
+      icon: FaSyringe,
+      onClick: () => navigate("/catalog"),
+    },
+    {
+      key: "roles-permisos",
+      label: "Roles y Permisos",
+      icon: FaUserShield,
+      onClick: () => navigate("/roles-permisos"),
+    }
+  ];
+
+  // 2. Filtramos usando tu lógica de permisos exacta
+  const itemsFiltrados = sidebarItems.filter((item) => {
+    if (item.key === 'dashboard') return canView('dashboard');
+    if (item.key === 'catalog') return canView('catalogo');
+    if (item.key === 'analisis_sintomas') return canView('analisis');
+    if (item.key === 'roles-permisos') return isAdmin;
+    return true;
+  });
+
+  // 3. Calculamos qué item está activo basándonos en la URL actual
+  const activeItem = location.pathname.replace("/", "");
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F4F7FB]">
       <Sidebar
-        items={items}
+        items={itemsFiltrados}
         activeItem={activeItem}
         collapsed={collapsed}
-        onToggleCollapse={onToggleCollapse}
+        onToggleCollapse={() => setCollapsed(!collapsed)}
         onLogoutClick={handleLogout}
         userName={userName}
         userRole={userRole}
       />
-      <div className="flex-1 min-w-0 overflow-x-hidden">
-        {children}
+      <div className="flex-1 min-w-0 overflow-x-hidden flex flex-col">
+        {/* 4. Aquí es donde React Router inyectará las pantallas */}
+        <Outlet />
       </div>
     </div>
   );
