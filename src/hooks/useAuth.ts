@@ -14,5 +14,8 @@ export const useAuth = () => {
     logout,
     userName: user ? `${user.nombre} ${user.apellidoPaterno}` : '',
     userRole: user?.rol ?? '',
+    isAdmin: user?.esAdmin ?? false,
+    canView: (modulo: 'dashboard' | 'catalogo' | 'analisis') =>
+      user?.permisos?.[modulo] ?? false,
   }
 }

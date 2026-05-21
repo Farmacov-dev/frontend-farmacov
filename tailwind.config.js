@@ -7,7 +7,6 @@ export default {
   theme: {
     extend: {
       colors: {
-
         // colors principales 
         primary: {
           DEFAULT:  "#527FF2",  // bg-primary
@@ -30,7 +29,8 @@ export default {
         // texto oscuro 
         dark: {
           DEFAULT: "#111928",   // text-dark — labels, texto principal
-          soft:    "#1a1a2e",   // text-dark-soft — textos ghost button
+          soft:    "#1a1a2e",
+          row:     "#1F2937",   // text-dark-soft — textO de las filas de la tabla de permisos
         },
 
         // negros
@@ -40,6 +40,7 @@ export default {
 
         // bordes
         stroke: {
+          light:   "#E5E7EB",           // border-stroke-light — borde de RolCard inactivo
           DEFAULT: "#DFE4EA",           // border-stroke — InputField default
           dark:    "rgba(0,0,0,0.15)",  // border-stroke-dark — ghost/sidebar button
         },
@@ -70,10 +71,13 @@ export default {
           dark:  "#E5E7EB",     // bg-hover-dark  — ghost button active
         },
 
+        // colores específicos
         login: {
           bg: "#6B97EE",  // bg-login-background — fondo general login
         },
-
+        accent: {
+          DEFAULT: "#6B97EE", // border-accent, bg-accent — Toggles, RolCard activa
+        }
       },
 
       fontFamily: {
@@ -87,6 +91,7 @@ export default {
       boxShadow: {
         search: "0px 1px 4px 0px rgba(0, 0, 0, 0.10)", // shadow-search — SearchInput
       },
+      
       // animación de entrada del modal
       keyframes: {
         fadeIn: {
