@@ -1,3 +1,4 @@
+// src/pages/ErrorPage.tsx
 import { useNavigate, useLocation } from 'react-router-dom'
 import Button from '../components/primary/Button/Button'
 
@@ -7,33 +8,12 @@ export default function ErrorPage() {
   const mensaje = location.state?.mensaje ?? 'Error desconocido'
 
   return (
-    <div
-      className="min-h-screen w-full flex flex-col items-center justify-center gap-8"
-      style={{ backgroundColor: '#3758F9' }}
-    >
-      <h1
-        style={{
-          color: '#FFF',
-          fontFamily: 'Inter',
-          fontSize: '100px',
-          fontWeight: 700,
-          lineHeight: '130px',
-          textAlign: 'center',
-        }}
-      >
+    <div className="min-h-screen w-full flex flex-col items-center justify-center gap-8 bg-[#3758F9]">
+      <h1 className="text-white font-inter text-[100px] font-bold leading-[130px] text-center">
         ERROR
       </h1>
 
-      <p
-        style={{
-          color: '#FFF',
-          fontFamily: 'Inter',
-          fontSize: '22px',
-          fontWeight: 600,
-          lineHeight: '24px',
-          textAlign: 'center',
-        }}
-      >
+      <p className="text-white font-inter text-[22px] font-semibold leading-[24px] text-center">
         {mensaje}
       </p>
 

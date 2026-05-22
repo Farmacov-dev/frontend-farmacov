@@ -1,18 +1,16 @@
 // src/pages/Dashboard.tsx
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader/PageHeader";
 import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
-import DashboardLayout from "../components/layout/DashboardLayout";
-import { useSidebar } from "../context/SidebarContext";
 import { useKpis, useTopSintomas, useSeguridadVacuna, useCostosVacuna } from "../hooks/useDashboard";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 
-const vaccineList = ["Comirnaty",
+const vaccineList = [
+  "Comirnaty",
   "Spikevax",
   "Vaxzevria",
   "Janssen",
@@ -21,11 +19,10 @@ const vaccineList = ["Comirnaty",
   "Covaxin",
   "Nuvaxovid",
   "Sputnik V",
-  "Convidecia"];
+  "Convidecia"
+];
 
 export default function Dashboard() {
-  const [activeItem, setActiveItem] = useState("dashboard");
-  const { collapsed, setCollapsed } = useSidebar();
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -36,27 +33,6 @@ export default function Dashboard() {
 
   const ultimaActualizacion = useUltimaActualizacion();
 
-  const sidebarItems = [
-    {
-      key: "dashboard",
-      label: "Dashboard",
-      icon: MdDashboard,
-      onClick: () => { setActiveItem("dashboard"); navigate("/dashboard"); },
-    },
-    {
-      key: "analisis_sintomas",
-      label: "Analisis de sintomas",
-      icon: FaClipboardList,
-      onClick: () => { setActiveItem("analisis_sintomas"); navigate("/analisis_sintomas"); },
-    },
-    {
-      key: "catalog",
-      label: "Catalogo de vacunas",
-      icon: FaSyringe,
-      onClick: () => { setActiveItem("catalog"); navigate("/catalog"); },
-    },
-  ];
-
   function handleCompare(vaccineA: string, vaccineB: string) {
     console.log("Comparando:", vaccineA, vaccineB);
     setModalOpen(false);
@@ -64,12 +40,7 @@ export default function Dashboard() {
   }
 
   return (
-    <DashboardLayout
-      items={sidebarItems}
-      activeItem={activeItem}
-      collapsed={collapsed}
-      onToggleCollapse={() => setCollapsed((prev) => !prev)}
-    >
+    <>
       <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
         <PageHeader
           title="Dashboard Ejecutivo"
@@ -118,7 +89,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 gap-6 overflow-hidden xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <ChartCard
             title="Frecuencia de Sintomas Adversos"
             subtitle="Distribucion estimada por sintoma reportado"
@@ -156,6 +127,6 @@ export default function Dashboard() {
         onCompare={handleCompare}
         vaccines={vaccineList}
       />
-    </DashboardLayout>
+    </>
   );
 }

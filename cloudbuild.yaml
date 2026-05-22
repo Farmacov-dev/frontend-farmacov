@@ -1,0 +1,42 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_API_URL=https://backend-farmacov-88437624090.us-central1.run.app'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'frontend-farmacov'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+  - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

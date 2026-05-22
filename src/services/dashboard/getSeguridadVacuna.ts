@@ -6,16 +6,20 @@ export interface SeguridadVacunaItem {
   value: number
 }
 
-const MOCK_SEGURIDAD: SeguridadVacunaItem[] = [
-  { label: 'Comirnaty', value: 91.2 },
-  { label: 'Spikevax', value: 88.7 },
-  { label: 'Vaxzevria', value: 76.4 },
-  { label: 'Janssen', value: 72.1 },
-  { label: 'CoronaVac', value: 68.9 },
-
-]
+interface SeguridadVacunaBackend {
+  idVacuna: number
+  indiceSeguridad: number
+  nombreVacuna: string
+  reportesGraves: number
+  totalReportes: number
+}
 
 export const getSeguridadVacuna = async (): Promise<SeguridadVacunaItem[]> => {
-  // return (await api.get('/dashboard/seguridad-vacuna')).data
-  return MOCK_SEGURIDAD
+  const { data } = await api.get('/dashboard/indice-seguridad')
+  return (data as SeguridadVacunaBackend[])
+    .slice(0, 5)
+    .map((item) => ({
+      label: item.nombreVacuna,
+      value: item.indiceSeguridad,
+    }))
 }
