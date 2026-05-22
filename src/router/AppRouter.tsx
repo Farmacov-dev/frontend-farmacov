@@ -1,6 +1,6 @@
 // src/router/AppRouter.tsx
 import { Route, Routes } from 'react-router-dom';
-import { Analisis_Sintomas } from '../pages';
+import { Analisis_Sintomas, Historial } from '../pages';
 import Login from '../pages/Login';
 import Catalog from '../pages/Catalog';
 import Dashboard from '../pages/Dashboard';
@@ -13,25 +13,25 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 export default function AppRouter() {
   return (
     <Routes>
-      {/* Rutas Públicas (No renderizan el Sidebar) */}
+      {/* Rutas Públicas */}
       <Route path="/" element={<Login />} />
       <Route path="/error" element={<ErrorPage />} />
 
-      {/* Rutas Privadas (Heredan el DashboardLayout automáticamente) */}
+      {/* Rutas Privadas con layout */}
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/analisis_sintomas" element={<Analisis_Sintomas />} />
         <Route path="/comparacion" element={<Comparison />} />
-        
-        {/* Ruta de Administrador (Protegida por tu AdminRoute) */}
-        <Route 
-          path="/roles-permisos" 
+        <Route path="/historial" element={<Historial />} />
+
+        <Route
+          path="/roles-permisos"
           element={
             <AdminRoute>
               <RolesPermisosPage />
             </AdminRoute>
-          } 
+          }
         />
       </Route>
     </Routes>
