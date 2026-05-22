@@ -5,6 +5,7 @@ import Catalog from '../pages/Catalog';
 import Dashboard from '../pages/Dashboard';
 import Comparison from '../pages/Comparison';
 import ErrorPage from '../pages/ErrorPage';
+import { Historial } from '../pages';
 
 export default function AppRouter() {
   return (
@@ -15,6 +16,7 @@ export default function AppRouter() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/comparacion" element={<Comparison />} />
       <Route path="/error" element={<ErrorPage />} />
+      <Route path="/historial" element={<Historial/>}/>
     </Routes>
   );
 }
