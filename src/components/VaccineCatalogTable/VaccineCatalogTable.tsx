@@ -16,9 +16,8 @@ const columns: { key: SortKey; label: string }[] = [
   { key: 'name', label: 'Nombre de Vacuna' },
   { key: 'farmaceutica', label: 'Farmaceutica' },
   { key: 'costo', label: 'Costo' },
-  { key: 'costoMayoreo', label: 'Costo a mayoreo' },
   { key: 'temperatura', label: 'Temperatura' },
-  { key: 'efectividad', label: 'Efectividad' },
+  { key: 'indice_seguridad', label: 'Índice de Seguridad' },
   { key: 'longevidad', label: 'Longevidad' },
 ];
 
