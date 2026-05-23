@@ -24,47 +24,48 @@ export default function VaccineDetailModal({
     <ModalContainer
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[1045px] max-h-[95vh] overflow-y-auto bg-[#F3F3F3]"
+      className="max-w-[480px] bg-[#F3F3F3]"
     >
       {isPending && (
-        <div className="flex min-h-[500px] w-full items-center justify-center">
+        <div className="flex h-[200px] w-full items-center justify-center">
           <p className="text-gray-400">Cargando información...</p>
         </div>
       )}
 
       {!isPending && !vacuna && (
-        <div className="flex min-h-[500px] w-full items-center justify-center">
+        <div className="flex h-[200px] w-full items-center justify-center">
           <EmptyState title="No hay información para mostrar sobre esta vacuna" />
         </div>
       )}
 
       {!isPending && vacuna && (
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[1fr_432px] xl:gap-[28px] w-full">
+        <div className="w-[496px] h-[570px] bg-white rounded-lg p-4">
+          <div className="grid grid-cols-2 gap-3 w-full h-full">
 
-          {/* columna izquierda */}
-          <div className="flex flex-col">
-            <VaccineDetailHeader
-              nombre={vacuna.nombre}
-              farmaceutica={vacuna.farmaceutica}
-            />
-            <VaccineDescription
-              descripcion={vacuna.descripcionGeneral}
-            />
-            <MedicalSpecsSection
-              tipo={vacuna.tipo}
-              temperatura={vacuna.temperatura}
-              tiempoAmbiente={vacuna.tiempoAmbiente}
-              costoUnitario={vacuna.costoUnitario}
-            />
-          </div>
+            <div className="flex flex-col gap-7 pr-2">
+              <VaccineDetailHeader
+                nombre={vacuna.nombre}
+                farmaceutica={vacuna.farmaceutica}
+              />
+              <VaccineDescription
+                descripcion={vacuna.descripcionGeneral}
+                compact={true}
+              />
+              <MedicalSpecsSection
+                tipo={vacuna.tipo}
+                temperatura={vacuna.temperatura}
+                tiempoAmbiente={vacuna.tiempoAmbiente}
+                costoUnitario={vacuna.costoUnitario}
+              />
+            </div>
 
-          {/* columna derecha */}
-          <div className="flex flex-col lg:items-end">
-            <SideEffectsPanel
+            <div className="flex flex-col">
+              <SideEffectsPanel
               efectos={vacuna.efectosSecundarios}
-            />
-          </div>
+              />
+            </div>
 
+          </div>
         </div>
       )}
     </ModalContainer>

@@ -20,8 +20,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // no redirigir si es un request de auth
+      const url = error.config?.url ?? ''
+      if (url.includes('/auth/')) {
+        return Promise.reject(error)
+      }
       localStorage.removeItem('token')
-      window.location.href = '/login'
+      localStorage.removeItem('user')
+      window.location.href = '/'
     }
     return Promise.reject(error)
   }

@@ -2,10 +2,10 @@
 import api from '../api'
 
 export interface SintomaFiltros {
-  vacuna?: string
+  idVacunas?: number[]  // ← array en lugar de uno solo
   sexo?: string
-  edad?: string
-  sintoma?: string
+  grupoEdad?: string
+  esGrave?: boolean
 }
 
 export interface SintomaData {
@@ -13,86 +13,68 @@ export interface SintomaData {
   value: number
 }
 
-// datos base por vacuna
-const DATOS_PFIZER: SintomaData[] = [
-  { label: 'Miocarditis', value: 85 },
-  { label: 'Anafilaxia', value: 45 },
-  { label: 'Trombosis', value: 30 },
-  { label: 'Parálisis', value: 20 },
-  { label: 'Gastritis', value: 10 },
-]
-
-const DATOS_MODERNA: SintomaData[] = [
-  { label: 'Miocarditis', value: 40 },
-  { label: 'Anafilaxia', value: 75 },
-  { label: 'Trombosis', value: 55 },
-  { label: 'Parálisis', value: 35 },
-  { label: 'Gastritis', value: 25 },
-]
-
-const DATOS_ASTRAZENECA: SintomaData[] = [
-  { label: 'Miocarditis', value: 20 },
-  { label: 'Anafilaxia', value: 30 },
-  { label: 'Trombosis', value: 90 },
-  { label: 'Parálisis', value: 60 },
-  { label: 'Gastritis', value: 40 },
-]
-
-const DATOS_DEFAULT: SintomaData[] = [
-  { label: 'Miocarditis', value: 65 },
-  { label: 'Anafilaxia', value: 64 },
-  { label: 'Trombosis', value: 57 },
-  { label: 'Parálisis', value: 50 },
-  { label: 'Gastritis', value: 21 },
-]
-
-// multiplicadores por sexo
-const MULTIPLICADOR_SEXO: Record<string, number> = {
-  M: 1.2,   // hombres tienen más reportes
-  F: 0.85,  // mujeres tienen menos
+export interface SintomaBackend {
+  esGrave: boolean
+  grupoEdad: string
+  idSintoma: number
+  idVacuna: number
+  nombreSintoma: string
+  nombreVacuna: string
+  sexo: string
+  total: number
 }
 
-// multiplicadores por grupo de edad
-const MULTIPLICADOR_EDAD: Record<string, number> = {
-  '0-17':  0.4,
-  '18-29': 0.7,
-  '30-49': 1.0,
-  '50-64': 1.3,
-  '65+':   1.6,  // adultos mayores tienen más reportes
+export interface VacunaOption {
+  id: number
+  nombre: string
 }
 
-export const getSintomas = async (filtros?: SintomaFiltros): Promise<SintomaData[]> => {
-  console.log('Filtros activos:', filtros)
+// extrae vacunas únicas de la respuesta del endpoint
+export const extraerVacunas = (data: SintomaBackend[]): VacunaOption[] => {
+  const mapa = new Map<number, string>()
+  data.forEach((item) => mapa.set(item.idVacuna, item.nombreVacuna))
+  return Array.from(mapa.entries()).map(([id, nombre]) => ({ id, nombre }))
+}
 
-  // 1. seleccionar datos base por vacuna
-  let datos: SintomaData[]
-  switch (filtros?.vacuna) {
-    case 'pfizer':      datos = DATOS_PFIZER;      break
-    case 'moderna':     datos = DATOS_MODERNA;     break
-    case 'astrazeneca': datos = DATOS_ASTRAZENECA; break
-    default:            datos = DATOS_DEFAULT;     break
+// agrupa datos por síntoma y vacuna para la gráfica grouped
+export interface SintomaAgrupado {
+  sintoma: string
+  [nombreVacuna: string]: string | number
+}
+
+export const agruparPorSintoma = (
+  data: SintomaBackend[],
+  vacunasSeleccionadas: number[]
+): SintomaAgrupado[] => {
+  const mapa = new Map<string, SintomaAgrupado>()
+
+  data
+    .filter((item) => vacunasSeleccionadas.includes(item.idVacuna))
+    .forEach((item) => {
+      if (!mapa.has(item.nombreSintoma)) {
+        mapa.set(item.nombreSintoma, { sintoma: item.nombreSintoma })
+      }
+      const entry = mapa.get(item.nombreSintoma)!
+      const valorActual = (entry[item.nombreVacuna] as number) ?? 0
+      entry[item.nombreVacuna] = valorActual + item.total
+    })
+
+  return Array.from(mapa.values())
+}
+
+export const getSintomas = async (filtros?: SintomaFiltros): Promise<SintomaBackend[]> => {
+  const params: Record<string, string> = {}
+
+  if (filtros?.sexo) params.sexo = filtros.sexo
+  if (filtros?.grupoEdad) params.grupoEdad = filtros.grupoEdad
+  if (filtros?.esGrave !== undefined) params.esGrave = String(filtros.esGrave)
+
+  // si hay vacunas seleccionadas las mandamos como filtro
+  // si no, traemos todas
+  if (filtros?.idVacunas && filtros.idVacunas.length === 1) {
+    params.idVacuna = String(filtros.idVacunas[0])
   }
 
-  // 2. aplicar multiplicador de sexo
-  const multSexo = filtros?.sexo
-    ? (MULTIPLICADOR_SEXO[filtros.sexo] ?? 1.0)
-    : 1.0
-
-  // 3. aplicar multiplicador de edad
-  const multEdad = filtros?.edad
-    ? (MULTIPLICADOR_EDAD[filtros.edad] ?? 1.0)
-    : 1.0
-
-  // 4. filtrar por síntoma específico si está seleccionado
-  const datosFiltrados = filtros?.sintoma
-    ? datos.filter((d) =>
-        d.label.toLowerCase().includes(filtros.sintoma!.toLowerCase())
-      )
-    : datos
-
-  // 5. aplicar multiplicadores y redondear
-  return datosFiltrados.map((item) => ({
-    label: item.label,
-    value: Math.round(item.value * multSexo * multEdad),
-  }))
+  const { data } = await api.get('/dashboard/resumen-sintomas', { params })
+  return data as SintomaBackend[]
 }

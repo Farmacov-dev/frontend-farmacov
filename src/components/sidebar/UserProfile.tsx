@@ -1,4 +1,4 @@
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "../Sidebar/UserAvatar";
 
 interface UserProfileProps {
   userName?: string;
