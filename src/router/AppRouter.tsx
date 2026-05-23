@@ -23,13 +23,22 @@ export default function AppRouter() {
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/analisis_sintomas" element={<Analisis_Sintomas />} />
         <Route path="/comparacion" element={<Comparison />} />
-        <Route path="/historial" element={<Historial />} />
+        
 
         <Route
           path="/roles-permisos"
           element={
             <AdminRoute>
               <RolesPermisosPage />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/historial"
+          element={
+            <AdminRoute>
+              <Historial />
             </AdminRoute>
           }
         />

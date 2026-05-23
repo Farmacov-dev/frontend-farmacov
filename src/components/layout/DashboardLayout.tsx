@@ -1,7 +1,7 @@
 // src/components/layout/DashboardLayout.tsx
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
-import { FaSyringe, FaClipboardList, FaUserShield } from "react-icons/fa";
+import { FaSyringe, FaClipboardList, FaUserShield, FaHistory } from "react-icons/fa";
 import Sidebar from "../Sidebar/Sidebar";
 import { useAuth } from "../../hooks/useAuth";
 import { useSidebar } from "../../context/SidebarContext";
@@ -44,6 +44,12 @@ const DashboardLayout = () => {
       label: "Roles y Permisos",
       icon: FaUserShield,
       onClick: () => navigate("/roles-permisos"),
+    },
+    {
+      key: "historial",
+      label: "Historial",
+      icon: FaHistory,
+      onClick: () => navigate("/historial"),
     }
   ];
 
@@ -53,6 +59,7 @@ const DashboardLayout = () => {
     if (item.key === 'catalog') return canView('catalogo');
     if (item.key === 'analisis_sintomas') return canView('analisis');
     if (item.key === 'roles-permisos') return isAdmin;
+    if (item.key === 'historial') return isAdmin;
     return true;
   });
 
