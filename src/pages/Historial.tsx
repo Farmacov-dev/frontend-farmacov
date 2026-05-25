@@ -1,7 +1,5 @@
 // src/pages/Historial.tsx
 import {
-  FaChartBar,
-  FaClipboardList,
   FaExclamationTriangle,
   FaSyringe,
 } from "react-icons/fa";
@@ -19,8 +17,7 @@ export default function Historial() {
     <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
       <PageHeader title="Inicio" />
 
-<<<<<<< HEAD
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2">
           <KpiCard
             title="Usuarios activos"
             value={kpisPending ? "-" : kpis?.usuariosActivos ?? "-"}
@@ -37,51 +34,7 @@ export default function Historial() {
             color="#FBBF24"
             icon={<FaExclamationTriangle size={24} />}
           />
-          <KpiCard
-            title="Alertas de seguridad"
-            value={kpisPending ? "-" : kpis?.alertasSeguridad ?? "-"}
-            change={null}
-            positiveDirection="up"
-            color="#EF4444"
-            icon={<FaChartBar size={24} />}
-          />
         </div>
-=======
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          title="Usuarios activos"
-          value={kpisPending ? "-" : kpis?.usuariosActivos ?? "-"}
-          change={null}
-          positiveDirection="up"
-          color="#10B981"
-          icon={<FaSyringe size={24} />}
-        />
-        <KpiCard
-          title="Usuarios suspendidos"
-          value={kpisPending ? "-" : kpis?.usuariosSuspendidos ?? "-"}
-          change={null}
-          positiveDirection="down"
-          color="#FBBF24"
-          icon={<FaExclamationTriangle size={24} />}
-        />
-        <KpiCard
-          title="Ultimo acceso"
-          value={kpisPending ? "-" : kpis?.ultimoAcceso ?? "-"}
-          change={null}
-          positiveDirection="neutral"
-          color="#2563EB"
-          icon={<FaClipboardList size={24} />}
-        />
-        <KpiCard
-          title="Alertas de seguridad"
-          value={kpisPending ? "-" : kpis?.alertasSeguridad ?? "-"}
-          change={null}
-          positiveDirection="up"
-          color="#EF4444"
-          icon={<FaChartBar size={24} />}
-        />
-      </div>
->>>>>>> 5643031c1cdd93178220b9808d384d4dc5719a3a
 
       <section className="rounded-xl bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold text-gray-800">
