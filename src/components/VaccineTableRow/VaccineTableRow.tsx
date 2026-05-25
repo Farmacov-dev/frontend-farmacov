@@ -6,7 +6,7 @@ export interface Vaccine {
   id: number;
   name: string;
   farmaceutica: string;
-  costo: number;
+  costoUnitario: number;
   temperatura: string;
   indice_seguridad: number;
   longevidad: string;
@@ -34,7 +34,7 @@ const VaccineTableRow = ({ vaccine, onClick, onInfoClick }: VaccineTableRowProps
       </span>
     </td>
     <td className="px-4 py-3 text-sm text-gray-600">{vaccine.farmaceutica}</td>
-    <td className="px-4 py-3 text-sm text-gray-600">${vaccine.costo.toFixed(2)}</td>
+    <td className="px-4 py-3 text-sm text-gray-600">${vaccine.costoUnitario ? vaccine.costoUnitario.toFixed(2) : "0.00"}</td>
     <td className="px-4 py-3 text-sm text-gray-600">{vaccine.temperatura}</td>
     <td className="px-4 py-3">
       <EffectivenessBadge value={vaccine.indice_seguridad} />

@@ -6,38 +6,45 @@ import PageHeader from "../components/PageHeader/PageHeader";
 import KpiCard from "../components/KpiCard/KpiCard";
 import ChartCard from "../components/charts/ChartCard";
 import ComparisonModal from "../components/composed/ComparisonModal/ComparisonModal";
-import { useKpis, useTopSintomas, useSeguridadVacuna, useCostosVacuna } from "../hooks/useDashboard";
+import { 
+  useKpis, 
+  useTopSintomas, 
+  useSeguridadVacuna, 
+  useCostosVacuna,
+  useDistribucionSeveridad 
+} from "../hooks/useDashboard";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
-
-const vaccineList = [
-  "Comirnaty",
-  "Spikevax",
-  "Vaxzevria",
-  "Janssen",
-  "CoronaVac",
-  "Sinopharm BBIBP",
-  "Covaxin",
-  "Nuvaxovid",
-  "Sputnik V",
-  "Convidecia"
-];
+import { useVacunas } from "../hooks/useVacunas";
 
 export default function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { data: vacunas } = useVacunas();
+  const vaccineList = (vacunas ?? []).map(v => ({
+    id: v.id,
+    nombre: v.name,
+  }));
+
   const { data: kpis, isPending: kpisPending } = useKpis();
   const { data: sintomas, isPending: sintomasPending } = useTopSintomas();
   const { data: costosVacuna, isPending: costosVacunaPending } = useCostosVacuna();
   const { data: seguridad, isPending: seguridadPending } = useSeguridadVacuna();
+  const { data: severidad, isPending: severidadPending } = useDistribucionSeveridad();
 
   const ultimaActualizacion = useUltimaActualizacion();
 
-  function handleCompare(vaccineA: string, vaccineB: string) {
-    console.log("Comparando:", vaccineA, vaccineB);
+  function handleCompare(idA: number, idB: number, nombreA: string, nombreB: string) {
     setModalOpen(false);
-    navigate(`/comparacion?a=${vaccineA}&b=${vaccineB}`);
+    navigate(`/comparacion?a=${idA}&b=${idB}&nombreA=${nombreA}&nombreB=${nombreB}`);
   }
+
+  // Transformamos el objeto de severidad al arreglo que espera ChartCard
+  const severidadChartData = severidad ? [
+    { label: 'Leve', value: severidad.leve },
+    { label: 'Moderado', value: severidad.moderado },
+    { label: 'Grave', value: severidad.grave }
+  ] : [];
 
   return (
     <>
@@ -89,26 +96,36 @@ export default function Dashboard() {
           )}
         </div>
 
+        {/* fila 1 de graficas */}
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <ChartCard
             title="Frecuencia de Sintomas Adversos"
             subtitle="Distribucion estimada por sintoma reportado"
             data={sintomasPending ? [] : sintomas}
+            type="bar"
           />
           <ChartCard
             title="Seguridad por Vacuna"
             subtitle="Indice de seguridad compuesto"
             data={seguridadPending ? [] : seguridad}
+            type="line"
           />
         </div>
-        <div className="flex justify-center">
-          <div className="w-full xl:w-[calc(50%-0.75rem)]">
-            <ChartCard
-              title="Costos por Vacuna"
-              subtitle="Costo unitario estimado por farmaceutica"
-              data={costosVacunaPending ? [] : costosVacuna}
-            />
-          </div>
+
+        {/* fila 2 de graficas: costos y la dona de severidad */}
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <ChartCard
+            title="Costos por Vacuna"
+            subtitle="Costo unitario estimado por farmaceutica"
+            data={costosVacunaPending ? [] : costosVacuna}
+      
+          />
+          <ChartCard
+            title="Distribución de Severidad"
+            subtitle="Proporción de reportes por nivel de gravedad"
+            data={severidadPending ? [] : severidadChartData}
+            type="pie"
+          />
         </div>
 
         <div className="flex justify-end">

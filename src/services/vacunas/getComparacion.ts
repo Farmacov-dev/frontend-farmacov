@@ -3,90 +3,22 @@ import api from '../api'
 import type { ComparisonRowProps, ComparisonRowStatus } from '../../components/ComparisonRow/ComparisonRow'
 
 export interface ComparacionData {
-  vaccineA: string
-  vaccineB: string
+  vaccineA: number
+  vaccineB: number
   rows: ComparisonRowProps[]
 }
 
-interface VacunaData {
-  seguridad: number
-  costo: number
+interface VacunaBackend {
+  nombre: string
+  farmaceutica: string
+  tipo: string
+  costoUnitario: number
   temperatura: number
-  tiempoAmbiente: string
-  
-}
-
-const DATOS_VACUNAS: Record<string, VacunaData> = {
-  Comirnaty: {
-    seguridad: 91.2,
-    costo: 19.50,
-    temperatura: -70,
-    tiempoAmbiente: '2 horas',
-    
-  },
-  Spikevax: {
-    seguridad: 88.7,
-    costo: 25.00,
-    temperatura: -20,
-    tiempoAmbiente: '12 horas',
-    
-  },
-  Vaxzevria: {
-    seguridad: 76.4,
-    costo: 4.00,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  Janssen: {
-    seguridad: 72.1,
-    costo: 10.00,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  CoronaVac: {
-    seguridad: 68.9,
-    costo: 13.60,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  'Sinopharm BBIBP': {
-    seguridad: 71.3,
-    costo: 14.50,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-   
-  },
-  Covaxin: {
-    seguridad: 70.5,
-    costo: 15.00,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  Nuvaxovid: {
-    seguridad: 74.2,
-    costo: 16.00,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  'Sputnik V': {
-    seguridad: 73.8,
-    costo: 9.95,
-    temperatura: -18,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
-  Convidecia: {
-    seguridad: 69.4,
-    costo: 10.50,
-    temperatura: 4,
-    tiempoAmbiente: 'Refrigerado',
-    
-  },
+  tiempoAmbiente: number | null
+  indiceSeguridad: number
+  totalReportes: number
+  efectosSecundarios: { descripcion: string; severidad: string }[]
+  distribucionSeveridad: { leve: number; moderado: number; grave: number }
 }
 
 const compararNumeros = (
@@ -99,48 +31,71 @@ const compararNumeros = (
   return aEsMejor ? ['better', 'worse'] : ['worse', 'better']
 }
 
-const generarComparacion = (vaccineA: string, vaccineB: string): ComparacionData => {
-  const a = DATOS_VACUNAS[vaccineA] ?? DATOS_VACUNAS['Comirnaty']
-  const b = DATOS_VACUNAS[vaccineB] ?? DATOS_VACUNAS['Spikevax']
+export const getComparacion = async (
+  idA: number,
+  idB: number
+): Promise<ComparacionData> => {
+  const [resA, resB] = await Promise.all([
+    api.get<VacunaBackend>(`/vacunas/${idA}`),
+    api.get<VacunaBackend>(`/vacunas/${idB}`),
+  ])
 
-  const [leftSeg, rightSeg] = compararNumeros(a.seguridad, b.seguridad, true)
-  const [leftCosto, rightCosto] = compararNumeros(a.costo, b.costo, false)
+  const a = resA.data
+  const b = resB.data
+
+  const [leftSeg, rightSeg] = compararNumeros(a.indiceSeguridad, b.indiceSeguridad, true)
+  const [leftCosto, rightCosto] = compararNumeros(a.costoUnitario, b.costoUnitario, false)
 
   const rows: ComparisonRowProps[] = [
-    {
-      index: 1,
-      label: 'Índice de Seguridad',
-      left:  { value: `${a.seguridad}%`, status: leftSeg },
-      right: { value: `${b.seguridad}%`, status: rightSeg },
-    },
-    {
-      index: 2,
-      label: 'Costo unitario',
-      left:  { value: `$${a.costo.toFixed(2)}`, status: leftCosto },
-      right: { value: `$${b.costo.toFixed(2)}`, status: rightCosto },
-    },
-    {
-      index: 3,
-      label: 'Temperatura',
-      left:  { value: `${a.temperatura}°C`, status: 'neutral' },
-      right: { value: `${b.temperatura}°C`, status: 'neutral' },
-    },
-    {
-      index: 4,
-      label: 'Tiempo ambiente',
-      left:  { value: a.tiempoAmbiente, status: 'neutral' },
-      right: { value: b.tiempoAmbiente, status: 'neutral' },
-    },
- 
+  {
+    index: 1,
+    label: 'Índice de Seguridad',
+    left:  { value: `${a.indiceSeguridad.toFixed(1)}%`, status: leftSeg },
+    right: { value: `${b.indiceSeguridad.toFixed(1)}%`, status: rightSeg },
+  },
+  {
+    index: 2,
+    label: 'Costo unitario',
+    left:  { value: `$${a.costoUnitario.toFixed(2)}`, status: leftCosto },
+    right: { value: `$${b.costoUnitario.toFixed(2)}`, status: rightCosto },
+  },
+  {
+    index: 3,
+    label: 'Temperatura',
+    left:  { value: `${a.temperatura}°C`, status: 'neutral' },
+    right: { value: `${b.temperatura}°C`, status: 'neutral' },
+  },
+  {
+    index: 4,
+    label: 'Tiempo ambiente',
+    left:  { value: a.tiempoAmbiente ? `${a.tiempoAmbiente} hrs` : 'Refrigerado', status: 'neutral' },
+    right: { value: b.tiempoAmbiente ? `${b.tiempoAmbiente} hrs` : 'Refrigerado', status: 'neutral' },
+  },
+  {
+    index: 5,
+    label: 'Total reportes',
+    left:  { value: String(a.totalReportes), status: 'neutral' },
+    right: { value: String(b.totalReportes), status: 'neutral' },
+  },
+  {
+    index: 6,
+    label: 'Reportes leves',
+    left:  { value: String(a.distribucionSeveridad.leve), status: 'neutral' },
+    right: { value: String(b.distribucionSeveridad.leve), status: 'neutral' },
+  },
+  {
+    index: 7,
+    label: 'Reportes moderados',
+    left:  { value: String(a.distribucionSeveridad.moderado), status: 'neutral' },
+    right: { value: String(b.distribucionSeveridad.moderado), status: 'neutral' },
+  },
+  {
+    index: 8,
+    label: 'Reportes graves',
+    left:  { value: String(a.distribucionSeveridad.grave), status: 'neutral' },
+    right: { value: String(b.distribucionSeveridad.grave), status: 'neutral' },
+  },
   ]
 
-  return { vaccineA, vaccineB, rows }
-}
-
-export const getComparacion = async (
-  vaccineA: string,
-  vaccineB: string
-): Promise<ComparacionData> => {
-  // return (await api.get(`/vacunas/comparar?a=${vaccineA}&b=${vaccineB}`)).data
-  return generarComparacion(vaccineA, vaccineB)
+  return { vaccineA: idA, vaccineB: idB, rows }
 }
