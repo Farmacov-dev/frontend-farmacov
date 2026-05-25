@@ -1,7 +1,5 @@
 // src/pages/Historial.tsx
 import {
-  FaChartBar,
-  FaClipboardList,
   FaExclamationTriangle,
   FaSyringe,
 } from "react-icons/fa";
@@ -19,7 +17,7 @@ export default function Historial() {
     <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
       <PageHeader title="Inicio" />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2">
           <KpiCard
             title="Usuarios activos"
             value={kpisPending ? "-" : kpis?.usuariosActivos ?? "-"}
@@ -35,14 +33,7 @@ export default function Historial() {
             positiveDirection="down"
             color="#FBBF24"
             icon={<FaExclamationTriangle size={24} />}
-          />
-          <KpiCard
-            title="Alertas de seguridad"
-            value={kpisPending ? "-" : kpis?.alertasSeguridad ?? "-"}
-            change={null}
-            positiveDirection="up"
-            color="#EF4444"
-            icon={<FaChartBar size={24} />}
+            //holla
           />
         </div>
 
