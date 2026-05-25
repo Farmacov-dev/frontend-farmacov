@@ -33,6 +33,7 @@ export default function Historial() {
             positiveDirection="down"
             color="#FBBF24"
             icon={<FaExclamationTriangle size={24} />}
+            //holla
           />
         </div>
 
