@@ -9,6 +9,7 @@ import ErrorPage from '../pages/ErrorPage';
 import RolesPermisosPage from '../pages/admin/RolesPermisosPage';
 import AdminRoute from './AdminRoute';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import GestionDatosPage from '../pages/admin/GestionDatosPage';
 
 export default function AppRouter() {
   return (
@@ -42,6 +43,17 @@ export default function AppRouter() {
             </AdminRoute>
           }
         />
+
+        <Route
+          path="/gestion-datos"
+          element={
+            <AdminRoute>
+              <GestionDatosPage />
+            </AdminRoute>
+          }
+        />
+
+
       </Route>
     </Routes>
   );

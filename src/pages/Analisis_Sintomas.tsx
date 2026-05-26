@@ -10,6 +10,7 @@ import RadarPerfilRiesgo from "../components/charts/RadarPerfilRiesgo";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 import VaccineCheckboxSelector from "../components/primary/VaccineCheckboxSelector/VaccineCheckboxSelector";
 import GroupedBarChart from "../components/charts/GroupedBarChart";
+import SeveridadComparisonPanel from "../components/composed/SeveridadComparisonPanel/SeveridadComparisonPanel";
 
 const Analisis_Sintomas = () => {
   const ultimaActualizacion = useUltimaActualizacion()
@@ -110,7 +111,7 @@ const Analisis_Sintomas = () => {
         {/* selector de vacunas */}
         <div className="mb-6">
           {isPending ? (
-            <p className="font-inter text-[13px] text-muted">
+            <p className="font-inter text-[13px] text-slate-500">
               Cargando vacunas...
             </p>
           ) : (
@@ -125,7 +126,7 @@ const Analisis_Sintomas = () => {
         {/* grafica grouped */}
         <div className="w-full mb-8">
           {isError ? (
-            <p className="font-inter text-[13px] text-red">
+            <p className="font-inter text-[13px] text-red-500">
               Error cargando análisis.
             </p>
           ) : (
@@ -136,6 +137,11 @@ const Analisis_Sintomas = () => {
               vacunasSeleccionadas={vacunasSeleccionadasConNombre}
             />
           )}
+        </div>
+
+        {/* COMPARATIVA DE SEVERIDAD (Dona) */}
+        <div className="w-full mb-8">
+          <SeveridadComparisonPanel vacunas={vacunasDisponibles} />
         </div>
 
         {/* perfil de riesgo-valor */}

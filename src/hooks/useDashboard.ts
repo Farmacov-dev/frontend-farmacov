@@ -4,6 +4,7 @@ import { getKpis } from '../services/dashboard/getKpis'
 import { getTopSintomas } from '../services/dashboard/getTopSintomas'
 import { getSeguridadVacuna } from '../services/dashboard/getSeguridadVacuna'
 import { getCostosVacuna } from '../services/dashboard/getCostosVacuna'
+import { getDistribucionSeveridad, getDistribucionSeveridadPorVacuna } from '../services/dashboard/getDistribucionSeveridad'
 import { CACHE_24H, CACHE_15MIN } from '../config/queryClient'
 
 
@@ -43,3 +44,18 @@ export const useCostosVacuna = () => {
   })
 }
 
+export const useDistribucionSeveridad = () => {
+  return useQuery({
+    queryKey: ['distribucionSeveridad'],
+    queryFn: getDistribucionSeveridad,
+  });
+};
+
+
+export const useDistribucionSeveridadPorVacuna = (idVacuna: number | undefined) => {
+  return useQuery({ 
+    queryKey: ['distribucionSeveridad', idVacuna],
+    queryFn: () => getDistribucionSeveridadPorVacuna(idVacuna!),
+    enabled: idVacuna !== undefined, // Solo ejecutar si idVacuna está definido
+  });
+};

@@ -4,11 +4,16 @@ import ModalContainer from "../ModalContainer/ModalContainer";
 import Button from "../../primary/Button/Button";
 import SelectDropdown from "../../SelectDropdown/SelectDropdown";
 
+interface VacunaOption {
+  id: number
+  nombre: string
+}
+
 interface ComparisonModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCompare: (vaccineA: string, vaccineB: string) => void;
-  vaccines: string[];
+  isOpen: boolean
+  onClose: () => void
+  onCompare: (idA: number, idB: number, nombreA: string, nombreB: string) => void
+  vaccines: VacunaOption[]
 }
 
 export default function ComparisonModal({
@@ -17,30 +22,26 @@ export default function ComparisonModal({
   onCompare,
   vaccines,
 }: ComparisonModalProps) {
-  const [vaccineA, setVaccineA] = useState("");
-  const [vaccineB, setVaccineB] = useState("");
+  const [vaccineA, setVaccineA] = useState<VacunaOption | null>(null)
+  const [vaccineB, setVaccineB] = useState<VacunaOption | null>(null)
 
-  const bothSelected = vaccineA !== "" && vaccineB !== "";
+  const bothSelected = vaccineA !== null && vaccineB !== null
 
   function handleCompare() {
-    if (!bothSelected) return;
-    onCompare(vaccineA, vaccineB);
+    if (!bothSelected) return
+    onCompare(vaccineA.id, vaccineB.id, vaccineA.nombre, vaccineB.nombre)
   }
 
   function handleClose() {
-    setVaccineA("");
-    setVaccineB("");
-    onClose();
+    setVaccineA(null)
+    setVaccineB(null)
+    onClose()
   }
 
   return (
     <ModalContainer isOpen={isOpen} onClose={handleClose} showCloseButton={false}>
       <div className="flex flex-col justify-between w-[466px] h-[fit-content]">
-
-        {/* parte superior — encabezado + selects */}
         <div className="flex flex-col w-full gap-[20px]">
-
-          {/* encabezado */}
           <div className="flex flex-col items-start gap-[14px]">
             <p className="text-negro font-inter text-[20px] font-medium leading-normal">
               Comparación de Vacunas
@@ -51,25 +52,28 @@ export default function ComparisonModal({
             </p>
           </div>
 
-          {/* selects */}
           <div className="flex flex-col w-full gap-[11px]">
             <SelectDropdown
-              options={vaccines}
+              options={vaccines.map(v => v.nombre)}
               placeholder="Vacuna a comparar"
-              value={vaccineA}
-              onChange={(val) => setVaccineA(val)}
+              value={vaccineA?.nombre ?? ''}
+              onChange={(nombre) => {
+                const found = vaccines.find(v => v.nombre === nombre)
+                if (found) setVaccineA(found)
+              }}
             />
             <SelectDropdown
-              options={vaccines}
+              options={vaccines.map(v => v.nombre)}
               placeholder="Vacuna a comparar"
-              value={vaccineB}
-              onChange={(val) => setVaccineB(val)}
+              value={vaccineB?.nombre ?? ''}
+              onChange={(nombre) => {
+                const found = vaccines.find(v => v.nombre === nombre)
+                if (found) setVaccineB(found)
+              }}
             />
           </div>
-
         </div>
 
-        {/* parte inferior para el boton */}
         <div className="flex justify-center w-full pt-[8px]">
           <Button
             variant="primary"
@@ -80,8 +84,7 @@ export default function ComparisonModal({
             Crear Comparación
           </Button>
         </div>
-
       </div>
     </ModalContainer>
-  );
+  )
 }
