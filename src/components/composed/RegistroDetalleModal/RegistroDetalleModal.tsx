@@ -1,13 +1,27 @@
+// src/components/composed/RegistroDetalleModal/RegistroDetalleModal.tsx
+// angel
+
 import { useState, useEffect } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer";
 import InputField from "../../primary/InputField/InputField";
 import Button from "../../primary/Button/Button";
 
+// Definimos las formas exactas de los datos para eliminar los 'any'
+export type DetallePayload = 
+  | { costoUnitario: number }
+  | { temperatura: number; tiempoAmbiente: number | null };
+
+export type DetalleItem = Partial<{
+  costoUnitario: number;
+  temperatura: number;
+  tiempoAmbiente: number | null;
+}>;
+
 interface RegistroDetalleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  itemToEdit?: any; // Si viene lleno, estamos editando
+  onSubmit: (data: DetallePayload) => void;
+  itemToEdit?: DetalleItem | null;
   tipo: "condiciones" | "costos";
   isLoading: boolean;
 }
@@ -22,7 +36,7 @@ export default function RegistroDetalleModal({
 }: RegistroDetalleModalProps) {
   const isEditing = !!itemToEdit;
 
-  // Estados
+  // Estados locales 
   const [costo, setCosto] = useState("");
   const [temperatura, setTemperatura] = useState("");
   const [tiempoAmbiente, setTiempoAmbiente] = useState("");
@@ -41,7 +55,10 @@ export default function RegistroDetalleModal({
     }
   }, [isOpen, itemToEdit, tipo]);
 
-  const handleSubmit = () => {
+  // anadimos soporte para el evento 'submit' del formulario
+  const handleSubmit = (e?: React.SyntheticEvent) => {
+    if (e) e.preventDefault();
+
     if (tipo === "costos") {
       if (!costo) return;
       onSubmit({ costoUnitario: parseFloat(costo) });
@@ -49,7 +66,6 @@ export default function RegistroDetalleModal({
       if (!temperatura) return;
       onSubmit({
         temperatura: parseFloat(temperatura),
-        // Si está vacío, lo mandamos como null para respetar el backend
         tiempoAmbiente: tiempoAmbiente.trim() ? parseFloat(tiempoAmbiente) : null, 
       });
     }
@@ -61,9 +77,10 @@ export default function RegistroDetalleModal({
 
   return (
     <ModalContainer isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col gap-6 w-[400px]">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-[400px]">
+        
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold text-dark font-inter capitalize">
+          <h2 className="text-xl font-bold text-dark font-inter">
             {isEditing ? `Editar ${tipo === "costos" ? "Costo" : "Condición"}` : `Registrar ${tipo === "costos" ? "Costo" : "Condición"}`}
           </h2>
         </div>
@@ -103,12 +120,14 @@ export default function RegistroDetalleModal({
         </div>
 
         <div className="flex justify-end gap-3 mt-4">
-          <Button variant="ghost" onClick={onClose} disabled={isLoading}>Cancelar</Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={!isValid || isLoading}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={isLoading}>
+            Cancelar
+          </Button>
+          <Button type="submit" variant="primary" disabled={!isValid || isLoading}>
             {isLoading ? "Guardando..." : isEditing ? "Guardar Cambios" : "Crear Registro"}
           </Button>
         </div>
-      </div>
+      </form>
     </ModalContainer>
   );
 }

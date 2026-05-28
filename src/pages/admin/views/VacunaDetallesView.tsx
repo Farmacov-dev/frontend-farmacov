@@ -1,3 +1,6 @@
+// src/pages/admin/views/VacunaDetallesView.tsx
+// angel
+
 import { useState } from "react";
 import type { ReactNode } from "react";
 import Button from "../../../components/primary/Button/Button";
@@ -7,14 +10,23 @@ import Tabs from "../../../components/composed/Tabs/Tabs";
 import type { TabItem } from "../../../components/composed/Tabs/Tabs";
 import ConfirmModal from "../../../components/composed/ConfirmModal/ConfirmModal";
 import TagBadge from "../../../components/shared/TagBadge"; 
-import RegistroDetalleModal from "../../../components/composed/RegistroDetalleModal/RegistroDetalleModal"; // <-- Importamos el Modal
+import RegistroDetalleModal from "../../../components/composed/RegistroDetalleModal/RegistroDetalleModal"; 
 import type { Vacuna } from "../../../services/admin/adminVacunas";
 
 import { 
   useCostosVacuna, useCondicionesVacuna, useEfectosSecundarios, useSintomasGraves,
   useEliminarCondicion, useEliminarCosto, useEliminarEfecto, useEliminarSintoma,
-  useCrearCosto, useEditarCosto, useCrearCondicion, useEditarCondicion // <-- Nuevos hooks
+  useCrearCosto, useEditarCosto, useCrearCondicion, useEditarCondicion
 } from "../../../hooks/useAdminDetallesVacuna";
+
+// Tipados estrictos para las filas de las diferentes tablas
+interface CondicionRow { id: number; temperatura: number; tiempoAmbiente: number | null; }
+interface CostoRow { id: number; costoUnitario: number; }
+interface EfectoRow { id: number; descripcion: string; severidad: string; }
+interface SintomaRow { id: number; nombre: string; }
+
+// Tipado para el formulario unificado
+type FormRow = CondicionRow | CostoRow;
 
 interface VacunaDetallesViewProps {
   vacunaActiva: Vacuna;
@@ -39,9 +51,9 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
   const { mutate: crearCondicion, isPending: pCrearCond } = useCrearCondicion();
   const { mutate: editCondicion, isPending: pEditCond } = useEditarCondicion();
 
-  // Estados de Modales
-  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; row: any; tipo: string }>({ isOpen: false, row: null, tipo: "" });
-  const [formModal, setFormModal] = useState<{ isOpen: boolean; row: any }>({ isOpen: false, row: null });
+  // Tipos estrictos para los estados de los modales
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; id: number | null; tipo: string }>({ isOpen: false, id: null, tipo: "" });
+  const [formModal, setFormModal] = useState<{ isOpen: boolean; row: FormRow | null }>({ isOpen: false, row: null });
 
   const efectosTop50 = efectos.slice(0, 50);
   const sintomasTop50 = sintomas.slice(0, 50);
@@ -53,18 +65,18 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
     { id: "sintomas", label: "Síntomas Graves" },
   ];
 
-  const colsCondiciones: Column<any>[] = [
+  const colsCondiciones: Column<CondicionRow>[] = [
     { header: "ID", accessor: (row) => row.id, widthClass: "w-[80px]" },
     { header: "Temperatura", accessor: (row) => `${row.temperatura}°C`, widthClass: "flex-1" },
     { header: "T. Ambiente", accessor: (row) => row.tiempoAmbiente ? `${row.tiempoAmbiente} hrs` : "N/A", widthClass: "flex-1" },
   ];
 
-  const colsCostos: Column<any>[] = [
+  const colsCostos: Column<CostoRow>[] = [
     { header: "ID", accessor: (row) => row.id, widthClass: "w-[80px]" },
     { header: "Costo Unitario", accessor: (row) => <span className="font-semibold text-green-600">${row.costoUnitario}</span>, widthClass: "flex-1" },
   ];
 
-  const colsEfectos: Column<any>[] = [
+  const colsEfectos: Column<EfectoRow>[] = [
     { header: "ID", accessor: (row) => row.id, widthClass: "w-[80px]" },
     { header: "Descripción", accessor: (row) => <span className="font-semibold text-dark">{row.descripcion}</span>, widthClass: "flex-1" },
     { 
@@ -78,39 +90,35 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
     },
   ];
 
-  const colsSintomas: Column<any>[] = [
+  const colsSintomas: Column<SintomaRow>[] = [
     { header: "ID", accessor: (row) => row.id, widthClass: "w-[80px]" },
     { header: "Síntoma", accessor: (row) => <span className="font-semibold text-dark">{row.nombre}</span>, widthClass: "flex-1" },
   ];
 
   // --- HANDLERS ---
   const handleOpenCrear = () => setFormModal({ isOpen: true, row: null });
-  const handleOpenEditar = (row: any) => setFormModal({ isOpen: true, row });
-  const handleOpenEliminar = (row: any, tipoTabla: string) => setDeleteModal({ isOpen: true, row, tipo: tipoTabla });
+  const handleOpenEditar = (row: FormRow) => setFormModal({ isOpen: true, row });
+  const handleOpenEliminar = (id: number, tipoTabla: string) => setDeleteModal({ isOpen: true, id, tipo: tipoTabla });
 
-  // Enrutador de Envíos de Formulario (Crear / Editar)
-  const handleSubmitForm = (data: any) => {
-    // Inyectamos el ID de la vacuna requerido por Quarkus
+  const handleSubmitForm = (data: Omit<FormRow, "id">) => {
     const payload = { ...data, idVacuna: vacunaActiva.idVacuna };
     const onSuccess = () => setFormModal({ isOpen: false, row: null });
 
     if (formModal.row) {
-      // MODO EDICIÓN
       if (tabActivo === "costos") editCosto({ id: formModal.row.id, data: payload }, { onSuccess });
       if (tabActivo === "condiciones") editCondicion({ id: formModal.row.id, data: payload }, { onSuccess });
     } else {
-      // MODO CREACIÓN
       if (tabActivo === "costos") crearCosto(payload, { onSuccess });
       if (tabActivo === "condiciones") crearCondicion(payload, { onSuccess });
     }
   };
 
   const handleConfirmarEliminar = () => {
-    if (!deleteModal.row) return;
-    const { id } = deleteModal.row;
-    const onSuccess = () => setDeleteModal({ isOpen: false, row: null, tipo: "" });
+    if (!deleteModal.id) return;
+    const { id, tipo } = deleteModal;
+    const onSuccess = () => setDeleteModal({ isOpen: false, id: null, tipo: "" });
 
-    switch (deleteModal.tipo) {
+    switch (tipo) {
       case "condiciones": delCondicion(id, { onSuccess }); break;
       case "costos": delCosto(id, { onSuccess }); break;
       case "efectos": delEfecto(id, { onSuccess }); break;
@@ -121,23 +129,24 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
   const isDeleting = pDelCond || pDelCosto || pDelEfecto || pDelSintoma;
   const isSaving = pCrearCosto || pEditCosto || pCrearCond || pEditCond;
 
-  // Solo mostramos el botón de añadir si estamos en Costos o Condiciones
-  // (Asumiendo que Efectos/Síntomas no se pueden añadir desde aquí por ahora)
   const canAdd = tabActivo === "costos" || tabActivo === "condiciones";
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn">
-      <div className="flex justify-between items-start">
+      
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-bold text-dark font-inter">
             Centro de Control: {vacunaActiva.nombre}
           </h2>
-          <p className="text-sm text-slate-500 font-inter">
+          <p className="text-sm text-muted font-inter">
             Gestionando especificaciones y métricas clínicas.
           </p>
         </div>
+        
+        {/* Aquí estaba el error de JSX. El comentario ahora está afuera de la expresión. */}
         {canAdd && (
-          <Button variant="primary" onClick={handleOpenCrear} className="!py-[8px] !px-[16px]">
+          <Button variant="primary" onClick={handleOpenCrear}>
             + Añadir Registro
           </Button>
         )}
@@ -147,25 +156,25 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
 
       <div className="pt-2">
         {tabActivo === "condiciones" && isLoadingWrapper(loadCondiciones, () => (
-          <DataTable data={condiciones} columns={colsCondiciones} onEdit={handleOpenEditar} onDelete={(r) => handleOpenEliminar(r, "condiciones")} />
+          <DataTable data={condiciones} columns={colsCondiciones} onEdit={handleOpenEditar} onDelete={(r) => handleOpenEliminar(r.id, "condiciones")} />
         ))}
 
         {tabActivo === "costos" && isLoadingWrapper(loadCostos, () => (
-          <DataTable data={costos} columns={colsCostos} onEdit={handleOpenEditar} onDelete={(r) => handleOpenEliminar(r, "costos")} />
+          <DataTable data={costos} columns={colsCostos} onEdit={handleOpenEditar} onDelete={(r) => handleOpenEliminar(r.id, "costos")} />
         ))}
 
         {tabActivo === "efectos" && isLoadingWrapper(loadEfectos, () => (
-          <DataTable data={efectosTop50} columns={colsEfectos} onDelete={(r) => handleOpenEliminar(r, "efectos")} />
+          <DataTable data={efectosTop50} columns={colsEfectos} onDelete={(r) => handleOpenEliminar(r.id, "efectos")} />
         ))}
 
         {tabActivo === "sintomas" && isLoadingWrapper(loadSintomas, () => (
-          <DataTable data={sintomasTop50} columns={colsSintomas} onDelete={(r) => handleOpenEliminar(r, "sintomas")} />
+          <DataTable data={sintomasTop50} columns={colsSintomas} onDelete={(r) => handleOpenEliminar(r.id, "sintomas")} />
         ))}
       </div>
 
       <ConfirmModal
         isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false, row: null, tipo: "" })}
+        onClose={() => setDeleteModal({ isOpen: false, id: null, tipo: "" })}
         onConfirm={handleConfirmarEliminar}
         title={`Eliminar registro`}
         message={`¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.`}
@@ -185,9 +194,18 @@ export default function VacunaDetallesView({ vacunaActiva }: VacunaDetallesViewP
   );
 }
 
+// Roles ARIA añadidos para mejor accesibilidad durante la carga
 function isLoadingWrapper(isLoading: boolean, renderTable: () => ReactNode) {
   if (isLoading) {
-    return <div className="text-muted text-sm py-8 text-center bg-white rounded-xl border border-stroke-light">Cargando información...</div>;
+    return (
+      <div 
+        role="status" 
+        aria-live="polite" 
+        className="text-muted text-sm py-8 text-center bg-white rounded-xl border border-stroke animate-pulse"
+      >
+        Cargando información...
+      </div>
+    );
   }
   return renderTable();
 }

@@ -1,59 +1,58 @@
 // src/components/primary/TextAreaField/TextAreaField.stories.tsx
-// angel
-import type { Meta, StoryObj } from "@storybook/react";
-import TextAreaField from "./TextAreaField";
+import type { Meta, StoryObj } from '@storybook/react';
+import TextAreaField from './TextAreaField';
 
-const meta: Meta<typeof TextAreaField> = {
-  title: "Primitivos/TextAreaField",
+const meta = {
+  title: 'Components/Primary/TextAreaField',
   component: TextAreaField,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text' },
+    error: { control: 'boolean' },
+    maxLength: { control: 'number' },
+    showCount: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    value: { control: 'text' },
+  },
+} satisfies Meta<typeof TextAreaField>;
 
 export default meta;
-type Story = StoryObj<typeof TextAreaField>;
+type Story = StoryObj<typeof meta>;
 
+// Historia 1: Estado por defecto
 export const Default: Story = {
   args: {
-    label: "Observaciones",
-    placeholder: "Escribe tus observaciones aquí...",
+    label: 'Descripción de los síntomas',
+    placeholder: 'Escribe detalladamente las reacciones observadas en el paciente...',
   },
 };
 
-export const ConTexto: Story = {
-  args: {
-    label: "Observaciones",
-    value: "El paciente presentó síntomas leves después de la segunda dosis.",
-  },
-};
-
-export const Error: Story = {
-  args: {
-    label: "Observaciones",
-    placeholder: "Escribe tus observaciones aquí...",
-    error: true,
-  },
-};
-
+// Historia 2: Con contador activado y un límite de caracteres
 export const ConContador: Story = {
   args: {
-    label: "Observaciones",
-    placeholder: "Máximo 300 caracteres...",
-    maxLength: 300,
+    label: 'Notas adicionales (Breve)',
+    placeholder: 'Ej. El paciente tiene historial de alergias...',
+    maxLength: 150,
     showCount: true,
-    value: "Texto de ejemplo.",
+    value: 'Paciente reporta dolor de cabeza constante tras 24 horas de la aplicación de la primera dosis.',
   },
 };
 
-export const SinLabel: Story = {
+// Historia 3: Estado de error
+export const ErrorState: Story = {
   args: {
-    placeholder: "Sin label, solo el área de texto...",
+    label: 'Justificación médica',
+    error: true,
+    value: '',
+    placeholder: 'Este campo es obligatorio...',
   },
 };
 
-export const Disabled: Story = {
+// Historia 4: Estado deshabilitado (solo lectura)
+export const Deshabilitado: Story = {
   args: {
-    label: "Observaciones",
-    value: "Este campo no es editable.",
+    label: 'Comentarios del supervisor',
     disabled: true,
+    value: 'El caso ha sido escalado al comité de farmacovigilancia. No se permiten más modificaciones por el momento.',
   },
 };

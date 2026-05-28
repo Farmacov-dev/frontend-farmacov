@@ -1,5 +1,7 @@
 // src/components/composed/ComparisonModal/ComparisonModal.tsx
-import { useState } from "react";
+// angel
+
+import { useState, useMemo } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer";
 import Button from "../../primary/Button/Button";
 import SelectDropdown from "../../SelectDropdown/SelectDropdown";
@@ -27,6 +29,16 @@ export default function ComparisonModal({
 
   const bothSelected = vaccineA !== null && vaccineB !== null
 
+  // refactor: useMemo y filtrado mejorado.
+  // se evita que el arreglo se recalcule en cada render y ocultamos la vacuna  ya seleccionada
+  const optionsA = useMemo(() => 
+    vaccines.filter(v => v.id !== vaccineB?.id).map(v => v.nombre),
+  [vaccines, vaccineB])
+
+  const optionsB = useMemo(() => 
+    vaccines.filter(v => v.id !== vaccineA?.id).map(v => v.nombre),
+  [vaccines, vaccineA])
+
   function handleCompare() {
     if (!bothSelected) return
     onCompare(vaccineA.id, vaccineB.id, vaccineA.nombre, vaccineB.nombre)
@@ -40,22 +52,21 @@ export default function ComparisonModal({
 
   return (
     <ModalContainer isOpen={isOpen} onClose={handleClose} showCloseButton={false}>
-      <div className="flex flex-col justify-between w-[466px] h-[fit-content]">
+      <div className="flex flex-col justify-between w-full max-w-[466px] h-fit">
         <div className="flex flex-col w-full gap-[20px]">
           <div className="flex flex-col items-start gap-[14px]">
-            <p className="text-negro font-inter text-[20px] font-medium leading-normal">
+            <p className="text-dark font-inter text-[20px] font-medium leading-normal">
               Comparación de Vacunas
             </p>
-            <p className="font-inter text-[12px] font-normal leading-normal"
-              style={{ color: "#5B5B5B" }}>
+            <p className="text-muted font-inter text-[12px] font-normal leading-normal">
               Seleccione vacunas para comparar sus características
             </p>
           </div>
 
           <div className="flex flex-col w-full gap-[11px]">
             <SelectDropdown
-              options={vaccines.map(v => v.nombre)}
-              placeholder="Vacuna a comparar"
+              options={optionsA}
+              placeholder="Primera vacuna a comparar"
               value={vaccineA?.nombre ?? ''}
               onChange={(nombre) => {
                 const found = vaccines.find(v => v.nombre === nombre)
@@ -63,8 +74,8 @@ export default function ComparisonModal({
               }}
             />
             <SelectDropdown
-              options={vaccines.map(v => v.nombre)}
-              placeholder="Vacuna a comparar"
+              options={optionsB}
+              placeholder="Segunda vacuna a comparar"
               value={vaccineB?.nombre ?? ''}
               onChange={(nombre) => {
                 const found = vaccines.find(v => v.nombre === nombre)
@@ -74,7 +85,7 @@ export default function ComparisonModal({
           </div>
         </div>
 
-        <div className="flex justify-center w-full pt-[8px]">
+        <div className="flex justify-center w-full pt-[8px] mt-6">
           <Button
             variant="primary"
             disabled={!bothSelected}

@@ -1,6 +1,10 @@
+// src/components/composed/VacunaModal/VacunaModal.tsx
+// angel
+
 import { useState, useEffect } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer";
 import InputField from "../../primary/InputField/InputField";
+import TextAreaField from "../../primary/TextAreaField/TextAreaField";
 import Button from "../../primary/Button/Button";
 import type { Vacuna, CrearVacunaDTO } from "../../../services/admin/adminVacunas";
 import type { Farmaco } from "../../../services/admin/adminFarmacos";
@@ -10,7 +14,7 @@ interface VacunaModalProps {
   onClose: () => void;
   onSubmit: (idManual: number | undefined, data: CrearVacunaDTO) => void;
   vacunaToEdit?: Vacuna | null;
-  farmacoActivo: Farmaco; // Necesitamos saber de qué fármaco viene
+  farmacoActivo: Farmaco; 
   isLoading: boolean;
 }
 
@@ -24,7 +28,6 @@ export default function VacunaModal({
 }: VacunaModalProps) {
   const isEditing = !!vacunaToEdit;
 
-  // Estados del formulario
   const [idManual, setIdManual] = useState("");
   const [nombre, setNombre] = useState("");
   const [tipo, setTipo] = useState("");
@@ -35,7 +38,7 @@ export default function VacunaModal({
       if (vacunaToEdit) {
         setNombre(vacunaToEdit.nombre);
         setTipo(vacunaToEdit.tipo);
-        setDescripcionGeneral(""); // El GET list no trae descripción, queda en blanco para rellenar
+        setDescripcionGeneral(""); 
         setIdManual("");
       } else {
         setNombre("");
@@ -46,7 +49,9 @@ export default function VacunaModal({
     }
   }, [isOpen, vacunaToEdit]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e?: React.SyntheticEvent) => {
+    if (e) e.preventDefault();
+
     if (!nombre.trim() || !tipo.trim()) return;
     if (!isEditing && !idManual.trim()) return;
     
@@ -54,7 +59,7 @@ export default function VacunaModal({
       isEditing ? undefined : Number(idManual),
       {
         idFarmaco: farmacoActivo.id,
-        farmaceutica: farmacoActivo.nombre, // Heredado automáticamente
+        farmaceutica: farmacoActivo.nombre,
         nombre,
         tipo,
         descripcionGeneral,
@@ -64,7 +69,7 @@ export default function VacunaModal({
 
   return (
     <ModalContainer isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col gap-6 w-[450px]">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-[450px]">
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold text-dark font-inter">
             {isEditing ? "Editar Vacuna" : `Nueva Vacuna para ${farmacoActivo.nombre}`}
@@ -99,32 +104,29 @@ export default function VacunaModal({
             disabled={isLoading}
           />
 
-          <div className="flex flex-col items-start gap-[10px] w-full">
-            <span className="font-inter text-[16px] font-medium leading-[24px] text-dark">
-              Descripción General
-            </span>
-            <textarea
-              value={descripcionGeneral}
-              onChange={(e) => setDescripcionGeneral(e.target.value)}
-              disabled={isLoading}
-              rows={3}
-              placeholder="Vacuna contra..."
-              className="w-full px-[20px] py-[12px] rounded-card bg-white border border-stroke text-dark font-inter text-[16px] placeholder:text-slate-400 focus:border-[#5B84E9] focus:outline-none transition-colors resize-none disabled:opacity-50"
-            />
-          </div>
+          <TextAreaField
+            label="Descripción General"
+            placeholder="Vacuna contra..."
+            value={descripcionGeneral}
+            onChange={(e) => setDescripcionGeneral(e.target.value)}
+            disabled={isLoading}
+            rows={3}
+          />
         </div>
 
         <div className="flex justify-end gap-3 mt-4">
-          <Button variant="ghost" onClick={onClose} disabled={isLoading}>Cancelar</Button>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={isLoading}>
+            Cancelar
+          </Button>
           <Button
+            type="submit"
             variant="primary"
-            onClick={handleSubmit}
             disabled={!nombre.trim() || !tipo.trim() || (!isEditing && !idManual.trim()) || isLoading}
           >
             {isLoading ? "Guardando..." : isEditing ? "Guardar" : "Crear Vacuna"}
           </Button>
         </div>
-      </div>
+      </form>
     </ModalContainer>
   );
 }

@@ -1,50 +1,69 @@
 // src/components/primary/Toggle/Toggle.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import { Toggle } from "./Toggle";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import { Toggle } from './Toggle';
 
-const meta: Meta<typeof Toggle> = {
-  title: "Primitivos/Toggle",
+const meta = {
+  title: 'Components/Primary/Toggle',
   component: Toggle,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  argTypes: {
+    checked: { control: 'boolean', description: 'Estado actual del interruptor' },
+    disabled: { control: 'boolean', description: 'Deshabilita la interacción' },
+    'aria-label': { control: 'text', description: 'Etiqueta para accesibilidad' },
+  },
+} satisfies Meta<typeof Toggle>;
 
 export default meta;
-type Story = StoryObj<typeof Toggle>;
+type Story = StoryObj<typeof meta>;
 
-export const Activo: Story = {
-  args: {
-    checked: true,
-    onChange: () => {}, // Función vacía solo para visualización
-  },
+// --- WRAPPER INTERACTIVO ---
+// Creamos un mini-componente para manejar el estado con React puro, 
+// sin depender de hooks frágiles de Storybook.
+const ToggleInteractiva = (args: any) => {
+  const [isChecked, setIsChecked] = useState(args.checked);
+  return (
+    <Toggle 
+      {...args} 
+      checked={isChecked} 
+      onChange={(val) => {
+        setIsChecked(val); // Actualiza la UI
+        args.onChange(val); // Llama a la función del prop para satisfacer TS
+      }} 
+    />
+  );
 };
 
-export const Inactivo: Story = {
+// --- HISTORIAS ---
+
+export const Interactivo: Story = {
   args: {
     checked: false,
-    onChange: () => {},
+    onChange: () => {}, // Función vacía para calmar a TypeScript
+    'aria-label': 'Interruptor interactivo',
+  },
+  render: (args) => <ToggleInteractiva {...args} />,
+};
+
+export const EncendidoFijo: Story = {
+  args: {
+    checked: true,
+    onChange: () => {}, // Función vacía para calmar a TypeScript
   },
 };
 
-export const Deshabilitado: Story = {
+export const DeshabilitadoApagado: Story = {
   args: {
     checked: false,
     disabled: true,
-    onChange: () => {},
+    onChange: () => {}, 
   },
 };
 
-export const Interactivo: Story = {
-  render: (args) => {
-    // Usamos un hook local para que este caso específico se pueda probar haciendo clic
-    const [isChecked, setIsChecked] = useState(false);
-    
-    return (
-      <Toggle 
-        {...args} 
-        checked={isChecked} 
-        onChange={setIsChecked} 
-      />
-    );
+export const DeshabilitadoEncendido: Story = {
+  args: {
+    checked: true,
+    disabled: true,
+    onChange: () => {}, 
   },
 };

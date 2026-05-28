@@ -1,68 +1,62 @@
 // src/components/composed/ComparisonModal/ComparisonModal.stories.tsx
-// angel
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import ComparisonModal from "./ComparisonModal";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import ComparisonModal from './ComparisonModal';
+import Button from '../../primary/Button/Button';
 
-const meta: Meta<typeof ComparisonModal> = {
-  title: "Compuestos/ComparisonModal",
+const meta = {
+  title: 'Components/Composed/ComparisonModal',
   component: ComparisonModal,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen', // Para que el overlay del modal cubra toda la pantalla de Storybook
+  },
+} satisfies Meta<typeof ComparisonModal>;
 
 export default meta;
-type Story = StoryObj<typeof ComparisonModal>;
+type Story = StoryObj<typeof meta>;
 
-const VACCINES = [
-  "Comirnaty",
-  "Spikevax",
-  "Vaxzevria",
-  "Janssen",
-  "CoronaVac",
-  "Sinopharm",
+const mockVaccines = [
+  { id: 1, nombre: 'Comirnaty (Pfizer)' },
+  { id: 2, nombre: 'Spikevax (Moderna)' },
+  { id: 3, nombre: 'Vaxzevria (AstraZeneca)' },
+  { id: 4, nombre: 'Jcovden (Janssen)' },
 ];
 
-// historia estática — modal abierto sin interacción
-export const Abierto: Story = {
+// Wrapper para controlar la visibilidad del modal sin romper Storybook
+const ModalWrapper = (args: any) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="p-10 flex flex-col items-center justify-center min-h-screen bg-surface">
+      <p className="mb-4 text-muted">Contenido de fondo de la aplicación...</p>
+      <Button onClick={() => setIsOpen(true)}>
+        Abrir Modal de Comparación
+      </Button>
+
+      <ComparisonModal
+        {...args}
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          args.onClose?.();
+        }}
+        onCompare={(idA, idB, nameA, nameB) => {
+          console.log(`Comparando: ${nameA} vs ${nameB}`);
+          setIsOpen(false);
+          args.onCompare?.(idA, idB, nameA, nameB);
+        }}
+      />
+    </div>
+  );
+};
+
+export const Interactivo: Story = {
   args: {
     isOpen: true,
-    vaccines: VACCINES,
+    vaccines: mockVaccines,
     onClose: () => {},
     onCompare: () => {},
   },
-};
-
-// historia interactiva — puedes seleccionar vacunas y ver el botón activarse
-export const Interactivo: Story = {
-  render: () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [result, setResult] = useState<{ a: string; b: string } | null>(null);
-
-    return (
-      <div className="flex flex-col items-center gap-4 p-8">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
-        >
-          Abrir Modal
-        </button>
-
-        {result && (
-          <p className="font-inter text-[14px] text-dark">
-            Comparando: <strong>{result.a}</strong> vs <strong>{result.b}</strong>
-          </p>
-        )}
-
-        <ComparisonModal
-          isOpen={isOpen}
-          vaccines={VACCINES}
-          onClose={() => setIsOpen(false)}
-          onCompare={(a, b) => {
-            setResult({ a, b });
-            setIsOpen(false);
-          }}
-        />
-      </div>
-    );
-  },
+  render: (args) => <ModalWrapper {...args} />,
 };

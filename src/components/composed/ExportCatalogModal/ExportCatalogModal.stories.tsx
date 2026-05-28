@@ -1,58 +1,54 @@
 // src/components/composed/ExportCatalogModal/ExportCatalogModal.stories.tsx
-// angel
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import ExportCatalogModal from "./ExportCatalogModal";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import ExportCatalogModal from './ExportCatalogModal';
+import Button from '../../primary/Button/Button';
 
-const meta: Meta<typeof ExportCatalogModal> = {
-  title: "Compuestos/ExportCatalogModal",
+const meta = {
+  title: 'Components/Composed/ExportCatalogModal',
   component: ExportCatalogModal,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+  },
+} satisfies Meta<typeof ExportCatalogModal>;
 
 export default meta;
-type Story = StoryObj<typeof ExportCatalogModal>;
+type Story = StoryObj<typeof meta>;
 
-export const Abierto: Story = {
+// Wrapper interactivo para no bloquear Storybook
+const ModalWrapper = (args: any) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="p-10 flex flex-col items-center justify-center min-h-screen bg-surface border border-stroke border-dashed">
+      <Button onClick={() => setIsOpen(true)}>
+        Abrir Opciones de Exportación
+      </Button>
+
+      <ExportCatalogModal
+        {...args}
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          args.onClose?.();
+        }}
+        onExport={(config) => {
+          // Imprimimos la configuración en la consola de Storybook (Actions)
+          console.log("Exportando PDF con:", config);
+          setIsOpen(false);
+          args.onExport?.(config);
+        }}
+      />
+    </div>
+  );
+};
+
+export const Interactivo: Story = {
   args: {
     isOpen: true,
     onClose: () => {},
     onExport: () => {},
   },
-};
-
-export const Interactivo: Story = {
-  render: () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [result, setResult] = useState<{
-      format: string;
-      orientation: string;
-      content: string[];
-    } | null>(null);
-
-    return (
-      <div className="flex flex-col items-center gap-4 p-8">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
-        >
-          Exportar Catálogo
-        </button>
-
-        {result && (
-          <div className="flex flex-col items-center gap-2 font-inter text-[14px] text-dark">
-            <p>Formato: <strong>{result.format}</strong></p>
-            <p>Orientación: <strong>{result.orientation}</strong></p>
-            <p>Contenido: <strong>{result.content.join(", ") || "ninguno"}</strong></p>
-          </div>
-        )}
-
-        <ExportCatalogModal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          onExport={(config) => setResult(config)}
-        />
-      </div>
-    );
-  },
+  render: (args) => <ModalWrapper {...args} />,
 };
