@@ -1,3 +1,4 @@
+// src/components/FilterBar.tsx
 import React from "react";
 import FilterSelect from "./FilterSelect";
 
@@ -23,21 +24,21 @@ const defaultFilters: FilterItem[] = [
   { key: "vacuna", label: "Vacuna" },
   { key: "sexo", label: "Sexo" },
   { key: "edad", label: "Edad" },
-  { key: "sintoma", label: "SÃ­ntoma" },
+  { key: "sintoma", label: "Síntoma" },
 ];
 
 const FilterBar = ({
-  title = "Filtro de AnÃ¡lisis",
+  title = "Filtro de Análisis", 
   filters = defaultFilters,
   onFilterChange,
 }: FilterBarProps) => {
   return (
-    <section className="mb-8">
-      <div className="mb-4 inline-block rounded-xl bg-white px-4 py-2 text-sm text-slate-700 shadow-sm">
+    <section className="mb-8 w-full">
+      <div className="mb-4 inline-block rounded-xl bg-white px-4 py-2 text-sm text-slate-700 shadow-sm font-medium">
         {title}
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
         {filters.map((filter) => (
           <FilterSelect
             key={filter.key}

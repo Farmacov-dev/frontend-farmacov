@@ -1,7 +1,8 @@
 // src/components/composed/ModalContainer/ModalContainer.tsx
 // angel
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { IoClose } from "react-icons/io5";
 
 interface ModalContainerProps {
@@ -19,11 +20,15 @@ export default function ModalContainer({
   showCloseButton = true,
   className = "",
 }: ModalContainerProps) {
-  
+  // Estado para asegurarnos de que el portal solo se renderice del lado del cliente
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
+    
     if (!isOpen) return;
 
-    // Bloquear scroll
+    // Bloquear scroll del fondo
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,11 +46,14 @@ export default function ModalContainer({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Si no está abierto o no se ha montado el componente, no renderizamos nada
+  if (!isOpen || !mounted) return null;
 
-  return (
+  // createPortal inyecta este HTML directamente al <body> de la página
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      // subida de z index para asegurar que el modal esté por encima de otros elementos.
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
@@ -80,6 +88,7 @@ export default function ModalContainer({
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body // <- Esta es la magia: destino final del HTML
   );
 }

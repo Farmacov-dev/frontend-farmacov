@@ -1,3 +1,4 @@
+// src/components/FilterSelect.tsx
 import React from "react";
 
 type FilterOption = {
@@ -27,7 +28,8 @@ const FilterSelect = ({
 
   return (
     <select
-      className="w-[180px] rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-400"
+      // w-[180px] se cambia por w-full.
+      className="w-full cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition-colors focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
       value={resolvedValue}
       onChange={(event) => onChange?.(event.target.value)}
     >

@@ -1,4 +1,6 @@
 // src/pages/Dashboard.tsx
+// angel
+
 import { useState } from "react";
 import { FaChartBar, FaSyringe, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -49,11 +51,25 @@ export default function Dashboard() {
   return (
     <>
       <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
-        <PageHeader
-          title="Dashboard Ejecutivo"
-          description="Resumen general de vacunas y eventos adversos"
-          date={ultimaActualizacion}
-        />
+        
+        {/* Contenedor Flex para alinear el Header y el Botón en la misma fila */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <PageHeader
+            title="Dashboard Ejecutivo"
+            description="Resumen general de vacunas y eventos adversos"
+            date={ultimaActualizacion}
+          />
+
+          {/*  Botón movido a la parte superior */}
+          <div className="flex shrink-0 pt-2">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="rounded-xl bg-[#5B84E9] px-6 py-3 text-sm font-semibold text-white shadow transition-colors hover:bg-[#4a73d8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B84E9] focus-visible:ring-offset-2"
+            >
+              Comparar Vacunas
+            </button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {kpisPending ? (
@@ -118,7 +134,6 @@ export default function Dashboard() {
             title="Costos por Vacuna"
             subtitle="Costo unitario estimado por farmaceutica"
             data={costosVacunaPending ? [] : costosVacuna}
-      
           />
           <ChartCard
             title="Distribución de Severidad"
@@ -126,15 +141,6 @@ export default function Dashboard() {
             data={severidadPending ? [] : severidadChartData}
             type="pie"
           />
-        </div>
-
-        <div className="flex justify-end">
-          <button
-            onClick={() => setModalOpen(true)}
-            className="rounded-xl bg-[#5B84E9] px-6 py-3 text-sm font-semibold text-white shadow transition-colors hover:bg-[#4a73d8]"
-          >
-            Comparar Vacunas
-          </button>
         </div>
       </main>
 

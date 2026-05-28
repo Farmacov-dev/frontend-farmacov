@@ -1,92 +1,71 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import ChartCard from "./ChartCard";
+// src/components/charts/ChartCard.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import ChartCard from './ChartCard';
 
 const meta = {
-  title: "Components/Charts/ChartCard",
+  title: 'Components/Charts/ChartCard',
   component: ChartCard,
-  tags: ["autodocs"],
-  argTypes: {
-    type: {
-      control: "select",
-      options: ["bar", "line", "area", "pie"],
-      description: "Tipo de visualización de la gráfica",
-    },
-    title: { control: "text" },
-    subtitle: { control: "text" },
-  },
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className="p-8 bg-surface min-h-screen">
+        <div className="max-w-3xl mx-auto">
+          <Story />
+        </div>
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ChartCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// grafica de barras
-export const BarrasSintomas: Story = {
+// Data de prueba
+const mockData = [
+  { label: 'Enero', value: 120 },
+  { label: 'Febrero', value: 250 },
+  { label: 'Marzo', value: 180 },
+  { label: 'Abril', value: 310 },
+  { label: 'Mayo', value: 220 },
+];
+
+export const GraficoDeBarras: Story = {
   args: {
-    type: "bar",
-    title: "Frecuencia de Síntomas Adversos",
-    subtitle: "Distribución de los síntomas más reportados",
-    data: [
-      { label: "Miocarditis", value: 65 },
-      { label: "Anafilaxia", value: 64 },
-      { label: "Trombosis", value: 57 },
-      { label: "Parálisis", value: 50 },
-      { label: "Gastritis", value: 21 },
-    ],
+    title: 'Reportes Mensuales',
+    subtitle: 'Cantidad de efectos reportados en el último semestre',
+    type: 'bar',
+    data: mockData,
   },
 };
 
-// grafica de lineas
-export const LineasEvolucion: Story = {
+export const GraficoDeLineas: Story = {
   args: {
-    type: "line",
-    title: "Reportes Mensuales",
-    subtitle: "Tendencia de reportes en el último semestre",
-    data: [
-      { label: "Enero", value: 120 },
-      { label: "Febrero", value: 150 },
-      { label: "Marzo", value: 90 },
-      { label: "Abril", value: 210 },
-      { label: "Mayo", value: 180 },
-    ],
+    title: 'Tendencia de Eficacia',
+    subtitle: 'Niveles de anticuerpos sostenidos por mes',
+    type: 'line',
+    data: mockData,
   },
 };
 
-// grafica de area
-export const AreaDistribucionEdad: Story = {
+export const GraficoDeArea: Story = {
   args: {
-    type: "area",
-    title: "Incidencia por Edad",
-    subtitle: "Volumen de reportes por grupo demográfico",
-    data: [
-      { label: "0-17", value: 45 },
-      { label: "18-29", value: 130 },
-      { label: "30-49", value: 250 },
-      { label: "50-64", value: 180 },
-      { label: "65+", value: 95 },
-    ],
+    title: 'Incidencia Poblacional',
+    subtitle: 'Volumen de casos identificados a lo largo del tiempo',
+    type: 'area',
+    data: mockData,
   },
 };
 
-// piechart
-export const PastelVacunas: Story = {
+export const GraficoDeDona: Story = {
   args: {
-    type: "pie",
-    title: "Distribución de Vacunas",
-    subtitle: "Proporción de dosis aplicadas en la muestra",
+    title: 'Distribución Demográfica',
+    subtitle: 'Participación por grupo de edad',
+    type: 'pie',
     data: [
-      { label: "Comirnaty", value: 45 },
-      { label: "Spikevax", value: 30 },
-      { label: "Vaxzevria", value: 15 },
-      { label: "Janssen", value: 10 },
+      { label: '18-25 años', value: 35 },
+      { label: '26-40 años', value: 45 },
+      { label: '41-60 años', value: 15 },
+      { label: '60+ años', value: 5 },
     ],
-  },
-};
-
-// estado Vacio
-export const SinDatos: Story = {
-  args: {
-    title: "Cargando métricas...",
-    subtitle: "Esperando información del servidor",
-    data: [],
   },
 };

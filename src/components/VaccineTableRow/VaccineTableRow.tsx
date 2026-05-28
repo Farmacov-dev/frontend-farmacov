@@ -19,7 +19,7 @@ interface VaccineTableRowProps {
 }
 
 const VaccineTableRow = ({ vaccine, onClick, onInfoClick }: VaccineTableRowProps) => (
-  <tr onClick={onClick} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-100">
+  <tr onClick={onClick} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-100">
     <td className="px-4 py-3">
       <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-900">
         {vaccine.name}

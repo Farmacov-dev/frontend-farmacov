@@ -1,4 +1,6 @@
 // src/pages/Catalog.tsx
+// angel
+
 import { useState, useRef } from "react";
 import { Download, FileText } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -11,16 +13,22 @@ import VaccineDetailModal from "../components/composed/VaccineDetailModal/Vaccin
 import type { Vaccine } from "../components/VaccineTableRow/VaccineTableRow";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 
+// [REFACTOR]: Importamos el modal
+import ExportarReporteModal from "../components/composed/ExportarReporteModal/ExportarReporteModal";
+
 const Catalog = () => {
   const ultimaActualizacion = useUltimaActualizacion()
 
-  // Estados del modal
+  // Estados del modal de detalles
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
 
   // Referencia y estado para la exportación
   const tableRef = useRef<HTMLElement>(null)
   const [isExporting, setIsExporting] = useState(false)
+  
+  // [REFACTOR]: Nuevo estado para el modal de exportación PDF
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false)
 
   const { data: vacunas, isPending, isError } = useVacunas()
   const { data: vacunaDetalle, isPending: detallePending } = useVacunaDetalle(selectedId)
@@ -58,7 +66,8 @@ const Catalog = () => {
   }
 
   // --- FUNCIÓN: EXPORTAR A PDF ---
-  const exportarPDF = async () => {
+  // [REFACTOR]: Ahora recibe las conclusiones desde el Modal
+  const exportarPDF = async (conclusiones: string) => {
     if (!tableRef.current) return
     setIsExporting(true)
     try {
@@ -70,22 +79,40 @@ const Catalog = () => {
       })
       const imgData = canvas.toDataURL('image/png')
       
-      // Orientación vertical ('p'), tamaño A4
       const pdf = new jsPDF('p', 'mm', 'a4')
       
-      // Calculamos la proporción para que la tabla no se deforme
       const imgProps = pdf.getImageProperties(imgData)
-      const pdfWidth = pdf.internal.pageSize.getWidth() - 30 // 15mm de margen por lado
+      const pdfWidth = pdf.internal.pageSize.getWidth() - 30 
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
       
-      // Agregamos un título al PDF antes de pegar la imagen
+      // Título superior
       pdf.setFontSize(14)
       pdf.setFont("helvetica", "bold")
       pdf.text("Catálogo Oficial de Vacunas - Farmacov", 15, 15)
       
-      // Pegamos la captura de la tabla debajo del título
+      // Captura de la tabla
       pdf.addImage(imgData, 'PNG', 15, 25, pdfWidth, pdfHeight)
-      pdf.save('catalogo-vacunas.pdf')
+
+      // [REFACTOR]: Inyección de las conclusiones en la parte inferior
+      if (conclusiones.trim().length > 0) {
+        // Calculamos la posición Y basándonos en la altura de la imagen + 25 (el offset inicial) + 15 de margen
+        const yPosTexto = 25 + pdfHeight + 15;
+
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(12);
+        pdf.text('Notas Administrativas:', 15, yPosTexto);
+
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(11);
+        
+        pdf.text(conclusiones, 15, yPosTexto + 8, {
+          maxWidth: pdfWidth,
+          align: 'justify'
+        });
+      }
+
+      pdf.save('catalogo-vacunas-reporte.pdf')
+      setIsExportModalOpen(false)
     } catch (error) {
       console.error('Error al exportar PDF:', error)
     } finally {
@@ -98,12 +125,11 @@ const Catalog = () => {
       <main className="flex flex-1 flex-col p-6 overflow-hidden">
         <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <PageHeader
-            title="Catalogo de vacunas"
-            description="Explora el catalogo completo de vacunas disponibles, con información detallada sobre cada una."
+            title="Catálogo de vacunas"
+            description="Explora el catálogo completo de vacunas disponibles, con información detallada sobre cada una."
             date={ultimaActualizacion}
           />
           
-          {/* BOTONES DE EXPORTACIÓN */}
           <div className="flex gap-3">
             <button
               onClick={exportarPNG}
@@ -113,8 +139,10 @@ const Catalog = () => {
               <Download size={16} />
               PNG
             </button>
+            
+            {/* [REFACTOR]: Abre el modal en lugar de descargar directo */}
             <button
-              onClick={exportarPDF}
+              onClick={() => setIsExportModalOpen(true)}
               disabled={isExporting || isPending || isError}
               className="flex items-center gap-2 rounded-xl bg-[#5B84E9] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4a73d8] disabled:opacity-50"
             >
@@ -124,7 +152,6 @@ const Catalog = () => {
           </div>
         </div>
 
-        {/* CONTENEDOR DE LA TABLA (Aquí atamos la referencia para tomar la foto) */}
         <section ref={tableRef} className="flex-1 rounded-xl bg-white p-4 shadow overflow-auto">
           {isPending && (
             <p className="text-gray-400 text-sm">Cargando vacunas...</p>
@@ -146,6 +173,14 @@ const Catalog = () => {
         onClose={handleCloseModal}
         vacuna={vacunaDetalle ?? null}
         isPending={detallePending}
+      />
+
+      {/* [REFACTOR]: Componente del modal inyectado */}
+      <ExportarReporteModal 
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        onExport={exportarPDF}
+        isLoading={isExporting}
       />
     </>
   );

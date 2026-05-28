@@ -24,12 +24,12 @@ const PageHeader = ({
         {title}
       </h1>
       {resolvedDescription && (
-        <p className="m-0 text-sm font-normal font-['Inter',sans-serif] text-gray-500">
+        <p className="m-0 text-lg font-normal font-['Inter',sans-serif] text-gray-500">
           {resolvedDescription}
         </p>
       )}
       {resolvedLastUpdated && (
-        <div className="mt-1 flex items-center gap-1.5 text-[13px] font-['Inter',sans-serif] text-gray-500">
+        <div className="mt-1 flex items-center gap-1.5 text-lg font-['Inter',sans-serif] text-gray-500">
           <Calendar size={14} />
           {"\u00daltima actualizaci\u00f3n"}: {resolvedLastUpdated}
         </div>
