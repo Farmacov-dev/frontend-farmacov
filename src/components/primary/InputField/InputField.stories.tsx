@@ -1,66 +1,61 @@
 // src/components/primary/InputField/InputField.stories.tsx
-// angel
-import type { Meta, StoryObj } from "@storybook/react";
-import InputField from "./InputField";
+import type { Meta, StoryObj } from '@storybook/react';
+import InputField from './InputField';
 
-const meta: Meta<typeof InputField> = {
-  title: "Primitivos/InputField",
+const meta = {
+  title: 'Components/Primary/InputField',
   component: InputField,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  argTypes: {
+    label: { control: 'text', description: 'Texto descriptivo del campo' },
+    error: { control: 'boolean', description: 'Activa el estado de error' },
+    type: { 
+      control: 'select', 
+      options: ['text', 'password', 'email', 'number'],
+      description: 'Tipo nativo de HTML5 para el input'
+    },
+    disabled: { control: 'boolean' },
+    placeholder: { control: 'text' },
+  },
+} satisfies Meta<typeof InputField>;
 
 export default meta;
-type Story = StoryObj<typeof InputField>;
+type Story = StoryObj<typeof meta>;
+
+// URLs con inconos de pruebas
+const ICON_EYE = "https://cdn-icons-png.flaticon.com/512/159/159604.png";
+const ICON_EYE_OFF = "https://cdn-icons-png.flaticon.com/512/2767/2767146.png";
 
 export const Default: Story = {
   args: {
-    label: "Correo electrónico",
-    placeholder: "ejemplo@correo.com",
-    type: "text",
-  },
-};
-
-export const Filled: Story = {
-  args: {
-    label: "Correo electrónico",
-    defaultValue: "angel@farmacov.com",
-    type: "text",
-  },
-};
-
-export const Error: Story = {
-  args: {
-    label: "Correo electrónico",
-    placeholder: "ejemplo@correo.com",
-    error: true,
+    label: 'Nombre de usuario',
+    placeholder: 'Ej. Dr. Juan Pérez',
   },
 };
 
 export const Password: Story = {
   args: {
-    label: "Contraseña",
-    placeholder: "••••••••",
-    type: "password",
-    eyeIcon: "/src/assets/icons/eye.svg",
-    eyeOffIcon: "/src/assets/icons/eye-off.svg",
+    label: 'Contraseña',
+    type: 'password',
+    placeholder: 'Ingresa tu contraseña',
+    eyeIcon: ICON_EYE,
+    eyeOffIcon: ICON_EYE_OFF,
   },
 };
 
-export const PasswordError: Story = {
+export const ErrorState: Story = {
   args: {
-    label: "Contraseña",
-    placeholder: "••••••••",
-    type: "password",
+    label: 'Correo electrónico',
+    type: 'email',
+    defaultValue: 'usuario@invalido',
     error: true,
-    eyeIcon: "/src/assets/icons/eye.svg",
-    eyeOffIcon: "/src/assets/icons/eye-off.svg",
   },
 };
 
 export const Disabled: Story = {
   args: {
-    label: "Correo electrónico",
-    placeholder: "ejemplo@correo.com",
+    label: 'Solo lectura',
+    value: 'ID 1',
     disabled: true,
   },
 };

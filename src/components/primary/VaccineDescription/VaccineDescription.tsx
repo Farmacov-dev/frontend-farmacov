@@ -1,4 +1,6 @@
 // src/components/primary/VaccineDescription/VaccineDescription.tsx
+// angel
+
 interface VaccineDescriptionProps {
   descripcion: string
   compact?: boolean
@@ -11,13 +13,16 @@ export default function VaccineDescription({
   className = ''
 }: VaccineDescriptionProps) {
   return (
-    <section className={`${compact ? 'mt-4' : 'mt-10 lg:mt-[80px]'} ${className}`}>
-      <h2 className="text-[18px] weight-[600]">
+    <section className={`${compact ? 'mt-4' : 'mt-10 lg:mt-20'} ${className}`}>
+      
+      <h2 className="text-[18px] font-semibold text-dark font-inter leading-[26px]">
         Descripción general
       </h2>
-      <p className="text-[14px] text-[#617284]">
+      
+      <p className="mt-2 text-[14px] text-muted font-inter leading-[22px]">
         {descripcion}
       </p>
+      
     </section>
   )
 }

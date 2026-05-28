@@ -21,18 +21,17 @@ const variantClasses: Record<ButtonVariant, string> = {
   `,
   ghost: `
     bg-transparent text-dark-soft border border-stroke-dark
-    hover:bg-black/[0.04] active:bg-black/[0.08]
+    hover:bg-black/5 active:bg-black/10
   `,
   sidebar: `
     bg-surface text-dark-soft border border-stroke-dark
     w-full justify-start px-[24px] py-[12px] gap-[10px] self-stretch
-    hover:bg-surface-dark active:bg-[#cbd5e1]
+    hover:bg-surface-dark active:bg-surface-active
   `,
-    floating: `
+  floating: `
     bg-white border-none
-    text-[#090909] text-[13px]
-    rounded-[10px]
-    shadow-[0_1px_55px_-11px_rgba(0,0,0,0.01)]
+    text-dark-deep text-[13px]
+    rounded-[10px] shadow-floating
     hover:bg-surface active:bg-surface-dark
   `,
   inverse: `

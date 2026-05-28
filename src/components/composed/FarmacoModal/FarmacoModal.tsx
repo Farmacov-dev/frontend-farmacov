@@ -1,7 +1,10 @@
 // src/components/composed/FarmacoModal/FarmacoModal.tsx
+// angel
+
 import { useState, useEffect } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer";
 import InputField from "../../primary/InputField/InputField";
+import TextAreaField from "../../primary/TextAreaField/TextAreaField";
 import Button from "../../primary/Button/Button";
 import type { Farmaco, CrearFarmacoDTO } from "../../../services/admin/adminFarmacos";
 
@@ -9,7 +12,7 @@ interface FarmacoModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: CrearFarmacoDTO) => void;
-  farmacoToEdit?: Farmaco | null; // Si viene lleno, estamos editando
+  farmacoToEdit?: Farmaco | null;
   isLoading: boolean;
 }
 
@@ -26,13 +29,12 @@ export default function FarmacoModal({
 
   const isEditing = !!farmacoToEdit;
 
-  // Si estamos editando, llenamos los campos automáticamente cuando se abre el modal
   useEffect(() => {
     if (isOpen) {
       if (farmacoToEdit) {
         setNombre(farmacoToEdit.nombre);
         setTipo(farmacoToEdit.tipo);
-        setDescripcion(farmacoToEdit.descripcion);
+        setDescripcion(farmacoToEdit.descripcion || ""); 
       } else {
         setNombre("");
         setTipo("");
@@ -53,12 +55,12 @@ export default function FarmacoModal({
 
   return (
     <ModalContainer isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col gap-6 w-[400px]">
+      <div className="flex flex-col gap-6 w-full max-w-[400px]">
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-bold text-dark font-inter">
             {isEditing ? "Editar Fármaco" : "Crear Nuevo Fármaco"}
           </h2>
-          <p className="text-sm text-slate-500 font-inter">
+          <p className="text-sm text-muted font-inter">
             {isEditing 
               ? "Modifica los detalles del laboratorio o fabricante." 
               : "Ingresa los datos del nuevo laboratorio."}
@@ -82,20 +84,14 @@ export default function FarmacoModal({
             disabled={isLoading}
           />
 
-          {/* Usamos un textarea nativo estilizado como tu InputField para descripciones largas */}
-          <div className="flex flex-col items-start gap-[10px] w-full">
-            <span className="font-inter text-[16px] font-medium leading-[24px] text-dark">
-              Descripción
-            </span>
-            <textarea
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              disabled={isLoading}
-              rows={3}
-              placeholder="Descripción del fabricante..."
-              className="w-full px-[20px] py-[12px] rounded-card bg-white border border-stroke text-dark font-inter text-[16px] placeholder:text-slate-400 focus:border-[#5B84E9] focus:outline-none transition-colors resize-none disabled:opacity-50"
-            />
-          </div>
+          <TextAreaField
+            label="Descripción"
+            placeholder="Descripción del fabricante..."
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            disabled={isLoading}
+            rows={3}
+          />
         </div>
 
         <div className="flex justify-end gap-3 mt-4">

@@ -22,15 +22,17 @@ export default {
 
         // fondos y superficies
         surface: {
-          DEFAULT: "#F1F5F9",   // bg-surface — fondo sidebar buttons, fondo app
-          dark:    "#E2E8F0",   // bg-surface-dark — hover sidebar
+          DEFAULT: "#F1F5F9",   // bg-surface 
+          dark:    "#E2E8F0",   // bg-surface-dark 
+          active:  "#CBD5E1",   // bg-surface-active 
         },
 
         // texto oscuro 
         dark: {
           DEFAULT: "#111928",   // text-dark — labels, texto principal
           soft:    "#1a1a2e",
-          row:     "#1F2937",   // text-dark-soft — textO de las filas de la tabla de permisos
+          row:     "#1F2937",   
+          deep:    "#090909",
         },
 
         // negros
@@ -63,6 +65,7 @@ export default {
         muted: {
           DEFAULT: "#6B7280",   // text-muted — placeholder InputField, counter TextArea
           light:   "#9CA3AF",   // text-muted-light — placeholder más suave
+
         },
 
         // hover status general 
@@ -77,7 +80,42 @@ export default {
         },
         accent: {
           DEFAULT: "#6B97EE", // border-accent, bg-accent — Toggles, RolCard activa
-        }
+        },
+
+        avatar: {
+          1: '#3B82F6',
+          2: '#8B5CF6',
+          3: '#F59E0B',
+          4: '#EC4899',
+          5: '#13C296',
+          6: '#1C3FB7',
+          7: '#1BBFA9',
+          8: '#D345F8',
+        },
+
+        severity: {
+          grave:    '#FF1F1F',
+          moderado: '#F59E0B',
+          leve:     '#18B663',
+        },
+        panel: {
+          DEFAULT: '#D3D3D3', // Fondo exterior del panel
+          inner:   '#F7F2F4', // Fondo interior del panel
+        },
+
+
+        chart: {
+          1: '#6366F1', // indigo (primary)
+          2: '#10B981', // verde
+          3: '#F59E0B', // amarillo
+          4: '#EF4444', // rojo
+          5: '#8B5CF6', // morado
+        },
+
+        brand: {
+          blue : '#4F7EF7', // color principal de la marca, usado en botones y acentos
+        },
+
       },
 
       fontFamily: {
@@ -90,6 +128,7 @@ export default {
 
       boxShadow: {
         search: "0px 1px 4px 0px rgba(0, 0, 0, 0.10)", // shadow-search — SearchInput
+        floating: "0 1px 55px -11px rgba(0,0,0,0.01)",
       },
       
       // animación de entrada del modal

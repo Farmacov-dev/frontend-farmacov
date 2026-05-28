@@ -1,6 +1,6 @@
 // src/components/charts/ChartCard.tsx
 import { useRef, useState } from 'react'
-import { Download, FileText } from 'lucide-react' // Íconos elegantes para las descargas
+import { Download, FileText } from 'lucide-react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import {
@@ -49,7 +49,7 @@ const ChartCard = ({
   data,
   type = 'bar',
 }: ChartCardProps) => {
-  // Referencia para capturar ESTA tarjeta específica con html2canvas
+  // referencia para capturar una tarjeta especifica con html2canvas
   const cardRef = useRef<HTMLDivElement>(null)
   const [isExporting, setIsExporting] = useState(false)
 
@@ -62,16 +62,16 @@ const ChartCard = ({
     value: item.value,
   }))
 
-  // --- FUNCIÓN: EXPORTAR A PNG ---
+  // exportar a png
   const exportarPNG = async () => {
     if (!cardRef.current) return
     setIsExporting(true)
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: '#FFFFFF',
-        scale: 2, // Duplica la resolución para que no se pixelee
+        scale: 2, // resolucion al doble
         logging: false,
-        useCORS: true // Por si hay recursos externos
+        useCORS: true
       })
       const link = document.createElement('a')
       link.download = `${title.toLowerCase().replace(/\s+/g, '-')}.png`
@@ -84,7 +84,7 @@ const ChartCard = ({
     }
   }
 
-  // --- FUNCIÓN: EXPORTAR A PDF ---
+  // exportar a pdf 
   const exportarPDF = async () => {
     if (!cardRef.current) return
     setIsExporting(true)
@@ -97,7 +97,7 @@ const ChartCard = ({
       })
       const imgData = canvas.toDataURL('image/png')
       
-      // Creamos PDF en formato Horizontal (Landscape 'l') para que las gráficas se acomoden mejor
+      // Creamos PDF en formato Horizontal (Landscape 'l') para que las graficas
       const pdf = new jsPDF('l', 'mm', 'a4')
       
       // Ajustamos la imagen proporcionalmente al tamaño de una hoja A4 Horizontal (297mm x 210mm)
@@ -171,7 +171,7 @@ const ChartCard = ({
           <p className="text-sm text-slate-500">{subtitle}</p>
         </div>
 
-        {/* BOTONES DE EXPORTACIÓN (Ocultos por defecto, aparecen en hover para mantener limpio el UI) */}
+        {/* BOTONES DE EXPORTACIÓN*/}
         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={exportarPNG}

@@ -1,76 +1,69 @@
 // src/components/composed/ModalContainer/ModalContainer.stories.tsx
-// angel
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import ModalContainer from "./ModalContainer";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import ModalContainer from './ModalContainer';
+import Button from '../../primary/Button/Button';
 
-const meta: Meta<typeof ModalContainer> = {
-  title: "Compuestos/ModalContainer",
+const meta = {
+  title: 'Components/Composed/ModalContainer',
   component: ModalContainer,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+  },
+} satisfies Meta<typeof ModalContainer>;
 
 export default meta;
-type Story = StoryObj<typeof ModalContainer>;
+type Story = StoryObj<typeof meta>;
 
-export const Abierto: Story = {
-  args: {
-    isOpen: true,
-    showCloseButton: true,
-    onClose: () => {},
-    children: (
-      <div className="flex flex-col gap-4">
-        <p className="font-inter text-[20px] font-medium text-dark">
-          Título del modal
-        </p>
-        <p className="font-inter text-[14px] text-muted">
-          Este es el contenido del modal. Aquí van los componentes hijos.
-        </p>
-      </div>
-    ),
-  },
+const WrapperInteractivo = (args: any) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="p-10 flex flex-col items-center justify-center min-h-screen bg-surface">
+      <Button onClick={() => setIsOpen(true)}>
+        Abrir Contenedor
+      </Button>
+
+      <ModalContainer 
+        {...args} 
+        isOpen={isOpen} 
+        onClose={() => setIsOpen(false)}
+      >
+        {/* Contenido inyectado para la prueba */}
+        <div className="flex flex-col gap-4 w-full sm:w-[400px]">
+          <h2 className="text-xl font-bold text-dark font-inter">Soy un Modal Contenedor</h2>
+          <p className="text-muted text-sm leading-relaxed">
+            Mi única responsabilidad es oscurecer el fondo, bloquear el scroll, 
+            proveer el botón de cerrar y atrapar los clics para que mis hijos 
+            solo se preocupen por su contenido interno. Puedes cerrarme haciendo clic afuera o presionando Escape.
+          </p>
+          <div className="flex justify-end mt-4">
+            <Button variant="primary" onClick={() => setIsOpen(false)}>
+              Entendido
+            </Button>
+          </div>
+        </div>
+      </ModalContainer>
+    </div>
+  );
 };
 
-export const SinBotonCierre: Story = {
+export const Predeterminado: Story = {
+  args: {
+    isOpen: true,
+    onClose: () => {},
+    children: null, // ReactNode vacío para TS, lo inyectamos en el wrapper
+  },
+  render: (args) => <WrapperInteractivo {...args} />,
+};
+
+export const SinBotonDeCerrar: Story = {
   args: {
     isOpen: true,
     showCloseButton: false,
     onClose: () => {},
-    children: (
-      <p className="font-inter text-[14px] text-muted">
-        Este modal no tiene botón de cierre — se cierra clickeando fuera.
-      </p>
-    ),
+    children: null,
   },
-};
-
-export const Interactivo: Story = {
-  render: () => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-      <div className="flex items-center justify-center p-8">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-primary text-white font-inter font-medium px-6 py-3 rounded-card cursor-pointer"
-        >
-          Abrir Modal
-        </button>
-
-        <ModalContainer
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-        >
-          <div className="flex flex-col gap-4">
-            <p className="font-inter text-[20px] font-medium text-dark">
-              Título del modal
-            </p>
-            <p className="font-inter text-[14px] text-muted">
-              Haz click fuera o en la X para cerrar.
-            </p>
-          </div>
-        </ModalContainer>
-      </div>
-    );
-  },
+  render: (args) => <WrapperInteractivo {...args} />,
 };

@@ -1,5 +1,6 @@
-// LoginPage.tsx
+// src/pages/LoginPage.tsx
 // angel
+
 import { useNavigate } from "react-router-dom";
 import LoginCard from "../components/composed/LoginCard/LoginCard";
 import Button from "../components/primary/Button/Button";
@@ -12,26 +13,28 @@ export default function LoginPage() {
 
   async function handleLogin(email: string, password: string) {
     try {
-      await login(email, password)
-      navigate("/dashboard")
+      await login(email, password);
+      navigate("/dashboard");
     } catch (error: any) {
       if (error.code === 'auth/user-disabled') {
         navigate('/error', {
           state: {
             mensaje: 'Error: usuario no activo, contacte a su administrador'
           }
-        })
+        });
       } else {
-        throw error
+        throw error;
       }
     }
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-login-bg">
-      <div className="flex flex-col items-center gap-[16px]">
+    <div className="min-h-screen w-full flex items-center justify-center bg-login-bg p-4">
+      
+      <div className="flex flex-col items-center gap-[16px] w-full max-w-[520px]">
         <LoginCard onLogin={handleLogin} />
-        <div className="flex justify-between w-[520px]">
+        
+        <div className="flex justify-between w-full px-2">
           <Button
             variant="floating"
             icon={salirSvg}
@@ -44,12 +47,15 @@ export default function LoginPage() {
           <Button
             variant="floating"
             className="h-[43px]"
-            onClick={() => console.log("forgot password")}
+            onClick={() => {
+              alert("Flujo de recuperación de contraseña en construcción");
+            }}
           >
-            Olvidaste tu contraseña?
+            ¿Olvidaste tu contraseña?
           </Button>
         </div>
       </div>
+      
     </div>
   );
 }

@@ -1,29 +1,34 @@
 // src/components/primary/RolCard/RolCard.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import RolCard from "./RolCard";
+import type { Meta, StoryObj } from '@storybook/react';
+import RolCard from './RolCard';
 
-const meta: Meta<typeof RolCard> = {
-  title: "Primitivos/RolCard",
+const meta = {
+  title: 'Components/Primary/RolCard',
   component: RolCard,
-  tags: ["autodocs"],
-  // Opcional: Un decorador para que la tarjeta no ocupe el 100% del ancho de la pantalla en Storybook
+  tags: ['autodocs'],
+  argTypes: {
+    nombre: { control: 'text' },
+    seleccionado: { control: 'boolean' },
+    onClick: { action: 'clicked' },
+  },
+  // Simulamos un grid para que la tarjeta no ocupe toda la pantalla en el preview
   decorators: [
     (Story) => (
-      <div style={{ maxWidth: '300px' }}>
+      <div className="max-w-[200px]">
         <Story />
       </div>
     ),
   ],
-};
+} satisfies Meta<typeof RolCard>;
 
 export default meta;
-type Story = StoryObj<typeof RolCard>;
+type Story = StoryObj<typeof meta>;
 
-export const Predeterminado: Story = {
+// Verificamos el comportamiento por defecto con 2 palabras
+export const Default: Story = {
   args: {
     id: 1,
-    nombre: "Finanzas",
+    nombre: 'Administrador Global',
     seleccionado: false,
   },
 };
@@ -31,34 +36,36 @@ export const Predeterminado: Story = {
 export const Seleccionado: Story = {
   args: {
     id: 2,
-    nombre: "Farmacovigilancia",
+    nombre: 'Médico',
     seleccionado: true,
   },
 };
 
-export const OtroColor: Story = {
+// Verificamos la corrección lógica de 1 sola palabra
+export const UnaPalabra: Story = {
   args: {
     id: 3,
-    nombre: "Logística",
+    nombre: 'Investigador',
     seleccionado: false,
   },
 };
 
-export const Interactivo: Story = {
+// Verificamos la consistencia del hash de colores con distintos nombres
+// Verificamos la consistencia del hash de colores con distintos nombres
+export const TestColores: Story = {
+  // Añadimos args ficticios para satisfacer la interfaz obligatoria de TypeScript
   args: {
-    id: 4,
-    nombre: "Ventas",
+    id: 0,
+    nombre: 'Dummy',
   },
-  render: (args) => {
-    // Estado local para simular la selección al hacer clic
-    const [seleccionado, setSeleccionado] = useState(false);
-    
-    return (
-      <RolCard 
-        {...args} 
-        seleccionado={seleccionado} 
-        onClick={() => setSeleccionado(!seleccionado)} 
-      />
-    );
-  },
+  render: () => (
+    <div className="grid grid-cols-2 gap-4 w-[450px]">
+      <RolCard id={1} nombre="Admin" />
+      <RolCard id={2} nombre="Doctor" />
+      <RolCard id={3} nombre="Enfermera" />
+      <RolCard id={4} nombre="Laboratorista" />
+      <RolCard id={5} nombre="Paciente" />
+      <RolCard id={6} nombre="Superusuario" />
+    </div>
+  ),
 };
