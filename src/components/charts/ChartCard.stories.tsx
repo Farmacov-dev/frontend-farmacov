@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import ChartCard from "./ChartCard";
 
+// hola
 const meta = {
   title: "Components/Charts/ChartCard",
   component: ChartCard,
