@@ -1,7 +1,7 @@
 // src/components/layout/DashboardLayout.tsx
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
-import { FaSyringe, FaClipboardList, FaUserShield, FaHistory, FaDatabase } from "react-icons/fa"; // <-- Agregamos FaDatabase
+import { FaSyringe, FaClipboardList, FaUserShield, FaHistory, FaUsers, FaDatabase } from "react-icons/fa";
 import Sidebar from "../Sidebar/Sidebar";
 import { useAuth } from "../../hooks/useAuth";
 import { useSidebar } from "../../context/SidebarContext";
@@ -51,6 +51,12 @@ const DashboardLayout = () => {
       icon: FaHistory,
       onClick: () => navigate("/historial"),
     },
+    {
+    key: "usuarios",
+    label: "Gestión de Usuarios",
+    icon: FaUsers,
+    onClick: () => navigate("/usuarios"),
+    },
     // --- NUESTRA NUEVA PANTALLA ---
     {
       key: "gestion-datos",
@@ -67,6 +73,7 @@ const DashboardLayout = () => {
     if (item.key === 'analisis_sintomas') return canView('analisis');
     if (item.key === 'roles-permisos') return isAdmin;
     if (item.key === 'historial') return isAdmin;
+    if (item.key === 'usuarios') return isAdmin;
     if (item.key === 'gestion-datos') return isAdmin; // <-- Protegido solo para Admins
     return true;
   });

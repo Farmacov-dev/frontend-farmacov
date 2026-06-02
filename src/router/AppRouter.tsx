@@ -8,6 +8,7 @@ import Dashboard from '../pages/Dashboard';
 import Comparison from '../pages/Comparison';
 import ErrorPage from '../pages/ErrorPage';
 import RolesPermisosPage from '../pages/admin/RolesPermisosPage';
+import GestionUsuarios from '../pages/GestionUsuarios';
 import AdminRoute from './AdminRoute';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import GestionDatosPage from '../pages/admin/GestionDatosPage';
@@ -54,6 +55,15 @@ export default function AppRouter() {
             </AdminRoute>
           }
         />
+      
+        <Route
+          path="/usuarios"
+          element={
+            <AdminRoute>
+              <GestionUsuarios />
+            </AdminRoute>
+          }
+        />        
 
         <Route
           path="/gestion-datos"
