@@ -70,7 +70,7 @@ const VaccineCatalogTable = ({ vaccines, onVaccineClick, onInfoClick }: VaccineC
               <th
                 key={col.key}
                 onClick={() => handleSort(col.key)}
-                className={`px-4 py-3 text-left text-xs font-medium cursor-pointer select-none whitespace-nowrap transition-colors
+                className={`px-4 py-3 text-left text-xs font-medium select-none whitespace-nowrap transition-colors
                   ${sortKey === col.key ? 'text-[#5B84E9]' : 'text-slate-500 hover:text-slate-700'}
                 `}
               >

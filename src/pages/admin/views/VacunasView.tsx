@@ -1,4 +1,6 @@
 // src/pages/admin/views/VacunasView.tsx
+// angel
+
 import { useState } from "react";
 import Button from "../../../components/primary/Button/Button";
 import { DataTable } from "../../../components/composed/DataTable/DataTable";
@@ -44,13 +46,15 @@ export default function VacunasView({ farmacoActivo, onSelectVacuna }: VacunasVi
   const [vacunaAEliminar, setVacunaAEliminar] = useState<Vacuna | null>(null);
   
   const [cargandoEdicion, setCargandoEdicion] = useState(false); 
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const columns: Column<VacunaRow>[] = [
     { header: "ID", accessor: (row) => row.idVacuna, widthClass: "w-[80px]" },
-    { header: "Nombre", accessor: (row) => <span className="font-semibold text-[#5B84E9]">{row.nombre}</span>, widthClass: "flex-[1.5]" },
+    { header: "Nombre", accessor: (row) => <span className="font-semibold text-primary">{row.nombre}</span>, widthClass: "flex-[1.5]" },
   ];
 
   const handleOpenEditar = async (vacunaFila: VacunaRow) => {
+    setActionError(null);
     setCargandoEdicion(true);
     try {
       const detalleCompleto = await queryClient.fetchQuery({
@@ -68,18 +72,20 @@ export default function VacunasView({ farmacoActivo, onSelectVacuna }: VacunasVi
       setIsFormOpen(true);
     } catch (error) {
       console.error("Error obteniendo detalles", error);
-      alert("No se pudo cargar la información de la vacuna desde el servidor.");
+      setActionError("No se pudo cargar la información completa de la vacuna desde el servidor.");
     } finally {
       setCargandoEdicion(false);
     }
   };
 
   const handleOpenCrear = () => {
+    setActionError(null);
     setVacunaAEditar(null);
     setIsFormOpen(true);
   };
 
   const handleSubmitForm = (idManual: number | undefined, data: CrearVacunaDTO) => {
+    setActionError(null);
     if (vacunaAEditar) {
       editar({ id: vacunaAEditar.idVacuna, vacuna: data }, { onSuccess: () => setIsFormOpen(false) });
     } else {
@@ -89,12 +95,16 @@ export default function VacunasView({ farmacoActivo, onSelectVacuna }: VacunasVi
 
   const handleConfirmarEliminar = () => {
     if (!vacunaAEliminar) return;
+    setActionError(null);
     eliminar(vacunaAEliminar.idVacuna, {
       onSuccess: () => {
         setIsDeleteOpen(false);
         setVacunaAEliminar(null);
       },
-      onError: () => alert("No se pudo eliminar. Puede que tenga reportes o efectos secundarios ligados.")
+      onError: () => {
+        setActionError(`No se pudo eliminar ${vacunaAEliminar.nombre}. Es probable que tenga reportes, síntomas o efectos secundarios ligados.`);
+        setIsDeleteOpen(false);
+      }
     });
   };
 
@@ -103,39 +113,54 @@ export default function VacunasView({ farmacoActivo, onSelectVacuna }: VacunasVi
       
       {/* Overlay de carga */}
       {cargandoEdicion && (
-        <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center rounded-xl">
-          <span className="text-[#5B84E9] font-medium bg-white px-4 py-2 rounded-card shadow-sm border border-stroke-light">
-            Obteniendo datos...
+        <div role="status" aria-live="polite" className="absolute inset-0 bg-white/60 z-10 flex items-center justify-center rounded-xl backdrop-blur-[1px]">
+          <span className="text-primary font-medium bg-white px-4 py-2 rounded-card shadow-modal border border-stroke animate-pulse">
+            Obteniendo datos de la vacuna...
           </span>
         </div>
       )}
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-dark font-inter">Vacunas Registradas</h2>
-          <p className="text-sm text-slate-500 font-inter mt-1">
+          <p className="text-sm text-muted font-inter mt-1">
             Administrando el catálogo de {farmacoActivo.nombre}
           </p>
         </div>
-        <Button variant="primary" onClick={handleOpenCrear} className="!py-[8px] !px-[16px]">
+        <Button variant="primary" onClick={handleOpenCrear}>
           + Añadir Vacuna
         </Button>
       </div>
 
-      {isError && <div className="p-4 text-red-500 bg-red-50 rounded-card">Error al cargar las vacunas.</div>}
+      {(isError || actionError) && (
+        <div role="alert" className="p-4 text-red bg-red/10 border border-red/30 rounded-card text-sm font-medium">
+          {actionError || "Error crítico al cargar las vacunas."}
+        </div>
+      )}
 
       {isLoading ? (
-        <div className="text-muted text-sm py-4">Cargando catálogo...</div>
+        <div role="status" aria-live="polite" className="text-muted text-sm py-4 animate-pulse">
+          Cargando catálogo de vacunas...
+        </div>
+      ) : vacunasTableData.length === 0 && !isError ? (
+        <div className="text-muted-light text-sm py-8 text-center border-2 border-dashed border-stroke rounded-card bg-surface">
+          Este laboratorio aún no tiene vacunas registradas.
+        </div>
       ) : (
         <DataTable 
           data={vacunasTableData} 
           columns={columns} 
           onEdit={handleOpenEditar} 
-          onDelete={(v) => { setVacunaAEliminar(v); setIsDeleteOpen(true); }}
+          onDelete={(v) => { 
+            setActionError(null); 
+            setVacunaAEliminar(v); 
+            setIsDeleteOpen(true); 
+          }}
           onRowClick={(v) => onSelectVacuna(v)} 
         />
       )}
 
+      {/* Modales */}
       <VacunaModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -150,7 +175,7 @@ export default function VacunasView({ farmacoActivo, onSelectVacuna }: VacunasVi
         onClose={() => setIsDeleteOpen(false)}
         onConfirm={handleConfirmarEliminar}
         title="Eliminar Vacuna"
-        message={`¿Estás seguro de eliminar ${vacunaAEliminar?.nombre}? Esta acción fallará si tiene reportes existentes.`}
+        message={`¿Estás seguro de eliminar ${vacunaAEliminar?.nombre}? Esta acción no se puede deshacer y fallará si tiene reportes existentes.`}
         isDestructive={true}
         isLoading={eliminando}
       />

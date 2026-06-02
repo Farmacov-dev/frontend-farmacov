@@ -1,7 +1,8 @@
 // src/router/AppRouter.tsx
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Analisis_Sintomas, Historial } from '../pages';
 import Login from '../pages/Login';
+import LandingView from '../pages/LandingView'; // [NUEVO]: Importamos el Landing
 import Catalog from '../pages/Catalog';
 import Dashboard from '../pages/Dashboard';
 import Comparison from '../pages/Comparison';
@@ -12,10 +13,21 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import GestionDatosPage from '../pages/admin/GestionDatosPage';
 
 export default function AppRouter() {
+  // [NUEVO]: Instanciamos el hook de navegación
+  const navigate = useNavigate();
+
   return (
     <Routes>
       {/* Rutas Públicas */}
-      <Route path="/" element={<Login />} />
+      {/* 1. El Landing ahora es la puerta de entrada principal */}
+      <Route 
+        path="/" 
+        element={<LandingView onLoginClick={() => navigate('/login')} />} 
+      />
+      
+      {/* 2. El Login se mueve a su propia ruta específica */}
+      <Route path="/login" element={<Login />} />
+      
       <Route path="/error" element={<ErrorPage />} />
 
       {/* Rutas Privadas con layout */}
@@ -25,7 +37,6 @@ export default function AppRouter() {
         <Route path="/analisis_sintomas" element={<Analisis_Sintomas />} />
         <Route path="/comparacion" element={<Comparison />} />
         
-
         <Route
           path="/roles-permisos"
           element={
@@ -52,8 +63,6 @@ export default function AppRouter() {
             </AdminRoute>
           }
         />
-
-
       </Route>
     </Routes>
   );
