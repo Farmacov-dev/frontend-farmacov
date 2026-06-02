@@ -14,7 +14,6 @@ export interface HistorialKpis {
   usuariosActivos: number;
   usuariosSuspendidos: number;
   ultimoAcceso: string;
-  alertasSeguridad: number;
 }
 
 const MOCK_USERS: HistorialUser[] = [
@@ -60,7 +59,6 @@ const MOCK_KPIS: HistorialKpis = {
   usuariosActivos: 18,
   usuariosSuspendidos: 3,
   ultimoAcceso: "Hace 5 min",
-  alertasSeguridad: 2,
 };
 
 export const getHistorialUsers = async (): Promise<HistorialUser[]> => {

@@ -1,4 +1,5 @@
 // src/components/composed/LoginCard/LoginCard.tsx
+// angel
 
 import { useState } from "react";
 import InputField from "../../primary/InputField/InputField";
@@ -19,8 +20,9 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
   const [systemError, setSystemError] = useState(false);
   const [loading, setLoading]         = useState(false);
 
-  async function handleSubmit() {
-    // campos vacíos → error de campos, no de sistema
+  async function handleSubmit(e?: React.SyntheticEvent) {
+    if (e) e.preventDefault();
+
     if (!email || !password) {
       setFieldError(true);
       return;
@@ -32,7 +34,6 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
       setSystemError(false);
       await onLogin(email, password);
     } catch (error: any) {
-      // credenciales incorrectas → error de campos
       if (
         error?.status === 401 ||
         error?.code === "auth/wrong-password" ||
@@ -41,7 +42,6 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
       ) {
         setFieldError(true);
       } else {
-        // error de red / servidor → pantalla de error
         setSystemError(true);
       }
     } finally {
@@ -49,7 +49,6 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
     }
   }
 
-  // regresa al formulario limpio desde la pantalla de error
   function handleRegresar() {
     setSystemError(false);
     setFieldError(false);
@@ -60,7 +59,8 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
   return (
     <div className="
       flex flex-col items-center
-      w-[520px] h-[618px]
+      /* [REFACTOR]: w-full max-w-[520px] y min-h-[618px] para evitar que se desborde en pantallas pequeñas */
+      w-full max-w-[520px] min-h-[618px]
       px-[48px] py-[64px]
       gap-[65px]
       bg-white rounded-[12px]
@@ -70,8 +70,9 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
       {/* sección título — siempre visible */}
       <div className="flex flex-col items-center gap-[16px] self-stretch">
         <LogoMark />
+        {/* [REFACTOR]: text-negro a text-dark */}
         <p className="
-          self-stretch text-center text-negro
+          self-stretch text-center text-dark
           font-inter text-[16px] font-medium leading-[24px]
         ">
           Portal Ejecutivo de Análisis de Vacunas
@@ -80,63 +81,60 @@ export default function LoginCard({ onLogin }: LoginCardProps) {
 
       {/* pantalla de error de sistema */}
       {systemError ? (
-        <>
+        <div className="flex flex-col w-full gap-6 animate-fadeIn">
           <ErrorBanner message="Algo falló! Intenta nuevamente." />
           <Button variant="primary" onClick={handleRegresar}>
             Regresar
           </Button>
-        </>
+        </div>
       ) : (
-        <>
-          {/* formulario normal */}
-          <div className="flex flex-col items-start gap-[25px] self-stretch">
+        /* [REFACTOR]: Cambiamos este div por un <form> para activar el envío con la tecla "Enter" */
+        <form onSubmit={handleSubmit} className="flex flex-col items-start gap-[25px] self-stretch w-full">
 
-            {/* correo */}
-            <div className="flex flex-col items-start gap-[5px] self-stretch h-[80px]">
-              <InputField
-                label="Correo Electrónico"
-                type="email"
-                placeholder="example@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={fieldError}
-              />
-            </div>
-
-            {/* contraseña */}
-            <div className="flex flex-col items-start gap-[5px] self-stretch h-[80px]">
-              <InputField
-                label="Contraseña"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                error={fieldError}
-                eyeIcon={eyeIcon}
-                eyeOffIcon={eyeOffIcon}
-              />
-            </div>
-
-            {/* mensaje credenciales incorrectas */}
-            {fieldError && (
-              <p
-                className="w-[345px] h-[43px] font-inter text-[16px] font-semibold leading-[24px]"
-                style={{ color: "#BC1C21" }}
-              >
-                Correo y/o contraseña incorrectos
-              </p>
-            )}
-
+          {/* correo */}
+          <div className="flex flex-col items-start gap-[5px] self-stretch">
+            <InputField
+              label="Correo Electrónico"
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={fieldError}
+              disabled={loading}
+            />
           </div>
 
+          {/* contraseña */}
+          <div className="flex flex-col items-start gap-[5px] self-stretch">
+            <InputField
+              label="Contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={fieldError}
+              eyeIcon={eyeIcon}
+              eyeOffIcon={eyeOffIcon}
+              disabled={loading}
+            />
+          </div>
+
+          {/* mensaje credenciales incorrectas */}
+          {fieldError && (
+            <p className="w-full font-inter text-[16px] font-semibold leading-[24px] text-red animate-fadeIn">
+              Correo y/o contraseña incorrectos
+            </p>
+          )}
+
           {/* botón acceder */}
+          {/* [REFACTOR]: type="submit" añadido para que el formulario funcione nativamente */}
           <Button
+            type="submit"
             variant="primary"
             disabled={loading}
-            onClick={handleSubmit}
           >
             {loading ? "Accediendo..." : "Accede al dashboard"}
           </Button>
-        </>
+        </form>
       )}
 
     </div>

@@ -1,4 +1,6 @@
 // src/pages/Analisis_Sintomas.tsx
+// angel
+
 import { useState } from "react";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ContentWrapper from "../components/content/ContentWrapper";
@@ -10,6 +12,7 @@ import RadarPerfilRiesgo from "../components/charts/RadarPerfilRiesgo";
 import { useUltimaActualizacion } from "../hooks/useUltimaActualizacion";
 import VaccineCheckboxSelector from "../components/primary/VaccineCheckboxSelector/VaccineCheckboxSelector";
 import GroupedBarChart from "../components/charts/GroupedBarChart";
+import SeveridadComparisonPanel from "../components/composed/SeveridadComparisonPanel/SeveridadComparisonPanel";
 
 const Analisis_Sintomas = () => {
   const ultimaActualizacion = useUltimaActualizacion()
@@ -18,25 +21,19 @@ const Analisis_Sintomas = () => {
     idVacunas: undefined,
     sexo: undefined,
     grupoEdad: undefined,
+    esGrave: undefined,
   })
 
   const [vacunasSeleccionadas, setVacunasSeleccionadas] = useState<number[]>([])
 
-  // traemos todos los datos sin filtro de vacuna para tener las opciones
-  const { data: todosSintomas, isPending, isError } = useSintomas({
-    sexo: filtros.sexo,
-    grupoEdad: filtros.grupoEdad,
-  })
+  const { data: todosSintomas, isPending, isError } = useSintomas(filtros)
 
-  // vacunas únicas para el selector
   const vacunasDisponibles = todosSintomas ? extraerVacunas(todosSintomas) : []
 
-  // vacunas seleccionadas con nombre para la gráfica
   const vacunasSeleccionadasConNombre = vacunasDisponibles.filter(
     (v) => vacunasSeleccionadas.includes(v.id)
   )
 
-  // datos agrupados para la gráfica
   const datosAgrupados = todosSintomas
     ? agruparPorSintoma(todosSintomas, vacunasSeleccionadas)
     : []
@@ -93,24 +90,22 @@ const Analisis_Sintomas = () => {
     <main className="flex-1 min-w-0 overflow-y-auto">
       <ContentWrapper>
         <PageHeader
-          title="Analisis de Sintomas"
-          subtitle="Analisis detallado de efectos secundarios graves por vacuna"
+          title="Análisis de Síntomas"
+          subtitle="Análisis detallado de efectos secundarios graves por vacuna"
           date={ultimaActualizacion}
         />
 
-        {/* filtros de contexto */}
-        <div className="mb-6 flex justify-center">
+        <div className="mt-10 mb-2 w-full">
           <FilterBar
-            title="Filtros de Analisis"
+            title="Filtros de Análisis"
             filters={filterOptions}
             onFilterChange={handleFilterChange}
           />
         </div>
 
-        {/* selector de vacunas */}
-        <div className="mb-6">
+        <div className="mb-3 w-full">
           {isPending ? (
-            <p className="font-inter text-[13px] text-muted">
+            <p className="font-inter text-[13px] text-slate-500">
               Cargando vacunas...
             </p>
           ) : (
@@ -122,10 +117,9 @@ const Analisis_Sintomas = () => {
           )}
         </div>
 
-        {/* grafica grouped */}
         <div className="w-full mb-8">
           {isError ? (
-            <p className="font-inter text-[13px] text-red">
+            <p className="font-inter text-[13px] text-red-500">
               Error cargando análisis.
             </p>
           ) : (
@@ -138,8 +132,11 @@ const Analisis_Sintomas = () => {
           )}
         </div>
 
-        {/* perfil de riesgo-valor */}
-        <div className="w-full">
+        <div className="w-full mb-8">
+          <SeveridadComparisonPanel vacunas={vacunasDisponibles} />
+        </div>
+
+        <div className="w-full pb-8">
           <RadarPerfilRiesgo />
         </div>
 

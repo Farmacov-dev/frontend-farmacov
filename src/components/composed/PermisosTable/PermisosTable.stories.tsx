@@ -1,36 +1,68 @@
 // src/components/composed/PermisosTable/PermisosTable.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import { PermisosTable } from "./PermisosTable";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import { PermisosTable } from './PermisosTable';
 
-const meta: Meta<typeof PermisosTable> = {
-  title: "Composed/PermisosTable",
+const meta = {
+  title: 'Components/Composed/PermisosTable',
   component: PermisosTable,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className="p-6 bg-slate-50 min-h-[300px] flex justify-center">
+        <div className="w-full max-w-[800px]">
+          <Story />
+        </div>
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof PermisosTable>;
 
 export default meta;
-type Story = StoryObj<typeof PermisosTable>;
+type Story = StoryObj<typeof meta>;
 
-export const Predeterminado: Story = {
+// Wrapper interactivo
+const PermisosWrapper = (args: any) => {
+  // Tomamos la propiedad nativa 'args.permisos' para inicializar el estado
+  const [permisosState, setPermisosState] = useState<Record<string, boolean>>(args.permisos || {});
+
+  const handleToggle = (moduloId: string) => {
+    setPermisosState((prev) => ({
+      ...prev,
+      [moduloId]: !prev[moduloId],
+    }));
+  };
+
+  return (
+    <PermisosTable 
+      permisos={permisosState} 
+      onTogglePermiso={handleToggle} 
+    />
+  );
+};
+
+export const EstadoPorDefecto: Story = {
   args: {
+    // Usamos el nombre exacto de la prop: 'permisos'
     permisos: {
       dashboard: true,
       analisis: false,
-      catalogo: true,
+      catalogo: false,
     },
-    onTogglePermiso: () => {}, // Función vacía para las vistas estáticas
+    onTogglePermiso: () => {}, // Función vacía para cumplir la interfaz
   },
+  render: (args) => <PermisosWrapper {...args} />,
 };
 
-export const TodosInactivos: Story = {
+export const TodoDenegado: Story = {
   args: {
-    permisos: {},
+    permisos: {}, 
     onTogglePermiso: () => {},
   },
+  render: (args) => <PermisosWrapper {...args} />,
 };
 
-export const TodosActivos: Story = {
+export const SuperAdmin: Story = {
   args: {
     permisos: {
       dashboard: true,
@@ -39,29 +71,5 @@ export const TodosActivos: Story = {
     },
     onTogglePermiso: () => {},
   },
-};
-
-export const Interactivo: Story = {
-  render: () => {
-    // Simulamos el estado que viviría en la pantalla principal (Page)
-    const [permisos, setPermisos] = useState<Record<string, boolean>>({
-      dashboard: true,
-      analisis: false,
-      catalogo: false,
-    });
-
-    const handleToggle = (moduloId: string) => {
-      setPermisos((prev) => ({
-        ...prev,
-        [moduloId]: !prev[moduloId],
-      }));
-    };
-
-    return (
-      <PermisosTable 
-        permisos={permisos} 
-        onTogglePermiso={handleToggle} 
-      />
-    );
-  },
+  render: (args) => <PermisosWrapper {...args} />,
 };

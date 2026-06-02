@@ -1,14 +1,21 @@
 // src/components/composed/ComparisonModal/ComparisonModal.tsx
-import { useState } from "react";
+// angel
+
+import { useState, useMemo } from "react";
 import ModalContainer from "../ModalContainer/ModalContainer";
 import Button from "../../primary/Button/Button";
 import SelectDropdown from "../../SelectDropdown/SelectDropdown";
 
+interface VacunaOption {
+  id: number
+  nombre: string
+}
+
 interface ComparisonModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCompare: (vaccineA: string, vaccineB: string) => void;
-  vaccines: string[];
+  isOpen: boolean
+  onClose: () => void
+  onCompare: (idA: number, idB: number, nombreA: string, nombreB: string) => void
+  vaccines: VacunaOption[]
 }
 
 export default function ComparisonModal({
@@ -17,60 +24,68 @@ export default function ComparisonModal({
   onCompare,
   vaccines,
 }: ComparisonModalProps) {
-  const [vaccineA, setVaccineA] = useState("");
-  const [vaccineB, setVaccineB] = useState("");
+  const [vaccineA, setVaccineA] = useState<VacunaOption | null>(null)
+  const [vaccineB, setVaccineB] = useState<VacunaOption | null>(null)
 
-  const bothSelected = vaccineA !== "" && vaccineB !== "";
+  const bothSelected = vaccineA !== null && vaccineB !== null
+
+  // refactor: useMemo y filtrado mejorado.
+  // se evita que el arreglo se recalcule en cada render y ocultamos la vacuna  ya seleccionada
+  const optionsA = useMemo(() => 
+    vaccines.filter(v => v.id !== vaccineB?.id).map(v => v.nombre),
+  [vaccines, vaccineB])
+
+  const optionsB = useMemo(() => 
+    vaccines.filter(v => v.id !== vaccineA?.id).map(v => v.nombre),
+  [vaccines, vaccineA])
 
   function handleCompare() {
-    if (!bothSelected) return;
-    onCompare(vaccineA, vaccineB);
+    if (!bothSelected) return
+    onCompare(vaccineA.id, vaccineB.id, vaccineA.nombre, vaccineB.nombre)
   }
 
   function handleClose() {
-    setVaccineA("");
-    setVaccineB("");
-    onClose();
+    setVaccineA(null)
+    setVaccineB(null)
+    onClose()
   }
 
   return (
     <ModalContainer isOpen={isOpen} onClose={handleClose} showCloseButton={false}>
-      <div className="flex flex-col justify-between w-[466px] h-[fit-content]">
-
-        {/* parte superior — encabezado + selects */}
+      <div className="flex flex-col justify-between w-full max-w-[466px] h-fit">
         <div className="flex flex-col w-full gap-[20px]">
-
-          {/* encabezado */}
           <div className="flex flex-col items-start gap-[14px]">
-            <p className="text-negro font-inter text-[20px] font-medium leading-normal">
+            <p className="text-dark font-inter text-[20px] font-medium leading-normal">
               Comparación de Vacunas
             </p>
-            <p className="font-inter text-[12px] font-normal leading-normal"
-              style={{ color: "#5B5B5B" }}>
+            <p className="text-muted font-inter text-[12px] font-normal leading-normal">
               Seleccione vacunas para comparar sus características
             </p>
           </div>
 
-          {/* selects */}
           <div className="flex flex-col w-full gap-[11px]">
             <SelectDropdown
-              options={vaccines}
-              placeholder="Vacuna a comparar"
-              value={vaccineA}
-              onChange={(val) => setVaccineA(val)}
+              options={optionsA}
+              placeholder="Primera vacuna a comparar"
+              value={vaccineA?.nombre ?? ''}
+              onChange={(nombre) => {
+                const found = vaccines.find(v => v.nombre === nombre)
+                if (found) setVaccineA(found)
+              }}
             />
             <SelectDropdown
-              options={vaccines}
-              placeholder="Vacuna a comparar"
-              value={vaccineB}
-              onChange={(val) => setVaccineB(val)}
+              options={optionsB}
+              placeholder="Segunda vacuna a comparar"
+              value={vaccineB?.nombre ?? ''}
+              onChange={(nombre) => {
+                const found = vaccines.find(v => v.nombre === nombre)
+                if (found) setVaccineB(found)
+              }}
             />
           </div>
-
         </div>
 
-        {/* parte inferior para el boton */}
-        <div className="flex justify-center w-full pt-[8px]">
+        <div className="flex justify-center w-full pt-[8px] mt-6">
           <Button
             variant="primary"
             disabled={!bothSelected}
@@ -80,8 +95,7 @@ export default function ComparisonModal({
             Crear Comparación
           </Button>
         </div>
-
       </div>
     </ModalContainer>
-  );
+  )
 }

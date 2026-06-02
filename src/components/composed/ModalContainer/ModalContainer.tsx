@@ -1,7 +1,8 @@
 // src/components/composed/ModalContainer/ModalContainer.tsx
-//angel
+// angel
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { IoClose } from "react-icons/io5";
 
 interface ModalContainerProps {
@@ -19,29 +20,50 @@ export default function ModalContainer({
   showCloseButton = true,
   className = "",
 }: ModalContainerProps) {
+  // Estado para asegurarnos de que el portal solo se renderice del lado del cliente
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    setMounted(true);
+    
+    if (!isOpen) return;
+
+    // Bloquear scroll del fondo
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup al cerrar o desmontar
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  // Si no está abierto o no se ha montado el componente, no renderizamos nada
+  if (!isOpen || !mounted) return null;
 
-  return (
+  // createPortal inyecta este HTML directamente al <body> de la página
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      // subida de z index para asegurar que el modal esté por encima de otros elementos.
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-4"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
         className={`
           relative flex flex-col items-start
-          w-fit min-w-[400px] max-w-[60vw]
-          px-[40px] pt-[40px] pb-[40px]
+          w-full sm:w-auto max-w-full sm:max-w-[90vw]
+          max-h-[90vh] overflow-y-auto
+          p-6 sm:p-10
           bg-white rounded-card
           shadow-modal
           animate-fadeIn
@@ -51,20 +73,22 @@ export default function ModalContainer({
       >
         {showCloseButton && (
           <button
+            type="button"
             onClick={onClose}
             className="
               absolute top-4 right-4
               text-muted hover:text-dark
               transition-colors duration-150
-              cursor-pointer
+              rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary
             "
             aria-label="Cerrar modal"
           >
-            <IoClose size={20} />
+            <IoClose size={24} aria-hidden="true" />
           </button>
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body // <- Esta es la magia: destino final del HTML
   );
 }
