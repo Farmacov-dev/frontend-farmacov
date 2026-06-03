@@ -3,10 +3,10 @@ import { CACHE_15MIN } from "../config/queryClient";
 import { getHistorialKpis } from "../services/historial/getHistorial";
 import { getBitacora } from "../services/historial/getBitacora";
 
-export const useHistorialUsers = () => {
+export const useHistorialUsers = (page: number = 0) => {
   return useQuery({
-    queryKey: ["bitacora"],
-    queryFn: getBitacora,
+    queryKey: ["bitacora", page],
+    queryFn: () => getBitacora(page),
     staleTime: CACHE_15MIN,
     gcTime: CACHE_15MIN,
   });

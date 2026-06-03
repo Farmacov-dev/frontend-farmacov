@@ -25,18 +25,25 @@ interface AuthStore {
   logout: () => Promise<void>
 }
 
-export const useAuthStore = create<AuthStore>()((set) => ({
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
-  user: null,
+export const useAuthStore = create<AuthStore>()((set) => {
+  // Load persisted data from localStorage on initialization
+  const token = localStorage.getItem('token')
+  const userStr = localStorage.getItem('user')
+  const user = userStr ? JSON.parse(userStr) : null
 
-  login: async (email, password) => {
-    const { token, user } = await loginService(email, password)
-    set({ token, isAuthenticated: true, user })
-  },
+  return {
+    token,
+    isAuthenticated: !!token,
+    user,
 
-  logout: async () => {
-    await logoutService()
-    set({ token: null, isAuthenticated: false, user: null })
-  },
-}))
+    login: async (email, password) => {
+      const { token, user } = await loginService(email, password)
+      set({ token, isAuthenticated: true, user })
+    },
+
+    logout: async () => {
+      await logoutService()
+      set({ token: null, isAuthenticated: false, user: null })
+    },
+  }
+})
