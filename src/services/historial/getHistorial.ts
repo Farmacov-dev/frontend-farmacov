@@ -8,6 +8,7 @@ export interface HistorialUser {
   colorAvatar: string;
   accion: string;
   resultado: "Exitoso" | "Fallido";
+  nombreAdmin?: string;
 }
 
 export interface HistorialKpis {

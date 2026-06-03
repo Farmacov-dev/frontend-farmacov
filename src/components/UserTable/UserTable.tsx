@@ -18,6 +18,9 @@ const UserTable = ({ users }: UserTableProps) => {
               Usuario
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Admin
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
               Acci\u00f3n
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
