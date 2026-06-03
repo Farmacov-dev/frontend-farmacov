@@ -9,10 +9,11 @@ import { useSidebar } from "../../context/SidebarContext";
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Consumimos los contextos directamente aquí
   const { collapsed, setCollapsed } = useSidebar();
   const { userName, userRole, logout, canView, isAdmin } = useAuth();
+
 
   const handleLogout = async () => {
     await logout();
@@ -66,16 +67,23 @@ const DashboardLayout = () => {
     }
   ];
 
-  // 2. Filtramos usando tu lógica de permisos exacta
+  // 2. Filtramos según el rol del usuario
+  // No-admin users: Dashboard, Análisis de Sintomas, Catálogo de Vacunas
+  // Admin users: Roles y Permisos, Historial, Gestión de Usuarios, Gestión de Datos
   const itemsFiltrados = sidebarItems.filter((item) => {
+    const adminItems = ['roles-permisos', 'historial', 'usuarios', 'gestion-datos'];
+
+    // Admin users see only admin sections
+    if (isAdmin) {
+      return adminItems.includes(item.key);
+    }
+
+    // Non-admin users see only non-admin sections with proper permissions
     if (item.key === 'dashboard') return canView('dashboard');
     if (item.key === 'catalog') return canView('catalogo');
     if (item.key === 'analisis_sintomas') return canView('analisis');
-    if (item.key === 'roles-permisos') return isAdmin;
-    if (item.key === 'historial') return isAdmin;
-    if (item.key === 'usuarios') return isAdmin;
-    if (item.key === 'gestion-datos') return isAdmin; // <-- Protegido solo para Admins
-    return true;
+
+    return false;
   });
 
   // 3. Calculamos qué item está activo basándonos en la URL actual

@@ -56,7 +56,29 @@ export function mapBitacoraToHistorialUsers(
   }));
 }
 
-export const getBitacora = async (): Promise<HistorialUser[]> => {
-  const { data } = await api.get<BitacoraEntry[]>("/bitacora");
-  return mapBitacoraToHistorialUsers(data);
+export interface BitacoraPaginatedResponse {
+  data: BitacoraEntry[];
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
+
+export interface BitacoraPaginatedResult {
+  users: HistorialUser[];
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
+
+export const getBitacora = async (page: number = 0): Promise<BitacoraPaginatedResult> => {
+  const { data } = await api.get<BitacoraPaginatedResponse>(`/bitacora/paginated?page=${page}`);
+  return {
+    users: mapBitacoraToHistorialUsers(data.data),
+    currentPage: data.currentPage,
+    pageSize: data.pageSize,
+    totalItems: data.totalItems,
+    totalPages: data.totalPages,
+  };
 };
