@@ -19,6 +19,7 @@ const PurchaseLocationsPanel = ({
   return (
     <SectionCard title={title}>
       <div className="space-y-3">
+        {/* Cada tarjeta solo muestra los campos opcionales que sí existen. */}
         {locations.map((location, index) => (
           <div
             key={index}

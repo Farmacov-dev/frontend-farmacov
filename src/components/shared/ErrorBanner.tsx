@@ -12,6 +12,7 @@ type ErrorBannerProps = {
 };
 
 const typeStyles = {
+  // La paleta centralizada mantiene consistentes las variantes de error y advertencia.
   error: {
     container: "bg-red-50 border-red-200",
     title: "text-red-800",
@@ -41,6 +42,7 @@ const ErrorBanner = ({
     >
       <div className="flex items-start gap-3">
         <span className={`mt-0.5 text-xl ${styles.icon}`}>
+          {/* Usa el icono por defecto cuando el componente no recibe uno personalizado. */}
           {icon ? icon : <MdErrorOutline />}
         </span>
 

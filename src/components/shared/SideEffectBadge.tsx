@@ -17,6 +17,7 @@ const severityStyles: Record<
     text: string;
   }
 > = {
+  // Cada severidad usa una paleta fija para que la etiqueta se lea rápido.
   low: {
     container: "bg-green-50",
     dot: "bg-green-500",
@@ -47,6 +48,7 @@ const SideEffectBadge = ({
     >
       <span className={`h-2.5 w-2.5 rounded-full ${styles.dot}`} />
       <span className="flex items-center gap-1">
+        {/* Usa el icono recibido; si no existe, muestra el marcador de advertencia por defecto. */}
         {icon ? icon : <MdWarningAmber className="text-base" />}
         {label}
       </span>

@@ -33,13 +33,14 @@ const BarChartComparison = ({
     );
 
   const getBarHeight = (value: number) => {
+    // Las alturas se normalizan contra el máximo configurado para mantener la comparación.
     return `${(value / maxValue) * 100}%`;
   };
 
   return (
     <section className="w-full rounded-lg border border-[#D9D9D9] bg-white p-6 shadow-sm">
       
-      {/* 🟣 Leyenda */}
+      {/* Leyenda de las dos series mostradas en el gráfico. */}
       <div className="mb-6 flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <span
@@ -62,13 +63,13 @@ const BarChartComparison = ({
         </div>
       </div>
 
-      {/* 🟡 Estado vacío */}
+      {/* Evita renderizar un gráfico vacío cuando no hay datos útiles. */}
       {!hasData ? (
         <EmptyState title="No hay datos disponibles para mostrar" />
       ) : (
         <div className="flex gap-4">
           
-          {/* Eje Y */}
+          {/* Las etiquetas del eje Y van separadas de las barras para simplificar la alineación. */}
           <div className="relative flex h-[320px] w-[60px] flex-col justify-between pb-8 text-xs text-[#6B7280]">
             {defaultTicks
               .slice()
@@ -80,10 +81,10 @@ const BarChartComparison = ({
               ))}
           </div>
 
-          {/* Área del gráfico */}
+          {/* Área principal del gráfico con líneas guía y barras agrupadas. */}
           <div className="relative flex-1">
             
-            {/* Líneas horizontales */}
+            {/* Las líneas guía ayudan a leer la altura relativa de cada barra. */}
             <div className="absolute inset-0 flex h-[320px] flex-col justify-between pb-8">
               {defaultTicks
                 .slice()
@@ -96,7 +97,7 @@ const BarChartComparison = ({
                 ))}
             </div>
 
-            {/* Barras */}
+            {/* Cada categoría renderiza un par de barras: una por serie. */}
             <div className="relative flex h-[320px] items-end justify-around gap-8 pb-8">
               {data.map((group) => (
                 <div
