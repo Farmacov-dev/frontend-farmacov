@@ -276,7 +276,7 @@ describe('Componente: SeveridadComparisonPanel', () => {
       target: { value: 'Pfizer' },
     });
 
-    const chartData = JSON.parse(screen.getByTestId('chart-data').textContent!);
+    const chartData = JSON.parse(screen.getByTestId('chart-data').textContent);
     expect(chartData).toEqual([
       { label: 'Leve',     value: 100 },
       { label: 'Moderado', value: 50  },
@@ -297,7 +297,7 @@ describe('Componente: SeveridadComparisonPanel', () => {
       target: { value: 'Pfizer' },
     });
 
-    expect(screen.getByTestId('chart-card').getAttribute('data-type')).toBe('pie');
+    expect(screen.getByTestId('chart-card').dataset.type).toBe('pie');
   });
 
   // ─── AMBOS PANELES CON DATOS ─────────────────────────────────────────────

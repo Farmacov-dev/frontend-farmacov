@@ -14,7 +14,6 @@ describe('Componente: InputField', () => {
   it('debe renderizar correctamente el label y vincularlo al input', () => {
     render(<InputField label="Nombre completo" />);
     
-    // getByLabelText hace la magia: busca el <label>, lee su texto, y te devuelve el <input> vinculado
     const inputElement = screen.getByLabelText(/nombre completo/i);
     expect(inputElement).toBeDefined();
     expect(inputElement.getAttribute('type')).toBe('text');

@@ -5,8 +5,6 @@ import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import ComparisonModal from './ComparisonModal';
 
-// 1. Mockeamos los componentes hijos para simplificar su DOM en esta prueba.
-// Esto aísla la lógica de ComparisonModal y evita fallos por animaciones del modal real.
 vi.mock('../ModalContainer/ModalContainer', () => ({
   default: ({ children, isOpen }: any) => (isOpen ? <div data-testid="mock-modal">{children}</div> : null)
 }));
@@ -16,7 +14,6 @@ vi.mock('../../SelectDropdown/SelectDropdown', () => ({
     <select
       aria-label={placeholder}
       onChange={(e) => onChange(e.target.value)}
-      // Guardamos las opciones renderizadas en un atributo data para evaluar el filtrado de tu useMemo
       data-opciones-disponibles={options.join(',')} 
     >
       <option value="">{placeholder}</option>
@@ -81,13 +78,13 @@ describe('Componente: ComparisonModal', () => {
     const dropdownB = screen.getByRole('combobox', { name: /segunda vacuna/i });
 
     // Verificamos el estado inicial: ambos tienen todas las vacunas
-    expect(dropdownA.getAttribute('data-opciones-disponibles')).toBe('Pfizer,Moderna,AstraZeneca');
+    expect(dropdownA.dataset.opcionesDisponibles).toBe('Pfizer,Moderna,AstraZeneca');
     
     // Simulamos que el usuario selecciona Pfizer en el primer dropdown
     fireEvent.change(dropdownA, { target: { value: 'Pfizer' } });
 
     // El segundo dropdown ya no debe contener a Pfizer en sus opciones gracias al useMemo
-    expect(dropdownB.getAttribute('data-opciones-disponibles')).toBe('Moderna,AstraZeneca');
+    expect(dropdownB.dataset.opcionesDisponibles).toBe('Moderna,AstraZeneca');
   });
 
   it('debe habilitar el botón y enviar los IDs y nombres correctos al hacer submit', () => {
@@ -105,18 +102,14 @@ describe('Componente: ComparisonModal', () => {
     const dropdownB = screen.getByRole('combobox', { name: /segunda vacuna/i });
     const botonComparar = screen.getByRole('button', { name: /crear comparación/i }) as HTMLButtonElement;
 
-    // Seleccionamos la primera
     fireEvent.change(dropdownA, { target: { value: 'AstraZeneca' } });
-    expect(botonComparar.disabled).toBe(true); // Todavía falta una
+    expect(botonComparar.disabled).toBe(true);
 
-    // Seleccionamos la segunda
     fireEvent.change(dropdownB, { target: { value: 'Moderna' } });
-    expect(botonComparar.disabled).toBe(false); // Ya están ambas
+    expect(botonComparar.disabled).toBe(false);
 
-    // Ejecutamos la acción
     fireEvent.click(botonComparar);
 
-    // Verificamos que tu función extrajo los IDs correctos (3 para AstraZeneca, 2 para Moderna)
     expect(handleCompare).toHaveBeenCalledTimes(1);
     expect(handleCompare).toHaveBeenCalledWith(3, 2, 'AstraZeneca', 'Moderna');
   });

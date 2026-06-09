@@ -155,8 +155,8 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={mockVacuna} />);
 
     const header = screen.getByTestId('vaccine-header');
-    expect(header.getAttribute('data-nombre')).toBe('Pfizer-BioNTech');
-    expect(header.getAttribute('data-farmaceutica')).toBe('Pfizer');
+    expect(header.dataset.nombre).toBe('Pfizer-BioNTech');
+    expect(header.dataset.farmaceutica).toBe('Pfizer');
   });
 
   // ─── PROPS DE VaccineDescription ─────────────────────────────────────────
@@ -165,8 +165,8 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={mockVacuna} />);
 
     const desc = screen.getByTestId('vaccine-description');
-    expect(desc.getAttribute('data-descripcion')).toBe('Vacuna de ARNm contra el COVID-19.');
-    expect(desc.getAttribute('data-compact')).toBe('true');
+    expect(desc.dataset.descripcion).toBe('Vacuna de ARNm contra el COVID-19.');
+    expect(desc.dataset.compact).toBe('true');
   });
 
   // ─── PROPS DE MedicalSpecsSection ────────────────────────────────────────
@@ -175,10 +175,10 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={mockVacuna} />);
 
     const specs = screen.getByTestId('medical-specs');
-    expect(specs.getAttribute('data-tipo')).toBe('ARNm');
-    expect(specs.getAttribute('data-temperatura')).toBe('-70');
-    expect(specs.getAttribute('data-tiempo')).toBe('2');
-    expect(specs.getAttribute('data-costo')).toBe('299.99');
+    expect(specs.dataset.tipo).toBe('ARNm');
+    expect(specs.dataset.temperatura).toBe('-70');
+    expect(specs.dataset.tiempo).toBe('2');
+    expect(specs.dataset.costo).toBe('299.99');
   });
 
   it('debe pasar tiempoAmbiente como null cuando la vacuna no lo tiene', () => {
@@ -186,7 +186,7 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={vacunaSinTiempo} />);
 
     const specs = screen.getByTestId('medical-specs');
-    expect(specs.getAttribute('data-tiempo')).toBe('null');
+    expect(specs.dataset.tiempo).toBe('null');
   });
 
   // ─── PROPS DE SideEffectsPanel ────────────────────────────────────────────
@@ -195,7 +195,7 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={mockVacuna} />);
 
     const efectos: EfectoSecundario[] = JSON.parse(
-      screen.getByTestId('side-effects').getAttribute('data-efectos')!
+      screen.getByTestId('side-effects').dataset.efectos ?? '[]'
     );
     expect(efectos).toEqual([
       { descripcion: 'Dolor en zona de inyección', severidad: 'leve' },
@@ -208,7 +208,7 @@ describe('Componente: VaccineDetailModal', () => {
     render(<VaccineDetailModal {...baseProps} vacuna={vacunaSinEfectos} />);
 
     const efectos: EfectoSecundario[] = JSON.parse(
-      screen.getByTestId('side-effects').getAttribute('data-efectos')!
+      screen.getByTestId('side-effects').dataset.efectos ?? '[]'
     );
     expect(efectos).toEqual([]);
   });

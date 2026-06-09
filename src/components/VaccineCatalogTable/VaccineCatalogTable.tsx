@@ -76,7 +76,6 @@ const VaccineCatalogTable = ({ vaccines, onVaccineClick, onInfoClick }: VaccineC
               >
                 <span className="inline-flex items-center gap-1.5">
                   {col.label}
-                  {/* MAGIA VISUAL: Ocultamos la flecha si no es la columna activa, y la rotamos si es descendente */}
                   <ChevronDown 
                     size={14} 
                     className={`transition-transform duration-200 ${sortKey === col.key ? 'opacity-100' : 'opacity-0'} 

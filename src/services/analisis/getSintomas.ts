@@ -2,7 +2,7 @@
 import api from '../api'
 
 export interface SintomaFiltros {
-  idVacunas?: number[]  // ← array en lugar de uno solo
+  idVacunas?: number[]  
   sexo?: string
   grupoEdad?: string
   esGrave?: boolean
@@ -36,7 +36,7 @@ export const extraerVacunas = (data: SintomaBackend[]): VacunaOption[] => {
   return Array.from(mapa.entries()).map(([id, nombre]) => ({ id, nombre }))
 }
 
-// agrupa datos por síntoma y vacuna para la gráfica grouped
+// agrupa datos por síntoma y vacuna para la gráfica 
 export interface SintomaAgrupado {
   sintoma: string
   [nombreVacuna: string]: string | number

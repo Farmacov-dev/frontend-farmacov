@@ -209,16 +209,16 @@ describe('Componente: RadarPerfilRiesgo', () => {
     mockHookConDatos();
     render(<RadarPerfilRiesgo />);
     const charts = screen.getAllByTestId('chart-card');
-    expect(charts[0].getAttribute('data-title')).toBe('Radar de Valor');
-    expect(charts[0].getAttribute('data-type')).toBe('radar');
+    expect(charts[0].dataset.title).toBe('Radar de Valor');
+    expect(charts[0].dataset.type).toBe('radar');
   });
 
   it('el segundo ChartCard debe ser el bar con título "Top 5 Síntomas"', () => {
     mockHookConDatos();
     render(<RadarPerfilRiesgo />);
     const charts = screen.getAllByTestId('chart-card');
-    expect(charts[1].getAttribute('data-title')).toBe('Top 5 Síntomas');
-    expect(charts[1].getAttribute('data-type')).toBe('bar');
+    expect(charts[1].dataset.title).toBe('Top 5 Síntomas');
+    expect(charts[1].dataset.type).toBe('bar');
   });
 
   it('debe mostrar el estado vacío "Sin síntomas registrados" cuando topSintomas está vacío', () => {

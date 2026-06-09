@@ -5,7 +5,6 @@ import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import ModalContainer from './ModalContainer';
 
-// Mockeamos el icono para mantener limpio el DOM
 vi.mock('react-icons/io5', () => ({
   IoClose: () => <svg data-testid="icon-close" />
 }));
@@ -17,7 +16,6 @@ describe('Componente: ModalContainer', () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
-    // Limpiamos los estilos del body por si alguna prueba los dejó modificados
     document.body.style.overflow = '';
   });
 
@@ -27,7 +25,6 @@ describe('Componente: ModalContainer', () => {
         <p>Contenido Oculto</p>
       </ModalContainer>
     );
-    
     expect(screen.queryByText('Contenido Oculto')).toBeNull();
   });
 
@@ -40,7 +37,6 @@ describe('Componente: ModalContainer', () => {
 
     const dialogElement = screen.getByRole('dialog');
     expect(dialogElement).toBeDefined();
-    // Verificamos el atributo de accesibilidad
     expect(dialogElement.getAttribute('aria-modal')).toBe('true');
     expect(screen.getByText('Contenido Visible')).toBeDefined();
   });
@@ -54,13 +50,8 @@ describe('Componente: ModalContainer', () => {
       </ModalContainer>
     );
 
-    // Al montarse y estar abierto, debe ocultar el scroll
     expect(document.body.style.overflow).toBe('hidden');
-
-    // Al desmontar el componente (simulando que React lo quita del DOM)
     unmount();
-
-    // El cleanup del useEffect debió limpiar el estilo
     expect(document.body.style.overflow).toBe('');
   });
 
@@ -71,9 +62,7 @@ describe('Componente: ModalContainer', () => {
       </ModalContainer>
     );
 
-    const btnCerrar = screen.getByRole('button', { name: /cerrar modal/i });
-    fireEvent.click(btnCerrar);
-
+    fireEvent.click(screen.getByRole('button', { name: /cerrar modal/i }));
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
@@ -94,8 +83,8 @@ describe('Componente: ModalContainer', () => {
       </ModalContainer>
     );
 
-    // Disparamos el evento de teclado globalmente en window
-    fireEvent.keyDown(window, { key: 'Escape' });
+    // ✅ globalThis en lugar de window
+    fireEvent.keyDown(globalThis as unknown as Window, { key: 'Escape' });
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
@@ -107,18 +96,13 @@ describe('Componente: ModalContainer', () => {
       </ModalContainer>
     );
 
-    const dialogElement = screen.getByRole('dialog');
-    // El contenedor del fondo oscuro (backdrop) es el padre directo del dialog
+    const dialogElement  = screen.getByRole('dialog');
     const backdropElement = dialogElement.parentElement as HTMLElement;
 
-    // 1. Hacemos clic DENTRO del modal
     fireEvent.click(dialogElement);
-    // Como tiene e.stopPropagation(), la función no debió llamarse
     expect(mockOnClose).not.toHaveBeenCalled();
 
-    // 2. Hacemos clic AFUERA del modal (en el backdrop)
     fireEvent.click(backdropElement);
-    // El onClick del padre sí se ejecutó
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 });
