@@ -53,7 +53,7 @@ export const Predeterminado: Story = {
   args: {
     isOpen: true,
     onClose: () => {},
-    children: null, // ReactNode vacío para TS, lo inyectamos en el wrapper
+    children: null, 
   },
   render: (args) => <WrapperInteractivo {...args} />,
 };
