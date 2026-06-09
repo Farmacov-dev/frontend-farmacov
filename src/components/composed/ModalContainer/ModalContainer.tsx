@@ -89,6 +89,6 @@ export default function ModalContainer({
         {children}
       </div>
     </div>,
-    document.body // <- Esta es la magia: destino final del HTML
+    document.body 
   );
 }
