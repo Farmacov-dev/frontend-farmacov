@@ -1,4 +1,5 @@
 // src/pages/Historial.tsx
+import { useState } from "react";
 import {
   FaExclamationTriangle,
   FaSyringe,
@@ -10,8 +11,17 @@ import UserTable from "../components/UserTable/UserTable";
 import { useHistorialKpis, useHistorialUsers } from "../hooks/useHistorial";
 
 export default function Historial() {
-  const { data: users, isPending: usersPending } = useHistorialUsers();
+  const [currentPage, setCurrentPage] = useState(0);
+  const { data: response, isPending: usersPending } = useHistorialUsers(currentPage);
   const { data: kpis, isPending: kpisPending } = useHistorialKpis();
+
+  const users = response?.users ?? [];
+  const pageInfo = response ? {
+    currentPage: response.currentPage,
+    pageSize: response.pageSize,
+    totalItems: response.totalItems,
+    totalPages: response.totalPages,
+  } : null;
 
   return (
     <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
@@ -45,22 +55,30 @@ export default function Historial() {
         {usersPending ? (
           <p className="py-8 text-sm text-gray-500">Cargando actividad...</p>
         ) : (
-          <UserTable users={users ?? []} />
+          <UserTable users={users} />
         )}
 
         <div className="mt-4 flex items-center justify-between">
           <p className="text-xs text-gray-500">
-            Mostrando 1 de {users?.length ?? 0} usuarios
+            Mostrando página {pageInfo?.currentPage ? pageInfo.currentPage + 1 : 1} de {pageInfo?.totalPages ?? 1} ({pageInfo?.totalItems ?? 0} total)
           </p>
 
           <div className="flex items-center gap-1">
-            <button className="h-7 w-7 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50">
+            <button
+              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+              disabled={currentPage === 0}
+              className="h-7 w-7 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {"<"}
             </button>
             <button className="h-7 w-7 rounded-md bg-[#5B84E9] text-white">
-              1
+              {pageInfo?.currentPage ? pageInfo.currentPage + 1 : 1}
             </button>
-            <button className="h-7 w-7 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50">
+            <button
+              onClick={() => setCurrentPage(Math.min(pageInfo?.totalPages ? pageInfo.totalPages - 1 : 0, currentPage + 1))}
+              disabled={!pageInfo || currentPage >= pageInfo.totalPages - 1}
+              className="h-7 w-7 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {">"}
             </button>
           </div>

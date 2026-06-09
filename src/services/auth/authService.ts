@@ -19,7 +19,10 @@ export const login = async (
   localStorage.setItem('token', token)
 
   // 3. backend verifica token y devuelve datos reales del usuario de MySQL
-  const { data: user } = await api.post('/auth/login')
+  // Response shape: { email, nombre, apellidoPaterno, apellidoMaterno, departamento,
+  //                   rol: string, esAdmin: boolean, permisos: { dashboard, catalogo, analisis } }
+  const { data: user } = await api.post<User>('/auth/login')
+
   localStorage.setItem('user', JSON.stringify(user))
   return { token, user }
 }
