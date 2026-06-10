@@ -20,12 +20,11 @@ vi.mock('../VaccineTableRow/VaccineTableRow', () => ({
 
 const mockVaccines = [
   { id: 1, name: 'Comirnaty', farmaceutica: 'Pfizer', costoUnitario: 25.5, temperatura: '-70°C', indice_seguridad: 95, longevidad: '12 meses' },
-  { id: 2, name: 'Spikevax', farmaceutica: 'Moderna', costoUnitario: 30.0, temperatura: '-20°C', indice_seguridad: 92, longevidad: '6 meses' },
+  { id: 2, name: 'Spikevax', farmaceutica: 'Moderna', costoUnitario: 30, temperatura: '-20°C', indice_seguridad: 92, longevidad: '6 meses' },
 ];
 
 describe('Componente: VaccineCatalogTable', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

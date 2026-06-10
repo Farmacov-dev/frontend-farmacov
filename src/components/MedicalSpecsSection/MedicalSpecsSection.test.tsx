@@ -16,7 +16,6 @@ const mockSpecs = [
 
 describe('Componente: MedicalSpecsSection', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

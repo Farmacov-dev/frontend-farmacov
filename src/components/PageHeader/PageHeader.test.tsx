@@ -11,7 +11,6 @@ vi.mock('lucide-react', () => ({
 
 describe('Componente: PageHeader', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

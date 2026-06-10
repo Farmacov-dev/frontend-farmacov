@@ -26,7 +26,6 @@ const mockVaccine: Vaccine = {
 
 describe('Componente: VaccineTableRow', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

@@ -20,7 +20,6 @@ const mockUsers = [
 
 describe('Componente: UserTable', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

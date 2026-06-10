@@ -33,7 +33,6 @@ const mockProps = {
 
 describe('Componente: VaccineDetailContent', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 
@@ -61,18 +60,18 @@ describe('Componente: VaccineDetailContent', () => {
   it('debe renderizar MedicalSpecsSection con los specs correctos', () => {
     render(<VaccineDetailContent {...mockProps} />);
     const el = screen.getByTestId('medical-specs');
-    expect(el.getAttribute('data-count')).toBe('1');
+    expect(el.dataset.count).toBe('1');
   });
 
   it('debe renderizar PurchaseLocationsPanel con las ubicaciones correctas', () => {
     render(<VaccineDetailContent {...mockProps} />);
     const el = screen.getByTestId('purchase-locations');
-    expect(el.getAttribute('data-count')).toBe('1');
+    expect(el.dataset.count).toBe('1');
   });
 
   it('debe renderizar SideEffectsPanel con los efectos correctos', () => {
     render(<VaccineDetailContent {...mockProps} />);
     const el = screen.getByTestId('side-effects');
-    expect(el.getAttribute('data-count')).toBe('1');
+    expect(el.dataset.count).toBe('1');
   });
 });

@@ -7,7 +7,6 @@ import NavLink from './NavLink';
 
 describe('Componente: NavLink', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

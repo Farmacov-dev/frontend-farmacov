@@ -28,7 +28,6 @@ const mockUserFallido: User = {
 
 describe('Componente: UserTableRow', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

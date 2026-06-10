@@ -1,14 +1,11 @@
 // src/components/EffectivenessBadge/EffectivenessBadge.test.tsx
 // @vitest-environment jsdom
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import EffectivenessBadge from './EffectivenessBadge';
 
 describe('Componente: EffectivenessBadge', () => {
-  afterEach(() => {
-    cleanup();
-  });
 
   it('debe mostrar el valor en porcentaje', () => {
     render(<EffectivenessBadge value={85} />);

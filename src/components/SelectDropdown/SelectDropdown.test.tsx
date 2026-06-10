@@ -13,7 +13,6 @@ const opciones = ['Opción A', 'Opción B', 'Opción C'];
 
 describe('Componente: SelectDropdown', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

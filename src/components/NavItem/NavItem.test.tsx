@@ -9,7 +9,6 @@ const MockIcon = (props: any) => <svg data-testid="mock-icon" />;
 
 describe('Componente: NavItem', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 

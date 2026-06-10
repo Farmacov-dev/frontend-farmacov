@@ -11,9 +11,9 @@ vi.mock('../LogoMark/LogoMark', () => ({
 
 vi.mock('../NavLink/NavLink', () => ({
   default: ({ label, active, onClick }: any) => (
-    <span data-testid="nav-link" data-active={String(active)} onClick={onClick}>
+    <button data-testid="nav-link" data-active={String(active)} onClick={onClick}>
       {label}
-    </span>
+    </button>
   ),
 }));
 
@@ -25,7 +25,6 @@ vi.mock('../primary/Button/Button', () => ({
 
 describe('Componente: NavBarLanding', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 
@@ -70,13 +69,13 @@ describe('Componente: NavBarLanding', () => {
     render(<NavBarLanding activeLink="Features" />);
     const links = screen.getAllByTestId('nav-link');
     const featuresLink = links.find(l => l.textContent === 'Features');
-    expect(featuresLink?.getAttribute('data-active')).toBe('true');
+    expect(featuresLink?.dataset.active).toBe('true');
   });
 
   it('debe marcar como inactivos los links que no coinciden con activeLink', () => {
     render(<NavBarLanding activeLink="Features" />);
     const links = screen.getAllByTestId('nav-link');
     const planesLink = links.find(l => l.textContent === 'Planes');
-    expect(planesLink?.getAttribute('data-active')).toBe('false');
+    expect(planesLink?.dataset.active).toBe('false');
   });
 });

@@ -1,14 +1,11 @@
 // src/components/ChangeBadge/ChangeBadge.test.tsx
 // @vitest-environment jsdom
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
+import { render } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import ChangeBadge from './ChangeBadge';
 
 describe('Componente: ChangeBadge', () => {
-  afterEach(() => {
-    cleanup();
-  });
 
   it('debe retornar null cuando value es null', () => {
     const { container } = render(<ChangeBadge value={null} />);

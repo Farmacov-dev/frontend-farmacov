@@ -11,7 +11,6 @@ vi.mock('lucide-react', () => ({
 
 describe('Componente: LogoMark', () => {
   afterEach(() => {
-    cleanup();
     vi.clearAllMocks();
   });
 
