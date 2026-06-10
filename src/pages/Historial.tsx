@@ -52,13 +52,13 @@ export default function Historial() {
         </h2>
 
         {usersPending ? (
-          <p className="py-8 text-sm text-gray-500">Cargando actividad...</p>
+          <p data-testid="historial-cargando-actividad" className="py-8 text-sm text-gray-500">Cargando actividad...</p>
         ) : (
           <UserTable users={users} />
         )}
 
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-xs text-gray-500">
+          <p data-testid="historial-paginacion" className="text-xs text-gray-500">
             Mostrando página {pageInfo?.currentPage ? pageInfo.currentPage + 1 : 1} de {pageInfo?.totalPages ?? 1} ({pageInfo?.totalItems ?? 0} total)
           </p>
 
