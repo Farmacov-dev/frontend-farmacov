@@ -22,7 +22,6 @@ export default function Historial() {
     totalItems: response.totalItems,
     totalPages: response.totalPages,
   } : null;
-
   return (
     <main className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-8">
       <PageHeader title="Inicio" />

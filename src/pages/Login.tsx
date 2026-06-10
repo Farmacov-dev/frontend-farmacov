@@ -44,15 +44,7 @@ export default function LoginPage() {
           >
             Salir
           </Button>
-          <Button
-            variant="floating"
-            className="h-[43px]"
-            onClick={() => {
-              alert("Flujo de recuperación de contraseña en construcción");
-            }}
-          >
-            ¿Olvidaste tu contraseña?
-          </Button>
+ 
         </div>
       </div>
       
