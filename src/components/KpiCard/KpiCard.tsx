@@ -42,7 +42,7 @@ const KpiCard = ({
         </div>
       </div>
       <div className="mt-6 flex items-end gap-3">
-        <span className="text-3xl font-bold leading-none text-[#111827]">
+        <span data-testid="kpi-value" className="text-3xl font-bold leading-none text-[#111827]">
           {value}
         </span>
         <div className="pb-1">

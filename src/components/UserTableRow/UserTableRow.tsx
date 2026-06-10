@@ -32,7 +32,7 @@ const UserTableRow = ({ user }: UserTableRowProps) => {
   const success = user.resultado === "Exitoso";
 
   return (
-    <tr className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/60">
+    <tr data-testid="user-row" className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/60">
       <td className="px-4 py-4 text-sm text-gray-700">
         {user.hora}
       </td>
@@ -44,7 +44,7 @@ const UserTableRow = ({ user }: UserTableRowProps) => {
           >
             {user.iniciales}
           </div>
-          <span className="text-sm font-medium text-gray-800">
+          <span data-testid="user-nombre" className="text-sm font-medium text-gray-800">
             {user.nombre}
           </span>
         </div>
