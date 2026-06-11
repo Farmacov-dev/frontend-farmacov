@@ -119,7 +119,7 @@ export default function GestionUsuarios() {
           <tbody>
             {isPending ? (
               <tr>
-                <td colSpan={5} className="py-10 text-center text-sm text-gray-400">Cargando usuarios...</td>
+                <td data-testid="usuarios-cargando" colSpan={5} className="py-10 text-center text-sm text-gray-400">Cargando usuarios...</td>
               </tr>
             ) : usuariosFiltrados.length === 0 ? (
               <tr>
@@ -127,7 +127,7 @@ export default function GestionUsuarios() {
               </tr>
             ) : (
               usuariosFiltrados.map(u => (
-                <tr key={u.id} className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
+                <tr key={u.id} data-testid="usuario-fila" className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div
@@ -137,8 +137,8 @@ export default function GestionUsuarios() {
                         {getInitials(u.nombre, u.apellidoPaterno)}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{u.nombre} {u.apellidoPaterno}</p>
-                        <p className="text-xs text-gray-400">{u.correo}</p>
+                        <p data-testid="usuario-nombre" className="text-sm font-medium text-gray-900">{u.nombre} {u.apellidoPaterno}</p>
+                        <p data-testid="usuario-correo" className="text-xs text-gray-400">{u.correo}</p>
                       </div>
                     </div>
                   </td>
