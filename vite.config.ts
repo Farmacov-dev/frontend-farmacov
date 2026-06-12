@@ -16,7 +16,6 @@ export default defineConfig({
       include: [
         'src/components/**/*.{ts,tsx}',
         'src/hooks/**/*.{ts,tsx}',
-        'src/pages/**/*.{ts,tsx}',
         'src/services/**/*.{ts,tsx}',
         'src/utils/**/*.{ts,tsx}'
       ],

@@ -1,6 +1,5 @@
 // src/components/Sidebar/Sidebar.test.tsx
 // @vitest-environment jsdom
-import React from 'react';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import Sidebar from './Sidebar';

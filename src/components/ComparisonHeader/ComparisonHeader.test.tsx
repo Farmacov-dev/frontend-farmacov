@@ -1,6 +1,5 @@
 // src/components/ComparisonHeader/ComparisonHeader.test.tsx
 // @vitest-environment jsdom
-import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import ComparisonHeader from './ComparisonHeader';

@@ -6,6 +6,7 @@ import LoginCard from "../components/composed/LoginCard/LoginCard";
 import Button from "../components/primary/Button/Button";
 import salirSvg from "../assets/icons/salir.svg";
 import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/authStore";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,7 +15,12 @@ export default function LoginPage() {
   async function handleLogin(email: string, password: string) {
     try {
       await login(email, password);
-      navigate("/dashboard");
+      const user = useAuthStore.getState().user;
+      if (user?.esAdmin) {
+        navigate("/roles-permisos");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error: any) {
       if (error.code === 'auth/user-disabled') {
         navigate('/error', {
