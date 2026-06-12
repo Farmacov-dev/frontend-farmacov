@@ -27,3 +27,4 @@ coverage
 *storybook.log
 storybook-static
 .env
+cypress.env.json
