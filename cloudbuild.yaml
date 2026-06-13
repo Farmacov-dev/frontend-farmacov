@@ -1,4 +1,5 @@
 steps:
+  # 1. Build con secretos de Firebase
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: bash
     secretEnv:
@@ -23,6 +24,37 @@ steps:
           -t us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest \
           .
 
+  # 2. Push imagen con BUILD_ID
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+
+  # 3. Push imagen latest
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+
+  # 4. Deploy a Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'frontend-farmacov'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+images:
+  - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:$BUILD_ID'
+  - 'us-central1-docker.pkg.dev/project-1f1c8817-494f-4eb9-a0d/frontfarmacov/frontend-farmacov:latest'
+
 availableSecrets:
   secretManager:
     - versionName: projects/project-1f1c8817-494f-4eb9-a0d/secrets/VITE_FIREBASE_API_KEY/versions/latest
@@ -40,4 +72,3 @@ availableSecrets:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
