@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# Farmacov — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para la gestión de una farmacia. Permite a los usuarios consultar un catálogo de medicamentos, comparar productos, analizar síntomas, revisar su historial de compras y generar reportes. Los administradores cuentan con un dashboard y módulos de gestión de usuarios.
 
-Currently, two official plugins are available:
+Construida con **React 19 + TypeScript + Vite**, usando MUI, Tailwind CSS, TanStack Query y Zustand.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Requisitos previos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js >= 18
+- Yarn
+- Nota: Se debe ejecutar todo el archivo .sql, con la finalidad de obtener todas las entidades dentro del servidor MySQL local y que el login funcione.
+- Tener corriendo el repositorio local de backend-farmacov: https://github.com/Farmacov-dev/backend-farmacov.git
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Instalación y ejecución local
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. Clonar el repositorio
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <url-del-repositorio>
+cd frontend-farmacov
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Instalar dependencias
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+yarn install
 ```
+
+### 3. Configurar variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto con el siguiente contenido (proporcionado por el equipo):
+
+```env
+# Contenido del .env será proporcionado en el documento final de entrega
+```
+
+### 4. Iniciar el servidor de desarrollo
+
+```bash
+yarn dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`.
+
+---
+
+## Usuarios de prueba
+
+| Email | Contraseña |
+|---|---|
+| jrodriguez@farmacov.com | 12345678 |
+
+---
+
+## Scripts disponibles
+
+| Comando | Descripción |
+|---|---|
+| `yarn dev` | Inicia el servidor de desarrollo |
+| `yarn build` | Compila la aplicación para producción |
+| `yarn preview` | Previsualiza el build de producción |
+| `yarn test` | Ejecuta las pruebas unitarias con Vitest |
+| `yarn test:coverage` | Ejecuta pruebas con reporte de cobertura |
+| `yarn lint` | Analiza el código con ESLint |
+| `yarn storybook` | Inicia Storybook en `http://localhost:6006` |
