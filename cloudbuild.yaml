@@ -37,3 +37,7 @@ availableSecrets:
       env: VITE_FIREBASE_MESSAGING_SENDER_ID
     - versionName: projects/project-1f1c8817-494f-4eb9-a0d/secrets/VITE_FIREBASE_APP_ID/versions/latest
       env: VITE_FIREBASE_APP_ID
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
